@@ -1,0 +1,60 @@
+<div class="panel">
+  <div class="margin" *ngIf="!sliderImagesLoaded">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="row">
+    <h3 class="section-title title-margin col-md-6 font-color align-self-center">Imagenes de Presentación</h3>
+    <a class="btn offset-5 align-self-end clickable plus-size" (click)="addingImage = !addingImage;" *ngIf="sliderImages.length < 8">
+      <i class="fa fa-check" aria-hidden="true" *ngIf="addingImage"></i>
+      <i class="fa fa-plus" aria-hidden="true" *ngIf="!addingImage"></i>
+    </a>
+  </div>
+  <h4 class="empty-slider" *ngIf="sliderImages.length<1 && imagesLoaded && sliderImagesLoaded && !addingImage">Todavia no hay imagenes de presentación.</h4>
+  <div *ngIf="addingImage">
+    <form class="margin">
+      <div class="form-group newImage">
+        <h4>Agregar Imagen</h4>
+        <label for="exampleFormControlFile1"  *ngIf="!uploadingImage">
+          Seleccionar Imagen
+          <input type="file" class="form-control-file" id="exampleFormControlFile1" (change)="onChange($event)" accept="image/*" style="display: none">
+        </label>
+        <div class="margin" *ngIf="uploadingImage">
+          <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+          <span class="sr-only">Loading...</span>
+        </div>
+        <div *ngIf="imageSuccess" class="alert alert-success" role="alert">
+          Imagen agregada con éxito
+        </div>
+        <div *ngIf="imageError" class="alert alert-danger" role="alert">
+          Ha ocurrido un error al guardar la imagen
+        </div>
+        <div *ngIf="imageSizeWarning" class="alert alert-warning" role="alert">
+          El tamaño de la imagen no es correcto. <br> Minimo 1200x720
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row margin" *ngIf="sliderImagesLoaded">
+    <div class="emptyImages" *ngIf="sliderImages.length == 0">
+      <h4>Todavía no hay imagenes de presentación</h4>
+    </div>
+    <div class="card" *ngFor="let image of sliderImages; let i = index">
+      <a class="align-self-end clickable" (click)="openDeleteImageModal(confirmDeletingImageModal, image, i)">
+        <i class="fa fa-times fa-2" aria-hidden="true"></i>
+      </a>
+      <div class="card-body">
+        <img class="card-img-top" src="{{image.path}}" alt="Imagen slider {{i}}">
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <ng-template #confirmDeletingImageModal>
+    <div class="modal-body text-center">
+      <p>¿Está seguro que desea eliminar la imagen del slider?</p>
+      <button type="button" class="btn btn-danger" (click)="confirm()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+    </div>
+  </ng-template>
+</div>

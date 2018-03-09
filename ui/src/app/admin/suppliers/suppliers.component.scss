@@ -1,0 +1,53 @@
+.margin{
+  width: 1000px;
+}
+
+.card{
+  margin: 40px 50px 5px 5px;
+  width: 12rem;
+  border: 0;
+  img, h4{
+    text-align: center;
+  }
+  i{
+    font-size: 27px;
+  }
+  .card-body{
+    padding-top: 0px;
+  }
+}
+
+.btn-delete{
+  width: 50px;
+}
+
+.errors{
+  color: red;
+}
+
+.pagination{
+  width: 200px;
+}
+
+.checked {
+  color: orange;
+}
+
+.plus-size{
+  font-size: 30px;
+}
+
+.title-margin {
+  margin-top: 20px;
+}
+
+.emptySuppliers{
+  width: 100%;
+  text-align: center;
+  margin-top: 100px;
+}
+
+.section-title {
+  font-family: HelveticaNeueHeavy!important;
+}
+

@@ -1,0 +1,67 @@
+<div class="row vertical-center-align">
+  <div class="col-md-4 col-xs-4 centered login-box">
+    <div class="square">
+      <form novalidate [formGroup]="loginFormGroup" (ngSubmit)="login()">
+        <div class="card text-center align-middle mx-auto">
+          <div class="card-block">
+            <br>
+            <div class="margin">
+              <div class="row">
+                <span class="col-md-1 login-icon"><i class="fa fa-at" aria-hidden="true"></i></span>
+                <fieldset class="col-md-10">
+                  <div class="form-group">
+                    <input type="text"
+                           class="form-control"
+                           formControlName="username"
+                           [formGroup]="loginFormGroup"
+                           placeholder="Correo Electrónico"
+                           [(ngModel)]="credentials.username"
+                           required>
+                    <div class="errors pull-left"
+                         *ngIf="loginFormGroup.controls.username.errors && (loginFormGroup.controls.username.dirty || loginFormGroup.controls.username.touched)">
+                      <p *ngIf="loginFormGroup.controls.username.errors.required">Es requerido</p>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="row">
+                <span class="col-md-1 login-icon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                <fieldset class="col-md-10">
+                  <div class="form-group">
+                    <input type="password"
+                           class="form-control"
+                           formControlName="password"
+                           [formGroup]="loginFormGroup"
+                           placeholder="Contraseña"
+                           [(ngModel)]="credentials.password"
+                           required
+                           (keydown.enter)="loginFormGroup.invalid ? false : login()"
+                    >
+                    <div class="errors pull-left"
+                         *ngIf="loginFormGroup.controls.password.errors && (loginFormGroup.controls.password.dirty || loginFormGroup.controls.password.touched)">
+                      <p *ngIf="loginFormGroup.controls.password.errors.required">Es requerido</p>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div class="alert alert-danger text-center button-margin" role="alert" *ngIf="badCredentialsError">
+                <blockquote class="card-blockquote">
+                  <p>El nombre de usuario o la contraseña no son correctos. Vuelva a introducirlos.</p>
+                </blockquote>
+              </div>
+              <!--<a class="row clickable reset-password" [ngClass]="{'is-required-2': (loginFormGroup.controls.username.errors && loginFormGroup.controls.username.errors.required && (loginFormGroup.controls.username.dirty || loginFormGroup.controls.username.touched)) && (loginFormGroup.controls.password.errors && loginFormGroup.controls.password.errors.required && (loginFormGroup.controls.password.dirty || loginFormGroup.controls.password.touched)), 'is-required':(loginFormGroup.controls.username.errors && loginFormGroup.controls.username.errors.required && (loginFormGroup.controls.username.dirty || loginFormGroup.controls.username.touched)) || (loginFormGroup.controls.password.errors && loginFormGroup.controls.password.errors.required && (loginFormGroup.controls.password.dirty || loginFormGroup.controls.password.touched)), 'alert-login': badCredentialsError}" (click)="resetPasswordMessage=true">No recuerdo mi contraseña</a>-->
+              <a class="row clickable reset-password" [ngClass]="{'is-required-2': (loginFormGroup.controls.username.errors && loginFormGroup.controls.username.errors.required && (loginFormGroup.controls.username.dirty || loginFormGroup.controls.username.touched)) && (loginFormGroup.controls.password.errors && loginFormGroup.controls.password.errors.required && (loginFormGroup.controls.password.dirty || loginFormGroup.controls.password.touched)), 'is-required':(loginFormGroup.controls.username.errors && loginFormGroup.controls.username.errors.required && (loginFormGroup.controls.username.dirty || loginFormGroup.controls.username.touched)) || (loginFormGroup.controls.password.errors && loginFormGroup.controls.password.errors.required && (loginFormGroup.controls.password.dirty || loginFormGroup.controls.password.touched)), 'alert-login': badCredentialsError}" (click)="goToCreateSupplier()">Crear perfil de proveedor</a>
+              <div class="margin" *ngIf="processingCredentials && !badCredentialsError">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 30px">
+          <span *ngIf="!processingCredentials" class="clickable login" type="submit" (click)="login()" [ngClass]="{'disable':loginFormGroup.invalid}">INGRESAR</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

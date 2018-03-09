@@ -1,0 +1,116 @@
+.card-title{
+  margin-bottom: 15px;
+}
+
+.centered{
+  margin-left: 33.3%;
+}
+
+.login-header{
+  text-align: center;
+}
+
+.errors{
+  color: red;
+}
+
+.button-margin{
+  margin: 15px;
+}
+
+.vertical-center-align{
+  margin-top: 20%;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+blockquote{
+  border-left-width: 0;
+  margin-bottom: 0;
+}
+
+.alert{
+  margin-bottom: 0;
+  height: 101px;
+  width: 328px;
+}
+
+.form-group{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.card-block{
+  background-color: white;
+}
+
+.square{
+  width: 400px;
+  height: 500px;
+  background: #00000017;
+  padding-top: 16px;
+}
+
+.card{
+  width: 360px;
+}
+
+input{
+  border: 0;
+  border-bottom: 2px solid;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+input:focus{
+  border: 0;
+  border-bottom: 4px solid;
+  border-radius: 0;
+  padding-left: 0;
+}
+
+.login-icon{
+  font-size: 30px;
+  padding-left: 24px;
+}
+
+.margin{
+  margin-top: 50px;
+}
+
+.reset-password{
+  margin: 40% 0 14% 22%;
+  color: RGB(128,193,214) !important;
+}
+
+.disable{
+  cursor: not-allowed !important;
+}
+
+.login{
+  margin-left: 37%;
+  margin-top: 7%;
+  -webkit-appearance: none;
+  font-weight: bold;
+  opacity: 0.75;
+  font-size: 20px;
+}
+
+fieldset{
+  padding-right: 0;
+}
+
+.is-required-2{
+  margin-top: 28% !important;
+
+}
+
+.is-required{
+  margin-top: 28%;
+}
+
+.alert-login{
+  margin-top: 10% !important;
+}

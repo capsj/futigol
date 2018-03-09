@@ -1,0 +1,41 @@
+
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+GET     /                                       controllers.HomeController.index()
+
+# Player
+POST    /api/player                             controllers.PlayerController.register
+GET     /api/player/id/:id                      controllers.PlayerController.getById(id: Long)
+GET     /api/player/username/:username          controllers.PlayerController.getByUsername(username)
+GET     /api/player/email/:email                controllers.PlayerController.getByEmail(email)
+GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: Long)
+GET     /api/player/all                         controllers.PlayerController.getAll
+DELETE  /api/player/:id                         controllers.PlayerController.delete(id: Long)
+
+# Team
+POST    /api/team                               controllers.TeamController.register
+POST    /api/team/add                           controllers.TeamController.joinRequest
+GET     /api/team/id/:id                        controllers.TeamController.getById(id: Long)
+GET     /api/team/name/:name                    controllers.TeamController.getByName(name)
+GET     /api/team/location/:locationId          controllers.TeamController.getByLocation(locationId: Long)
+GET     /api/team/players/:teamId               controllers.TeamController.getTeamPlayers(teamId: Long)
+GET     /api/team/all                           controllers.TeamController.getAll
+DELETE  /api/team/:id                           controllers.TeamController.delete(id: Long)
+
+# Location
+POST    /api/location                           controllers.LocationController.register
+GET     /api/location/id/:id                    controllers.LocationController.getById(id: Long)
+GET     /api/location/name/:name                controllers.LocationController.getByName(name)
+GET     /api/location/all                       controllers.LocationController.getAll
+DELETE  /api/location/:id                       controllers.LocationController.delete(id: Long)
+
+# Login
+POST    /api/login                              controllers.LoginController.login
+GET     /api/logout                             controllers.LoginController.logout
+GET     /api/data                               controllers.LoginController.loggedData
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
+
+GET     /*others                                controllers.HomeController.other(others)

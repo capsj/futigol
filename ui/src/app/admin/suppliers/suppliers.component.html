@@ -1,0 +1,92 @@
+<div class="panel">
+  <div class="container">
+    <div class="margin" *ngIf="!homepageSuppliersLoaded || !nonHomepageSuppliersLoaded">
+      <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="homepageSuppliersError || nonHomepageSuppliersError || errorRemovingSupplier || addingSupplierError || maxSuppliersError">
+      <blockquote class="card-blockquote">
+        <p *ngIf="homepageSuppliersError">Hubo un error al cargar los proveedores asignados.</p>
+        <p *ngIf="nonHomepageSuppliersError">Hubo un error al cargar los proveedores no asignados.</p>
+        <p *ngIf="errorRemovingSupplier">Hubo un error al desasignar el proveedor.</p>
+        <p *ngIf="addingSupplierError">Hubo un error al asignar el proveedor.</p>
+        <p *ngIf="maxSuppliersError">Se alcanzó el máximo de proveedores.</p>
+      </blockquote>
+    </div>
+
+    <div class="row">
+      <h3 class="section-title title-margin col-md-6 font-color align-self-center">Proveedores Destacados</h3>
+      <a class="btn offset-5 align-self-end clickable plus-size" (click)="addingSupplier = !addingSupplier;" *ngIf="homepageSuppliers.length < 8 && nonHomepageSuppliersPaginated.length >= 0">
+        <i class="fa fa-check" aria-hidden="true" *ngIf="addingSupplier"></i>
+        <i class="fa fa-plus" aria-hidden="true" *ngIf="!addingSupplier"></i>
+      </a>
+    </div>
+    <div *ngIf="addingSupplier">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Proveedor</th>
+          <th scope="col"></th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Agregar</th>
+        </tr>
+        </thead>
+        <tbody *ngIf="nonHomepageSuppliersPaginated">
+        <tr>
+          <td colspan="2"> <input type="text" [(ngModel)]="supplierSearchName" (keyup)="filterPaginatedPast()" class="form-control" placeholder="Buscar por nombre" /></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr *ngFor="let supplier of nonHomepageSuppliersPaginated; let i = index;">
+          <td>{{supplier.name}}</td>
+          <td><img height="67" width="62" src="{{supplier.mainImage.path}}" alt="Imagen proveedor {{i}}"></td>
+          <td>{{supplier.description}}</td>
+          <td>
+            <a class="btn btn-delete btn-light clickable" (click)="addSupplier(supplier, i)">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <h4 *ngIf="nonHomepageSuppliersPaginated.length<1">Su búsqueda no obtuvo resultados.</h4>
+      <nav class="" aria-label="Page navigation example" *ngIf="numberOfPastPages.length>1">
+        <ul class="pagination mx-auto">
+          <li class="page-item" (click)="currentPage==1 ? currentPage = 1 : getNextPastPage(currentPage-2)" [ngClass]="{'disabled': currentPage==1}"><a class="page-link">Anterior</a></li>
+          <li class="page-item" *ngFor="let page of numberOfPastPages; let i = index;" (click)="getNextPastPage(i)" [ngClass]="{'active': currentPage==i+1}"><a class="page-link">{{i+1}}</a></li>
+          <li class="page-item" (click)="currentPage==numberOfPastPages.length ? currentPage = numberOfPastPages.length : getNextPastPage(currentPage)" [ngClass]="{'disabled': currentPage==numberOfPastPages.length}"><a class="page-link">Siguiente</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="row margin mx-auto" *ngIf="homepageSuppliersLoaded && !addingSupplier">
+      <div class="emptySuppliers">
+        <h4 *ngIf="homepageSuppliers.length < 1">Todavía no hay proveedores destacados.</h4>
+      </div>
+      <div class="card" *ngFor="let supplier of homepageSuppliers; let i = index">
+        <a class="align-self-end clickable" (click)="openDeleteSupplierModal(confirmDeletingSupplierModal, supplier, i)">
+          <i class="fa fa-times fa-2" aria-hidden="true"></i>
+        </a>
+        <div class="card-body">
+          <img class="card-img-top rounded-circle" src="{{supplier.mainImage.path}}" alt="Imagen proveedor {{i}}">
+          <h4 class="card-title font-color">{{supplier.name}}</h4>
+          <div class="text-center">
+            <span class="fa fa-star" [ngClass]="{'checked': supplier.rating>0.5}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked': supplier.rating>1.5}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked': supplier.rating>2.5}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked': supplier.rating>3.5}"></span>
+            <span class="fa fa-star" [ngClass]="{'checked': supplier.rating>4.5}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <ng-template #confirmDeletingSupplierModal>
+    <div class="modal-body text-center">
+      <p>¿Está seguro que desea eliminar el proveedor {{supplierToDelete.name}} del homepage?</p>
+      <button type="button" class="btn btn-danger" (click)="confirm()">Sí</button>
+      <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+    </div>
+  </ng-template>
+</div>

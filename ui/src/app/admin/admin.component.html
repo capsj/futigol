@@ -1,0 +1,56 @@
+<div class="admin">
+  <nav class="navbar navbar-default navbar-fixed-top nav-background">
+    <div class="container-fluid shadow-1 row">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header col-md-4">
+        <a class="navbar-brand float-left" [routerLink]="['/admin/panel/suppliers']">
+          <img class="logo" src="/assets/images/Isologo-2.svg">
+        </a>
+      </div>
+      <!--<div class="float-right">
+        <h3 class="title-margin">Panel de Administrador</h3>
+      </div>-->
+    </div>
+  </nav>
+  <div class="main-content">
+    <div class="side-navigation">
+      <ul>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/admin/panel/suppliers']">
+            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <span class="margin-text">P. Destacados</span>
+          </a>
+        </li>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/admin/panel/video']">
+            <i class="fa fa-video-camera" aria-hidden="true"></i>
+            <span>Video</span>
+          </a>
+        </li>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/admin/panel/images']">
+            <i class="fa fa-picture-o" aria-hidden="true"></i>
+            <span>Imágenes</span>
+          </a>
+        </li>
+        <li routerLinkActive="active">
+          <a [routerLink]="['/admin/panel/categories']">
+            <i class="fa fa-align-center" aria-hidden="true"></i>
+            <span>Categorías</span>
+          </a>
+        </li>
+        <li class="logout" style="margin-top: 200px" (click)="logout()">
+          <a><i class="fa fa-sign-out" aria-hidden="true"></i><span>Cerrar Sesión</span></a>
+        </li>
+      </ul>
+      <div class="alert alert-danger text-center" role="alert" *ngIf="errorLoginOut">
+        <blockquote class="card-blockquote">
+          <p>Hubo un error al cerrar sesión.</p>
+        </blockquote>
+      </div>
+    </div>
+    <div class="content shadow-1">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
