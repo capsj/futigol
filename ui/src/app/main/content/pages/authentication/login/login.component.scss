@@ -1,11 +1,11 @@
-@import "src/app/core/scss/fuse";
+@import "../../../../../../../src/app/core/scss/fuse";
 
 :host {
 
     #login {
         width: 100%;
         overflow: auto;
-        background: url('/assets/images/backgrounds/dark-material-bg.jpg') no-repeat;
+        background: url('../../../../../../assets/images/backgrounds/dark-material-bg.jpg') no-repeat;
         background-size: cover;
 
         #login-form-wrapper {

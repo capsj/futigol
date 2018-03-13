@@ -13,6 +13,7 @@ export class HttpService {
 
     private DEFAULT_HEADERS = {'Content-Type': 'application/json'};
     private _authToken: string;
+    private baseUrl = 'http://localhost:9000/api/';
 
     get authToken(): string { return this._authToken; }
     set authToken(value: string) { this._authToken = value; }
@@ -25,39 +26,39 @@ export class HttpService {
     constructor(private _http: Http) {}
 
     public request(url: string | Request): Promise<ResponseData> {
-        return this.asPromise(this._http.request(url, this.requestOptions()));
+        return this.asPromise(this._http.request(this.baseUrl + url, this.requestOptions()));
     }
 
     public get(url: string): Promise<ResponseData> {
-        return this.asPromise(this._http.get(url, this.requestOptions()));
+        return this.asPromise(this._http.get(this.baseUrl + url, this.requestOptions()));
     }
 
     public post(url: string, body: any): Promise<ResponseData> {
-        return this.asPromise(this._http.post(url, body, this.requestOptions()));
+        return this.asPromise(this._http.post(this.baseUrl + url, body, this.requestOptions()));
     }
 
     public jeroPost(url: string, body: any): Promise<ResponseData> {
-      return this.asPromise(this._http.post(url, body, this.jeroRequestOptions()));
+      return this.asPromise(this._http.post(this.baseUrl + url, body, this.jeroRequestOptions()));
     }
 
     public put(url: string, body: any): Promise<ResponseData> {
-        return this.asPromise(this._http.put(url, body, this.requestOptions()));
+        return this.asPromise(this._http.put(this.baseUrl + url, body, this.requestOptions()));
     }
 
     public delete(url: string): Promise<ResponseData> {
-        return this.asPromise(this._http.delete(url, this.requestOptions()));
+        return this.asPromise(this._http.delete(this.baseUrl + url, this.requestOptions()));
     }
 
     public patch(url: string, body: any): Promise<ResponseData> {
-        return this.asPromise(this._http.patch(url, body, this.requestOptions()));
+        return this.asPromise(this._http.patch(this.baseUrl + url, body, this.requestOptions()));
     }
 
     public head(url: string): Promise<ResponseData> {
-        return this.asPromise(this._http.head(url, this.requestOptions()));
+        return this.asPromise(this._http.head(this.baseUrl + url, this.requestOptions()));
     }
 
     public options(url: string): Promise<ResponseData> {
-        return this.asPromise(this._http.options(url, this.requestOptions()));
+        return this.asPromise(this._http.options(this.baseUrl + url, this.requestOptions()));
     }
 
     private asPromise(observable: Observable<Response>): Promise<ResponseData> {

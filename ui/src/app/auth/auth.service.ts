@@ -12,7 +12,7 @@ const HEADERS = {'Content-Type': 'application/json'};
 export class AuthService {
 
     private tokenCookieKey = 'futigol-t0k3n';
-
+    private baseUrl = 'http://localhost:9000/api/';
     private _redirectUrl: string;
     private _token: string;
     private _loggedUser: User;
@@ -39,7 +39,7 @@ export class AuthService {
     }
 
     public login(credentials: UserCredentials): Promise<ResponseData> {
-        return this.http.defaultHttp.post('/api/login', credentials.asJsonString(), this.http.defaultOptions).toPromise()
+        return this.http.defaultHttp.post(this.baseUrl + 'login', credentials.asJsonString(), this.http.defaultOptions).toPromise()
             .then(res => {
                 const data: ResponseData = res.json() as ResponseData;
 
@@ -53,7 +53,7 @@ export class AuthService {
     }
 
     public logout(): Promise<ResponseData> {
-        return this.http.get('/api/logout')
+        return this.http.get('logout')
             .then(resData => {
                 this.clearSession();
                 return resData;
@@ -66,7 +66,7 @@ export class AuthService {
     }
 
     private requestLoggedUser(): Promise<User> {
-        return this.http.get('/api/data')
+        return this.http.get('data')
             .then(resData => {
                 const user = resData.data.caseUser as User;
                 this._loggedUser = user;

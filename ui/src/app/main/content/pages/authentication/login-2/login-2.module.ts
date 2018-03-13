@@ -18,7 +18,7 @@ const routes = [
     imports     : [
         SharedModule,
         RouterModule.forChild(routes)
-    ]
+    ],
 })
 
 export class Login2Module

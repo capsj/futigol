@@ -1,7 +1,7 @@
 import {HttpService} from "./http.service";
 import {Injectable} from '@angular/core';
 import {Supplier} from '../models/supplier-model';
-import {PaginationModel} from "../../admin/suppliers/suppliers.component";
+// import {PaginationModel} from "../../admin/suppliers/suppliers.component";
 
 /*
 Supplier routes
@@ -134,11 +134,11 @@ export class SuppliersService {
       });
   }
 
-  public getPaginatedNonHomepageSuppliers(pagination: PaginationModel): Promise<any> {
-    return this.http
-      .post('/api/supplier/nonhomepage', pagination)
-      .then(res => {
-        return res.data;
-      });
-  }
+  // public getPaginatedNonHomepageSuppliers(pagination: PaginationModel): Promise<any> {
+  //   return this.http
+  //     .post('/api/supplier/nonhomepage', pagination)
+  //     .then(res => {
+  //       return res.data;
+  //     });
+  // }
 }

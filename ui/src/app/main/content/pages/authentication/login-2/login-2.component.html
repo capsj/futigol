@@ -7,12 +7,11 @@
         </div>
 
         <div class="title" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',y:'25px'}}">
-            Welcome to the FUSE!
+            Welcome to FUTIGOL!
         </div>
 
         <div class="description" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',y:'25px'}}">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ullamcorper nisl erat,
-            vel convallis elit fermentum pellentesque. Sed mollis velit facilisis facilisis viverra.
+            Build your team and challenge other teams to a thrilling football match
         </div>
 
     </div>
@@ -28,22 +27,19 @@
 
             <div class="title">LOGIN TO YOUR ACCOUNT</div>
 
-            <form name="loginForm" [formGroup]="loginForm" novalidate>
+            <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
 
                 <mat-form-field>
-                    <input matInput placeholder="Email" formControlName="email">
-                    <mat-error *ngIf="loginFormErrors.email.required">
-                        Email is required
-                    </mat-error>
-                    <mat-error *ngIf="!loginFormErrors.email.required && loginFormErrors.email.email">
-                        Please enter a valid email address
+                    <input matInput placeholder="Username" formControlName="username" [(ngModel)]="credentials.username">
+                    <mat-error *ngIf="loginFormErrors.username.required">
+                        Username is required
                     </mat-error>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput type="password" placeholder="Password" formControlName="password">
-                    <mat-error *ngIf="loginFormErrors.password.required">
-                        Password is required
+                    <input matInput type="password" placeholder="Password" formControlName="password" [(ngModel)]="credentials.password">
+                    <mat-error *ngIf="badCredentialsError">
+                        Incorrect username and password combination
                     </mat-error>
                 </mat-form-field>
 

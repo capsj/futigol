@@ -1,7 +1,7 @@
 import {HttpService} from "./http.service";
 import {Injectable} from '@angular/core';
 import {Player} from '../models/player-model';
-import {PaginationModel} from "../../admin/suppliers/suppliers.component";
+// import {PaginationModel} from "../../admin/suppliers/suppliers.component";
 import {PlayerCreate} from "../models/new-player-model";
 
 /*
@@ -135,11 +135,11 @@ export class PlayerService {
       });
   }
 
-  public getPaginatedNonHomepagePlayers(pagination: PaginationModel): Promise<any> {
-    return this.http
-      .post('/api/player/nonhomepage', pagination)
-      .then(res => {
-        return res.data;
-      });
-  }
+  // public getPaginatedNonHomepagePlayers(pagination: PaginationModel): Promise<any> {
+  //   return this.http
+  //     .post('/api/player/nonhomepage', pagination)
+  //     .then(res => {
+  //       return res.data;
+  //     });
+  // }
 }
