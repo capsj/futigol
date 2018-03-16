@@ -42,7 +42,7 @@ export class PlayerService {
 
   public getHomepagePlayers(): Promise<Player[]> {
     return this.http
-      .get('/api/player/homepage')
+      .get('player/homepage')
       .then(res => {
         return res.data as Player[];
       });
@@ -50,7 +50,7 @@ export class PlayerService {
 
   public getNonHomepagePlayers(): Promise<Player[]> {
     return this.http
-      .get('/api/player/nonhomepage')
+      .get('player/nonhomepage')
       .then(res => {
         return res.data as Player[];
       });
@@ -58,7 +58,7 @@ export class PlayerService {
 
   public addPlayer(playerCreate: PlayerCreate): Promise<Player> {
     return this.http
-      .post('/api/player', playerCreate)
+      .post('player', playerCreate)
       .then(res => {
         this._playersById.set(res.data.id, res.data);
         return res.data;
@@ -67,7 +67,7 @@ export class PlayerService {
 
   public removePlayerFromHomepage(id: number): Promise<any> {
     return this.http
-      .get('/api/player/homepage/remove/'+id)
+      .get('player/homepage/remove/'+id)
       .then(res => {
         return res.data;
       });
@@ -75,7 +75,7 @@ export class PlayerService {
 
   public addPlayerToHomepage(id: number): Promise<any> {
     return this.http
-      .get('/api/player/homepage/add/'+id)
+      .get('player/homepage/add/'+id)
       .then(res => {
         return res.data;
       });
@@ -84,7 +84,7 @@ export class PlayerService {
   public updatePlayer(player: Player): Promise<Player> {
     if(this._playersById.get(player.id)) {
       return this.http
-        .put('/api/player', player)
+        .put('player', player)
         .then(res => {
           this._playersById.set(player.id, res.data);
           return res.data;
@@ -95,7 +95,7 @@ export class PlayerService {
   }
 
   public deletePlayer(id: number): Promise<any> {
-    return this.http.delete('/api/player/' + id)
+    return this.http.delete('player/' + id)
       .then(res => {
         this._playersById.delete(id);
         return res;
@@ -108,7 +108,7 @@ export class PlayerService {
 
   private requestPlayers(): Promise<Player[]> {
     return this.http
-      .get('/api/player/all')
+      .get('player/all')
       .then(res => {
         const players = res.data as Player[];
         players.forEach(player => this._playersById = this._playersById.set(player.id, player));
@@ -119,16 +119,16 @@ export class PlayerService {
 
   private requestPlayerById(id: number): Promise<Player> {
     return this.http
-      .get('/api/player/id/' + id)
+      .get('player/id/' + id)
       .then(res => {
         this._playersById.set(id,res.data);
         return res.data;
       });
   }
 
-  private requestPlayerByName(name: string): Promise<Player> {
+  public requestPlayerByUserame(username: string): Promise<Player> {
     return this.http
-      .get('/api/player/name/' + name)
+      .get('player/username/' + username)
       .then(res => {
         this._playersById.set(res.data.id, res.data);
         return res.data;
@@ -137,7 +137,7 @@ export class PlayerService {
 
   // public getPaginatedNonHomepagePlayers(pagination: PaginationModel): Promise<any> {
   //   return this.http
-  //     .post('/api/player/nonhomepage', pagination)
+  //     .post('player/nonhomepage', pagination)
   //     .then(res => {
   //       return res.data;
   //     });

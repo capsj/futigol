@@ -12,6 +12,7 @@ import { FuseConfigService } from './core/services/config.service';
 import { FuseNavigationService } from './core/components/navigation/navigation.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { LoginModule } from './main/content/login/login.module';
+import { RegisterModule } from './main/content/register/register.module';
 import { FuseFakeDbService } from "./fuse-fake-db/fuse-fake-db.service";
 import { InMemoryWebApiModule } from "angular-in-memory-web-api";
 import { AuthService } from "./auth/auth.service";
@@ -19,6 +20,7 @@ import { CookieService }   from 'angular2-cookie/services/cookies.service';
 import { HttpService } from "./shared/services/http.service";
 import { APP_BASE_HREF } from "@angular/common";
 import {HttpModule} from "@angular/http";
+import {PlayerService} from "./shared/services/player.service";
 
 const appRoutes: Routes = [
   {
@@ -28,6 +30,10 @@ const appRoutes: Routes = [
   {
     path        : 'home',
     loadChildren: './main/content/sample/sample.module#FuseSampleModule'
+  },
+  {
+    path        : 'register',
+    loadChildren: './main/content/register/register.module#RegisterModule'
   },
   {
     path      : '**',
@@ -53,6 +59,7 @@ const appRoutes: Routes = [
         }),
         FuseMainModule,
         LoginModule,
+        RegisterModule,
         HttpModule,
     ],
     providers   : [
@@ -62,6 +69,7 @@ const appRoutes: Routes = [
         AuthService,
         CookieService,
         HttpService,
+        PlayerService,
         {provide: APP_BASE_HREF, useValue : '/' }
     ],
     bootstrap   : [

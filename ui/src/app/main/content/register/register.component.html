@@ -1,0 +1,82 @@
+<div id="register" fxLayout="column" fusePerfectScrollbar>
+
+    <div id="register-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+        <div id="register-form" *fuseIfOnDom [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+
+            <div class="logo">
+                <img src="assets/images/logos/fuse.svg">
+            </div>
+
+            <div class="title">REGISTRATE EN FUTIGOL</div>
+
+            <form name="registerForm" [formGroup]="registerForm" (ngSubmit)="save()" novalidate>
+
+                <mat-form-field>
+                  <input matInput placeholder="Nombre" formControlName="name" [(ngModel)]="newPlayer.name">
+                  <mat-error *ngIf="registerFormErrors.name.required">
+                      Nombre requerido
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput placeholder="Usuario" formControlName="username" (blur)="checkUsername()" [(ngModel)]="newPlayer.username">
+                  <mat-hint *ngIf="duplicatedUsername">
+                    Nombre de usuario ya existente
+                  </mat-hint>
+                  <mat-error *ngIf="registerFormErrors.username.required">
+                    Nombre de usuario requerido
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput placeholder="Email" formControlName="email" [(ngModel)]="newPlayer.email">
+                  <mat-error *ngIf="registerFormErrors.email.required">
+                      Email requerido
+                  </mat-error>
+                  <mat-error *ngIf="!registerFormErrors.email.required && registerFormErrors.email.email">
+                      Email invalido
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput placeholder="Teléfono" formControlName="phone" [(ngModel)]="newPlayer.phone">
+                  <mat-error *ngIf="registerFormErrors.phone.required">
+                      Teléfono requerido
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <input matInput type="password" placeholder="Contraseña" formControlName="password" [(ngModel)]="newPlayer.password">
+                  <mat-error *ngIf="registerFormErrors.password.required">
+                      Contraseña requerida
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <input matInput type="password" placeholder="Confirmar Contraseña" formControlName="passwordConfirm">
+                    <mat-error *ngIf="registerFormErrors.passwordConfirm.required">
+                        Confirmación de contraseña requerida
+                    </mat-error>
+                    <mat-error *ngIf="registerFormErrors.passwordConfirm.passwordsNotMatch">
+                        Las contraseñas deben ser iguales
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-raised-button color="accent" class="submit-button" aria-label="CREATE AN ACCOUNT"
+                        [disabled]="registerForm.invalid">
+                    CREAR CUENTA
+                </button>
+
+            </form>
+
+            <div class="register" fxLayout="column" fxLayoutAlign="center center">
+                <span class="text">Ya tenes una cuenta?</span>
+                <a class="link" [routerLink]="'/login'">Login</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

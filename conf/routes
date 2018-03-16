@@ -2,7 +2,7 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET     /                                       controllers.HomeController.index()
+#GET     /                                       controllers.HomeController.index()
 
 # Player
 POST    /api/player                             controllers.PlayerController.register

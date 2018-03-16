@@ -100,18 +100,16 @@ export class LoginComponent implements OnInit {
         this.processingCredentials = false;
         this.redirect();
       })
-      .catch(err => {
-        this.handleErrorLogin(err);
+      .catch(_ => {
+        this.handleErrorLogin();
       });
   }
 
-  private handleErrorLogin(error: any) {
-    if (error.json().msg === 'Invalid data') {
-      this.processingCredentials = false;
-      this.badCredentialsError = true;
-      this.resetPasswordUser = this.credentials.username;
-      setTimeout(() => this.badCredentialsError = false, 5000)
-    }
+  private handleErrorLogin() {
+    this.processingCredentials = false;
+    this.badCredentialsError = true;
+    this.resetPasswordUser = this.credentials.username;
+    setTimeout(() => this.badCredentialsError = false, 5000)
   }
 
   private redirect() {

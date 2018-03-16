@@ -36,7 +36,7 @@ import {FuseEcommerceModule} from './content/e-commerce/e-commerce.module';
         FuseSampleModule,
         FuseShortcutsModule,
         FuseSearchBarModule,
-      FuseEcommerceModule
+        FuseEcommerceModule
     ],
     exports     : [
         FuseMainComponent

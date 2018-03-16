@@ -28,7 +28,7 @@ class LoginController extends Controller{
             case None =>
               BadRequest(
                 Json.toJson(
-                  ResponseGenerated(BAD_REQUEST, "Invalid data")
+                  ResponseGenerated(BAD_REQUEST, "Wrong credentials")
                 )
               )
           }
