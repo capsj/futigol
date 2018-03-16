@@ -106,7 +106,7 @@ export class FuseRegisterComponent implements OnInit
   }
 
   checkUsername() {
-    this.playerService.requestPlayerByUserame(this.newPlayer.username)
+    this.playerService.requestPlayerByUsername(this.newPlayer.username)
       .then( () => {
         this.duplicatedUsername = true;
       })
@@ -115,6 +115,15 @@ export class FuseRegisterComponent implements OnInit
       })
   }
 
+  checkEmail() {
+    this.playerService.requestPlayerByEmail(this.newPlayer.email)
+      .then( () => {
+        this.duplicatedEmail = true;
+      })
+      .catch( () => {
+        this.duplicatedEmail = false;
+      })
+  }
 
     onRegisterFormValuesChanged() {
         for ( const field in this.registerFormErrors )

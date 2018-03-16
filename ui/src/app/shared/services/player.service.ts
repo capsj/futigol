@@ -126,9 +126,18 @@ export class PlayerService {
       });
   }
 
-  public requestPlayerByUserame(username: string): Promise<Player> {
+  public requestPlayerByUsername(username: string): Promise<Player> {
     return this.http
       .get('player/username/' + username)
+      .then(res => {
+        this._playersById.set(res.data.id, res.data);
+        return res.data;
+      });
+  }
+
+  public requestPlayerByEmail(email: string): Promise<Player> {
+    return this.http
+      .get('player/email/' + email)
       .then(res => {
         this._playersById.set(res.data.id, res.data);
         return res.data;
