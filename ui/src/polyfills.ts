@@ -76,5 +76,5 @@ import 'intl/locale-data/jsonp/en';
  */
 if ( typeof SVGElement.prototype.contains === 'undefined' )
 {
-  SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
+    SVGElement.prototype.contains = HTMLDivElement.prototype.contains;
 }

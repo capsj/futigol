@@ -2,8 +2,9 @@
 
     <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
 
-    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex fxFill fxLayout="row-reverse" fxLayoutAlign="start center">
 
+        <!--
         <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
 
             <button mat-button class="toggle-button-navbar mat-icon-button"
@@ -24,6 +25,7 @@
             </div>
 
         </div>
+        -->
 
         <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
 
@@ -44,20 +46,11 @@
                 </button>
 
                 <button mat-menu-item class="">
-                    <mat-icon>mail</mat-icon>
-                    <span>Inbox</span>
-                </button>
-
-                <button mat-menu-item class="">
                     <mat-icon>exit_to_app</mat-icon>
                     <span>Logout</span>
                 </button>
 
             </mat-menu>
-
-            <div class="toolbar-separator"></div>
-
-            <fuse-search-bar (onInput)="search($event)"></fuse-search-bar>
 
             <div class="toolbar-separator"></div>
 
@@ -76,12 +69,6 @@
                     <div fxLayout="row" fxLayoutAlign="start center">
                         <img class="flag mr-16" [src]="'assets/images/flags/'+lang.flag+'.png'">
                         <span class="iso">{{lang.title}}</span>
-                    </div>
-                </button>
-
-                <button mat-menu-item [routerLink]="'/components/multi-language'">
-                    <div fxLayout="row" fxLayoutAlign="start center">
-                        <span>Learn more</span>
                     </div>
                 </button>
 

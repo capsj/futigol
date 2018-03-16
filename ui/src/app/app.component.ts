@@ -23,7 +23,7 @@ export class AppComponent
     )
     {
         // Add languages
-        this.translate.addLangs(['en', 'tr']);
+        this.translate.addLangs(['en', 'es']);
 
         // Set the default language
         this.translate.setDefaultLang('en');
