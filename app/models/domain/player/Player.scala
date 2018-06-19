@@ -6,12 +6,12 @@ import models.domain.team.Team
 import models.ebean.{Player => EPlayer}
 import play.api.libs.json.{Json, OFormat}
 
-case class Player(id: Option[Long], username: String, password: String, email: String, name: String, phone: String)
+case class Player(id: Option[Long], password: String, email: String, name: String, phone: String)
 
 object Player extends PlayerFormat {
 
   def apply(ePlayer: EPlayer): Player = {
-    Player(Some(ePlayer.getId), ePlayer.getUsername, ePlayer.getPassword, ePlayer.getEmail, ePlayer.getName, ePlayer.getPhone)
+    Player(Some(ePlayer.getId), ePlayer.getPassword, ePlayer.getEmail, ePlayer.getName, ePlayer.getPhone)
   }
 
   def saveOrUpdate(player: Player): Player = {
@@ -20,10 +20,6 @@ object Player extends PlayerFormat {
 
   def getById(id: Long): Option[Player] = {
     PlayerDAO.getById(id)
-  }
-
-  def getByUsername(username: String): Option[Player] = {
-    PlayerDAO.getByUsername(username)
   }
 
   def getByEmail(email: String): Option[Player] = {
@@ -39,7 +35,7 @@ object Player extends PlayerFormat {
   }
 
   def authenticate(userLogin: UserLogin): Option[Player] = {
-    PlayerDAO.authenticate(userLogin.username, userLogin.password)
+    PlayerDAO.authenticate(userLogin.email, userLogin.password)
   }
 
   def getPlayerTeams(playerId: Long): List[Team] = {

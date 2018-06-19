@@ -2,12 +2,11 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-#GET     /                                       controllers.HomeController.index()
+GET     /                                       controllers.HomeController.index()
 
 # Player
 POST    /api/player                             controllers.PlayerController.register
 GET     /api/player/id/:id                      controllers.PlayerController.getById(id: Long)
-GET     /api/player/username/:username          controllers.PlayerController.getByUsername(username)
 GET     /api/player/email/:email                controllers.PlayerController.getByEmail(email)
 GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: Long)
 GET     /api/player/all                         controllers.PlayerController.getAll
@@ -36,6 +35,8 @@ GET     /api/logout                             controllers.LoginController.logo
 GET     /api/data                               controllers.LoginController.loggedData
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file                           controllers.Assets.versioned(path="/public", file: Asset)
-
-GET     /*others                                controllers.HomeController.other(others)
+GET     /assets/fonts/*file                                     controllers.Assets.at(path="/public/ui/assets/fonts", file: String)
+GET     /assets/images/*file                                    controllers.Assets.at(path="/public/ui/assets/images", file: String)
+GET     /assets/icons/*file                                     controllers.Assets.at(path="/public/ui/assets/icons", file: String)
+GET     /assets/*file                                           controllers.Assets.versioned(path="/public", file: Asset)
+GET     /*others                                                controllers.HomeController.other(others)

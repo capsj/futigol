@@ -1,23 +1,13 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../core/modules/shared.module';
-import { RouterModule } from '@angular/router';
-
-import { FuseRegisterComponent } from './register.component';
-
-const routes = [
-    {
-        path     : 'register',
-        component: FuseRegisterComponent
-    }
-];
+import { RegisterComponent } from './register.component';
 
 @NgModule({
     declarations: [
-        FuseRegisterComponent
+        RegisterComponent
     ],
     imports     : [
         SharedModule,
-        RouterModule.forChild(routes)
     ]
 })
 

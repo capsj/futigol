@@ -11,34 +11,23 @@ class PlayerController extends Controller {
     request =>
       request.body.asJson.get.asOpt[Player] match {
         case Some(player) =>
-          Player.getByUsername(player.username) match {
+          Player.getByEmail(player.email) match {
             case Some(_) =>
               BadRequest(
                 Json.toJson(
                   ResponseGenerated(
-                    BAD_REQUEST, "Username already in use"
+                    BAD_REQUEST, "Email already in use"
                   )
                 )
               )
             case None =>
-              Player.getByEmail(player.email) match {
-                case Some(_) =>
-                  BadRequest(
-                    Json.toJson(
-                      ResponseGenerated(
-                        BAD_REQUEST, "Email already in use"
-                      )
-                    )
+              Ok(
+                Json.toJson(
+                  ResponseGenerated(
+                    OK, "Player saved", Json.toJson(Player.saveOrUpdate(player))
                   )
-                case None =>
-                  Ok(
-                    Json.toJson(
-                      ResponseGenerated(
-                        OK, "Player saved", Json.toJson(Player.saveOrUpdate(player))
-                      )
-                    )
-                  )
-              }
+                )
+              )
           }
         case None =>
           BadRequest(
@@ -98,27 +87,6 @@ class PlayerController extends Controller {
           Json.toJson(
             ResponseGenerated(
               BAD_REQUEST, "No player for that id"
-            )
-          )
-        )
-    }
-  }
-
-  def getByUsername(username: String) = Action {
-    Player.getByUsername(username) match {
-      case Some(player) =>
-        Ok(
-          Json.toJson(
-            ResponseGenerated(
-              OK, "Player found", Json.toJson(player)
-            )
-          )
-        )
-      case None =>
-        BadRequest(
-          Json.toJson(
-            ResponseGenerated(
-              BAD_REQUEST, "No player with that username"
             )
           )
         )

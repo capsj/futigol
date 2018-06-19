@@ -1,14 +1,14 @@
-import { UiPage } from './app.po';
+import { Fuse2Page } from './app.po';
 
-describe('ui App', function() {
-  let page: UiPage;
+describe('Fuse2 App', () => {
+    let page: Fuse2Page;
 
-  beforeEach(() => {
-    page = new UiPage();
-  });
+    beforeEach(() => {
+        page = new Fuse2Page();
+    });
 
-  it('should display message saying app works', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('IT WORKS! - SASS + TS = <3');
-  });
+    it('should display welcome message', () => {
+        page.navigateTo();
+        expect(page.getParagraphText()).toEqual('Welcome to app!');
+    });
 });

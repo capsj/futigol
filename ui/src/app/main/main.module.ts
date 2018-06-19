@@ -5,41 +5,52 @@ import { SharedModule } from '../core/modules/shared.module';
 
 import { FuseMainComponent } from './main.component';
 import { FuseContentComponent } from './content/content.component';
-import { FuseFooterComponent } from './footer/footer.component';
 import { FuseNavbarVerticalComponent } from './navbar/vertical/navbar-vertical.component';
 import { FuseToolbarComponent } from './toolbar/toolbar.component';
 import { FuseNavigationModule } from '../core/components/navigation/navigation.module';
 import { FuseNavbarVerticalToggleDirective } from './navbar/vertical/navbar-vertical-toggle.directive';
 import { FuseNavbarHorizontalComponent } from './navbar/horizontal/navbar-horizontal.component';
-import { FuseQuickPanelComponent } from './quick-panel/quick-panel.component';
-import { FuseThemeOptionsComponent } from '../core/components/theme-options/theme-options.component';
-import { FuseShortcutsModule } from '../core/components/shortcuts/shortcuts.module';
-import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.module';
-import {FuseSampleModule} from './content/sample/sample.module';
-import {FuseEcommerceModule} from './content/e-commerce/e-commerce.module';
+import {LoginModule} from "./content/login/login.module";
+import {LoginComponent} from "./content/login/login.component";
+import {RegisterComponent} from "./content/register/register.component";
+import {RegisterModule} from "./content/register/register.module";
+import {ReverseAuthGuard} from "../core/services/auth/reverse-auth-guard";
+
+const routes = [
+  {
+    path     : 'login',
+    canActivate: [ReverseAuthGuard],
+    component: LoginComponent
+  },
+  {
+    path     : 'register',
+    canActivate: [ReverseAuthGuard],
+    component: RegisterComponent
+  }
+];
 
 @NgModule({
     declarations: [
         FuseContentComponent,
-        FuseFooterComponent,
         FuseMainComponent,
         FuseNavbarVerticalComponent,
         FuseNavbarHorizontalComponent,
         FuseToolbarComponent,
         FuseNavbarVerticalToggleDirective,
-        FuseQuickPanelComponent
     ],
     imports     : [
         SharedModule,
         RouterModule,
         FuseNavigationModule,
-        FuseSampleModule,
-        FuseShortcutsModule,
-        FuseSearchBarModule,
-        FuseEcommerceModule
+        RouterModule.forChild(routes),
+        LoginModule,
+        RegisterModule
     ],
     exports     : [
         FuseMainComponent
+    ],
+    providers : [
+      ReverseAuthGuard,
     ]
 })
 

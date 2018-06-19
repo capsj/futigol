@@ -14,8 +14,6 @@ public class Player extends Model {
 
     @Id
     private Long id;
-    @Column(unique = true)
-    private String username;
     private String password;
     private String name;
     @Column(unique = true)
@@ -24,9 +22,8 @@ public class Player extends Model {
 
     private static Finder<Long, Player> finder = new Finder<>(Player.class);
 
-    public Player(Long id, String username, String password, String name, String email, String phone) {
+    public Player(Long id, String password, String name, String email, String phone) {
         this.id = id;
-        this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
@@ -48,15 +45,6 @@ public class Player extends Model {
         }
     }
 
-    public static Optional<Player> getByUsername(String username) {
-        Player player = finder.where().eq("username", username).findUnique();
-        if(player != null) {
-            return  Optional.of(player);
-        } else {
-            return Optional.empty();
-        }
-    }
-
     public static Optional<Player> getByEmail(String email) {
         Player player = finder.where().eq("email", email).findUnique();
         if(player != null) {
@@ -70,16 +58,12 @@ public class Player extends Model {
         return finder.all();
     }
 
-    public static Optional<Player> authenticatePlayer(String username, String clearPassword) {
-        return getByUsername(username).filter((user) -> Encrypter.checkEncrypted(clearPassword, user.password));
+    public static Optional<Player> authenticatePlayer(String email, String clearPassword) {
+        return getByEmail(email).filter((user) -> Encrypter.checkEncrypted(clearPassword, user.password));
     }
 
     public Long getId() {
         return id;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getPassword() {

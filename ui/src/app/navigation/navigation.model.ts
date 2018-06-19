@@ -7,62 +7,62 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
     constructor()
     {
         this.model = [
-            {
-                'id'      : 'applications',
-                'title'   : 'Applications',
-                'translate': 'NAV.APPLICATIONS',
-                'type'    : 'group',
-                'children': [
-                    {
-                        'id'   : 'home',
-                        'title': 'Home',
-                        'translate': 'NAV.HOME.TITLE',
-                        'type' : 'item',
-                        'icon' : 'email',
-                        'url'  : '/home',
-                        'badge': {
-                            'title': 25,
-                            'translate': 'NAV.HOME.BADGE',
-                            'bg'   : '#F44336',
-                            'fg'   : '#FFFFFF'
-                        }
-                    }
-                ]
-            },
-            {
-              'id'   : 'dashboard',
-              'title': 'Dashboard',
-              'type' : 'item',
-              'url'  : '/dashboard'
-            },
-            {
-              'id'        : 'products',
-              'title'     : 'Products',
-              'type'      : 'item',
-              'url'       : '/products',
-              'exactMatch': true
-            },
-            {
-              'id'        : 'productDetail',
-              'title'     : 'Product Detail',
-              'type'      : 'item',
-              'url'       : '/products/1/printed-dress',
-              'exactMatch': true
-            },
-            {
-              'id'        : 'orders',
-              'title'     : 'Orders',
-              'type'      : 'item',
-              'url'       : '/orders',
-              'exactMatch': true
-            },
-            {
-              'id'        : 'orderDetail',
-              'title'     : 'Order Detail',
-              'type'      : 'item',
-              'url'       : '/orders/1',
-              'exactMatch': true
-            }
+          {
+            'id'      : 'landing',
+            'title'   : 'Inicio',
+            'type'    : 'item',
+            'url'     : 'landing'
+          },
+          {
+            'id'      : 'players',
+            'title'   : 'Jugadores',
+            'type'    : 'item',
+            'url'     : 'players'
+          },
+          {
+            'id'      : 'teams',
+            'title'   : 'Equipos',
+            'type'    : 'collapse',
+            'children' : [
+              {
+                'id'       : 'create',
+                'title'    : 'Crear Equipo',
+                'type'     : 'item',
+                'url'      : 'team/create'
+              },
+              {
+                'id'       : 'my_teams',
+                'title'    : 'Mis Equipos',
+                'type'     : 'item',
+                'url'      : 'team/general'
+              }
+            ]
+          },
+          {
+            'id'      : 'matches',
+            'title'   : 'Partidos',
+            'type'    : 'collapse',
+            'children' : [
+              {
+                'id'       : 'challenge',
+                'title'    : 'Desafiar equipo',
+                'type'     : 'item',
+                'url'      : 'match/challenge'
+              },
+              {
+                'id'       : 'active_challenges',
+                'title'    : 'Partidos confirmados',
+                'type'     : 'item',
+                'url'      : 'match/active'
+              },
+              {
+                'id'       : 'history',
+                'title'    : 'Historial',
+                'type'     : 'item',
+                'url'      : 'match/history'
+              }
+            ]
+          },
         ];
     }
 }

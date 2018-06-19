@@ -12,7 +12,6 @@ object PlayerDAO {
   def toEbean(player: Player): EPlayer = {
     new EPlayer(
       if(player.id.isDefined) player.id.get else null,
-      player.username,
       player.password,
       player.name,
       player.email,
@@ -37,10 +36,6 @@ object PlayerDAO {
     toScalaOption[EPlayer](EPlayer.getById(id)).map(Player.apply)
   }
 
-  def getByUsername(username: String): Option[Player] = {
-    toScalaOption[EPlayer](EPlayer.getByUsername(username)).map(Player.apply)
-  }
-
   def getByEmail(email: String): Option[Player] = {
     toScalaOption[EPlayer](EPlayer.getByEmail(email)).map(Player.apply)
   }
@@ -59,8 +54,8 @@ object PlayerDAO {
     }
   }
 
-  def authenticate(username: String, password: String): Option[Player] = {
-    toScalaOption[EPlayer](EPlayer.authenticatePlayer(username, password)).map(Player.apply)
+  def authenticate(email: String, password: String): Option[Player] = {
+    toScalaOption[EPlayer](EPlayer.authenticatePlayer(email, password)).map(Player.apply)
   }
 
   def getPlayerTeams(playerId: Long): List[Team] = {

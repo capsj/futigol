@@ -2,13 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '../../../core/services/config.service';
 import { fuseAnimations } from '../../../core/animations';
-import {PlayerCreate} from "../../../shared/models/new-player-model";
+import {RegisterService} from "../../../core/services/register.service";
+import {PlayerCreate} from '../../../core/models/player/player-create.model';
 import {Router} from "@angular/router";
-import {PlayerService} from "../../../shared/services/player.service";
-import {AuthService} from "../../../auth/auth.service";
-import {Player} from "../../../shared/models/player-model";
-import {UserCredentials} from "../../../shared/models/user-credentials";
-import {ResponseData} from "../../../shared/response-data";
+import {MatSnackBar} from '@angular/material';
 
 @Component({
     selector   : 'fuse-register',
@@ -16,24 +13,17 @@ import {ResponseData} from "../../../shared/response-data";
     styleUrls  : ['./register.component.scss'],
     animations : fuseAnimations
 })
-export class FuseRegisterComponent implements OnInit
+export class RegisterComponent implements OnInit
 {
-  registerForm: FormGroup;
-  registerFormErrors: any;
+    registerForm: FormGroup;
+    registerFormErrors: any;
 
-  public newPlayer: PlayerCreate;
-  public savingError: boolean;
-  public savingLoading: boolean;
-  public duplicatedUsername: boolean;
-  public duplicatedEmail: boolean;
-  public badCredentialsError: boolean;
-
-  constructor(
+    constructor(
         private fuseConfig: FuseConfigService,
         private formBuilder: FormBuilder,
-        public router: Router,
-        public playerService: PlayerService,
-        public authService: AuthService
+        private registerService: RegisterService,
+        private router: Router,
+        public snackBar: MatSnackBar
     )
     {
         this.fuseConfig.setSettings({
@@ -46,20 +36,18 @@ export class FuseRegisterComponent implements OnInit
 
         this.registerFormErrors = {
             name           : {},
-            username       : {},
             email          : {},
-            phone          : {},
             password       : {},
             passwordConfirm: {}
         };
     }
 
-    ngOnInit() {
+    ngOnInit()
+    {
         this.registerForm = this.formBuilder.group({
             name           : ['', Validators.required],
-            username       : ['', Validators.required],
-            email          : ['', [Validators.required, Validators.email]],
-            phone          : ['', Validators.required],
+            phone           : ['', Validators.required],
+            email          : ['', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}')]],
             password       : ['', Validators.required],
             passwordConfirm: ['', [Validators.required, confirmPassword]]
         });
@@ -67,63 +55,7 @@ export class FuseRegisterComponent implements OnInit
         this.registerForm.valueChanges.subscribe(() => {
             this.onRegisterFormValuesChanged();
         });
-        this.newPlayer = PlayerCreate.empty();
-        this.savingError = false;
-        this.savingLoading = false;
-        this.duplicatedUsername = false;
-        this.duplicatedEmail = false;
-        this.badCredentialsError = false;
     }
-
-  save() {
-    this.savingLoading = true;
-    this.playerService.addPlayer(this.newPlayer).then( (player: Player) => {
-      this.login();
-      this.savingError = false;
-    }).catch(err => {
-      if (JSON.parse(err._body).msg === 'Username already in use') {
-        this.duplicatedUsername = true;
-      }
-      else if (JSON.parse(err._body).msg === 'Email already in use') {
-        this.duplicatedEmail = true;
-      } else {
-        this.savingError = true;
-      }
-      this.savingLoading = false;
-    });
-  }
-
-  login() {
-    this.authService.login(new UserCredentials(this.newPlayer.username, this.newPlayer.password))
-      .then((data: ResponseData) => {
-        this.savingLoading = false;
-        this.router.navigate(['home']);
-        this.badCredentialsError = false;
-      })
-      .catch(() => {
-        this.badCredentialsError = true;
-      });
-  }
-
-  checkUsername() {
-    this.playerService.requestPlayerByUsername(this.newPlayer.username)
-      .then( () => {
-        this.duplicatedUsername = true;
-      })
-      .catch( () => {
-        this.duplicatedUsername = false;
-      })
-  }
-
-  checkEmail() {
-    this.playerService.requestPlayerByEmail(this.newPlayer.email)
-      .then( () => {
-        this.duplicatedEmail = true;
-      })
-      .catch( () => {
-        this.duplicatedEmail = false;
-      })
-  }
 
     onRegisterFormValuesChanged() {
         for ( const field in this.registerFormErrors )
@@ -144,6 +76,20 @@ export class FuseRegisterComponent implements OnInit
                 this.registerFormErrors[field] = control.errors;
             }
         }
+    }
+
+    register() {
+      this.registerService.register(new PlayerCreate(this.registerForm.getRawValue()))
+        .then(res => {
+          console.log(res);
+          this.router.navigate(['login']);
+          this.snackBar.open('Registro exitoso, ahora inicia sesión!', '', {
+            duration: 5000,
+            verticalPosition: 'top'
+          });
+        }).catch(err => {
+          console.log(err);
+      })
     }
 }
 

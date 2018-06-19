@@ -1,61 +1,34 @@
-<div id="login" fxLayout="row" fxLayoutAlign="start">
+<div id="login" fxLayout="column" fusePerfectScrollbar>
 
-    <div id="login-intro" fxFlex fxHide fxShow.gt-xs>
-      <div class="large-logo" *fuseIfOnDom [@animate]="{value:'*',params:{scale:'0.2'}}">
-          <img src="assets/images/logos/giotrace_iso_large.png">
+  <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+
+    <div id="login-form" *fuseIfOnDom [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
+
+      <div class="title">Iniciar Sesión</div>
+
+      <form name="loginForm" [formGroup]="loginForm" novalidate>
+        <mat-form-field>
+          <input matInput placeholder="Mail" formControlName="email" [(ngModel)]="credentials.email">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="password" placeholder="Contraseña" formControlName="password" [(ngModel)]="credentials.password">
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" [disabled]="loginForm.invalid || loading" (click)="login()">
+          <span *ngIf="!loading">INICIAR SESIÓN</span>
+          <mat-spinner class="loader mx-auto" [diameter]="35" *ngIf="loading"></mat-spinner>
+        </button>
+      </form>
+
+      <div class="separator"></div>
+
+      <div class="register" fxLayout="column" fxLayoutAlign="center center">
+        <span class="text">No tenés una cuenta?</span>
+        <a class="link" (click)="registerRedirect()">Registrate</a>
       </div>
-      <div class="description" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',y:'25px'}}">
-        Build your team and challenge other teams to a thrilling football match
-      </div>
+
     </div>
 
-    <div id="login-form-wrapper" fusePerfectScrollbar *fuseIfOnDom
-         [@animate]="{value:'*',params:{delay:'300ms',x:'100%'}}">
+  </div>
 
-      <div id="login-form">
-
-        <div class="logo" fxHide.gt-xs>
-          <span>J</span>
-        </div>
-
-        <div class="title">LOGUEATE A TU CUENTA</div>
-          <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
-
-            <mat-form-field>
-              <input matInput placeholder="Usuario" formControlName="username" [(ngModel)]="credentials.username">
-              <mat-error *ngIf="loginFormErrors.username.required">
-                Usuario requerido
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field>
-              <input matInput type="password" placeholder="Contraseña" formControlName="password" [(ngModel)]="credentials.password">
-              <mat-error *ngIf="loginFormErrors.password.required">
-                Contraseña requerida
-              </mat-error>
-            </mat-form-field>
-
-            <mat-error *ngIf="badCredentialsError">
-              Combinación incorrecta de usuario y contraseña
-            </mat-error>
-
-            <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
-                 fxLayoutAlign="space-between center">
-
-              <a class="forgot-password" [routerLink]="'/pages/auth/forgot-password-2'">
-                Olvido su contraseña?
-              </a>
-            </div>
-
-            <button mat-raised-button color="accent" class="submit-button" aria-label="LOGIN" [disabled]="loginForm.invalid">
-              LOGIN
-            </button>
-          </form>
-        </div>
-
-        <div class="register" fxLayout="column" fxLayoutAlign="center center">
-            <span class="text">Don't have an account?</span>
-            <a class="link" [routerLink]="'/register'">Create an account</a>
-        </div>
-    </div>
 </div>

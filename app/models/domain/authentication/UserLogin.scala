@@ -2,7 +2,7 @@ package models.domain.authentication
 
 import play.api.libs.json.{Json, OFormat}
 
-case class UserLogin(username: String, password: String)
+case class UserLogin(email: String, password: String)
 
 object UserLogin extends UserLoginJsonFormat
 
