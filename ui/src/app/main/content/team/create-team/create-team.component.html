@@ -1,0 +1,68 @@
+<div class="page-layout carded fullwidth" fusePerfectScrollbar>
+
+  <div class="center">
+
+    <form class="mat-white-bg mat-elevation-z4 p-24 mr-24 mb-24" fxLayout="column" fxLayoutAlign="start"
+          fxFlex="1 0 auto" [formGroup]="createTeamForm">
+
+      <div class="h2 mb-24">Reactive Form Example</div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field fxFlex="100">
+          <input matInput placeholder="First name" formControlName="firstName" required>
+          <mat-error *ngIf="createTeamFormErrors.name">
+            Name is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field fxFlex="100">
+          <mat-select placeholder="Ubicación" formControlName="location" required>
+            <mat-option [value]="'United States of America'">
+              United States of America
+            </mat-option>
+            <mat-option [value]="'United Kingdom'">
+              United Kingdom
+            </mat-option>
+            <mat-option [value]="'Russia'">
+              Russia
+            </mat-option>
+            <mat-option [value]="'China'">
+              China
+            </mat-option>
+            <mat-option [value]="'Japan'">
+              Japan
+            </mat-option>
+            <mat-option [value]="'Turkey'">
+              Turkey
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createTeamFormErrors.location.required">
+            Location is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field fxFlex="100">
+          <mat-select placeholder="Ubicación" formControlName="size" required>
+            <mat-option [value]="'5'">
+              5
+            </mat-option>
+            <mat-option [value]="'7'">
+              7
+            </mat-option>
+            <mat-option [value]="'11'">
+              11
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="createTeamFormErrors.size.required">
+            Size is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -1,0 +1,16 @@
+
+<div class="fuse-search-bar md-raised expanded-search form-group" [ngClass]="{'expanded':!collapsed}" fxFlex="100">
+    <div [ngClass]="toolbarColor" fxLayout="row" fxLayoutAlign="start center" fxFlex="100">
+
+        <input [matAutocomplete]="auto" name="searchBar" id="fuse-search-bar-input" class="ml-24" type="text" (ngModelChange)="onInputChange($event)" placeholder={{placeholder}} [(ngModel)]="searchBar">
+        <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let suggestion of suggestions; let i = index" (onSelectionChange)="onSelectionChange($event, i)" >
+                <mat-panel-description>
+                    {{suggestion.name}}
+                </mat-panel-description>
+            </mat-option>
+        </mat-autocomplete>
+    </div>
+</div>
+
+<!---->

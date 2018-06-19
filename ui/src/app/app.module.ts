@@ -19,6 +19,7 @@ import {HttpService} from "./core/services/shared/http.service";
 import {CookieService} from "angular2-cookie/core";
 import {HttpModule} from '@angular/http';
 import {RegisterService} from './core/services/register.service';
+import {TeamModule} from "./main/content/team/team.module";
 
 const appRoutes: Routes = [
     {

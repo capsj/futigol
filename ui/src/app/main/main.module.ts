@@ -15,6 +15,7 @@ import {LoginComponent} from "./content/login/login.component";
 import {RegisterComponent} from "./content/register/register.component";
 import {RegisterModule} from "./content/register/register.module";
 import {ReverseAuthGuard} from "../core/services/auth/reverse-auth-guard";
+import {TeamModule} from "./content/team/team.module";
 
 const routes = [
   {
@@ -44,7 +45,8 @@ const routes = [
         FuseNavigationModule,
         RouterModule.forChild(routes),
         LoginModule,
-        RegisterModule
+        RegisterModule,
+        TeamModule
     ],
     exports     : [
         FuseMainComponent
