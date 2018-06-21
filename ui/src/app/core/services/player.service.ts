@@ -4,7 +4,7 @@ import {PlayerCreate} from "../models/player/player-create.model";
 import {Player} from "../models/player/player.model";
 
 @Injectable()
-export class RegisterService {
+export class PlayerService {
 
   constructor(private http: HttpService) {}
 

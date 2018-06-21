@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '../../../core/services/config.service';
 import { fuseAnimations } from '../../../core/animations';
-import {RegisterService} from "../../../core/services/register.service";
+import {PlayerService} from "../../../core/services/player.service";
 import {PlayerCreate} from '../../../core/models/player/player-create.model';
 import {Router} from "@angular/router";
 import {MatSnackBar} from '@angular/material';
@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit
     constructor(
         private fuseConfig: FuseConfigService,
         private formBuilder: FormBuilder,
-        private registerService: RegisterService,
+        private registerService: PlayerService,
         private router: Router,
         public snackBar: MatSnackBar
     )

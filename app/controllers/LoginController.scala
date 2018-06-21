@@ -60,15 +60,7 @@ class LoginController extends Controller{
               Ok(
                 Json.toJson(
                   ResponseGenerated(
-                    OK,
-                    "Logged",
-                    Json.toJson(
-                      UserLogged(
-                        Some(
-                          CaseUser.toCaseUser(userAux)
-                        ),
-                        isLogged = true
-                      )
+                    OK, "Logged", Json.toJson(UserLogged(Some(CaseUser.toCaseUser(userAux)), isLogged = true)
                     )
                   )
                 )

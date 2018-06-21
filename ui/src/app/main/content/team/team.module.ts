@@ -10,6 +10,7 @@ import {FusePipesModule} from "../../../core/pipes/pipes.module";
 import {AutocompleterModule} from "../../../core/components/autocompleter/autocompleter.module";
 import {TeamComponent} from "./team.component";
 import {CreateTeamComponent} from "./create-team/create-team.component";
+import {MyTeamsComponent} from "./my-teams/my-teams.component";
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
         // canActivate: [AuthGuard],
         component: CreateTeamComponent
       },
+      {
+        path: 'general',
+        // canActivate: [AuthGuard],
+        component: MyTeamsComponent
+      }
     ]
   }
 ];
@@ -28,7 +34,8 @@ const routes = [
 @NgModule({
   declarations: [
     TeamComponent,
-    CreateTeamComponent
+    CreateTeamComponent,
+    MyTeamsComponent
   ],
   imports     : [
     SharedModule,

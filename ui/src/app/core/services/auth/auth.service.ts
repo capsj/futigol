@@ -13,15 +13,13 @@ const HEADERS = {'Content-Type': 'application/json'};
 export class AuthService {
 
     private tokenCookieKey = 'fU7160l-70k3n';
-    private userTypeCookieKey = 'u53r-7Yp3';
     private _redirectUrl: string;
     private _token: string;
     private _loggedUser: any;
 
     get isLoggedIn(): boolean {
         const tokenAvailable = this.cookieService.get(this.tokenCookieKey) !== '';
-        const userTypeAvailable = this.cookieService.get(this.userTypeCookieKey) === 'ADMIN';
-        return tokenAvailable && userTypeAvailable;
+        return tokenAvailable;
     }
 
     get redirectUrl(): string { return this._redirectUrl; }
@@ -49,14 +47,13 @@ export class AuthService {
           this._token = res.headers.get('authorization') || '';
           this.http.authToken = this._token;
           this.cookieService.put(this.tokenCookieKey, this._token);
-          this.cookieService.put(this.userTypeCookieKey, data.data.userType);
           return data;
         })
         .catch(this.handleError);
     }
 
     public logout(): Promise<ResponseData> {
-        return this.http.get('/api/session/logout')
+        return this.http.get('/api/logout')
             .then(resData => {
                 this.clearSession();
                 return resData;
@@ -69,9 +66,9 @@ export class AuthService {
     }
 
     private requestLoggedUser(): Promise<any> {
-        return this.http.get('/api/session/data')
+        return this.http.get('/api/data')
             .then(resData => {
-                const user = resData.data;
+                const user = resData.data.caseUser;
                 this._loggedUser = user;
                 return user;
             })

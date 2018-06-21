@@ -22,11 +22,11 @@ public class MatchRequest extends Model {
     private DateTime date;
     @NotNull
     private DateTime time;
-    private Location location;
+    private String location;
 
     private static Finder<Long, MatchRequest> finder = new Finder<>(MatchRequest.class);
 
-    public MatchRequest(Long id, @NotNull Team sender, @NotNull Team receiver, @NotNull DateTime date, @NotNull DateTime time, Location location) {
+    public MatchRequest(Long id, @NotNull Team sender, @NotNull Team receiver, @NotNull DateTime date, @NotNull DateTime time, String location) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
@@ -76,7 +76,7 @@ public class MatchRequest extends Model {
         return time;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 

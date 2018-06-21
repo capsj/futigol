@@ -3,17 +3,11 @@
 
 # --- !Ups
 
-create table location (
-  id                            bigint auto_increment not null,
-  name                          varchar(255),
-  constraint uq_location_name unique (name),
-  constraint pk_location primary key (id)
-);
-
 create table match_request (
   id                            bigint auto_increment not null,
   date                          datetime(6),
   time                          datetime(6),
+  location                      varchar(255),
   constraint pk_match_request primary key (id)
 );
 
@@ -30,7 +24,7 @@ create table player (
 create table team (
   id                            bigint auto_increment not null,
   name                          varchar(255),
-  location_id                   bigint,
+  location                      varchar(255),
   size                          integer,
   captain_id                    bigint,
   constraint uq_team_name unique (name),
@@ -51,9 +45,6 @@ create table team_request (
   constraint pk_team_request primary key (id)
 );
 
-alter table team add constraint fk_team_location_id foreign key (location_id) references location (id) on delete restrict on update restrict;
-create index ix_team_location_id on team (location_id);
-
 alter table team add constraint fk_team_captain_id foreign key (captain_id) references player (id) on delete restrict on update restrict;
 create index ix_team_captain_id on team (captain_id);
 
@@ -66,9 +57,6 @@ create index ix_team_player_team_id on team_player (team_id);
 
 # --- !Downs
 
-alter table team drop foreign key fk_team_location_id;
-drop index ix_team_location_id on team;
-
 alter table team drop foreign key fk_team_captain_id;
 drop index ix_team_captain_id on team;
 
@@ -77,8 +65,6 @@ drop index ix_team_player_player_id on team_player;
 
 alter table team_player drop foreign key fk_team_player_team_id;
 drop index ix_team_player_team_id on team_player;
-
-drop table if exists location;
 
 drop table if exists match_request;
 

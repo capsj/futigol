@@ -1,12 +1,11 @@
 package models.domain.matchRequest
 
-import models.domain.Location
 import models.domain.team.Team
 import models.domain.util.{Date, Time}
-import play.api.libs.json.{Json, OFormat}
 import models.ebean.{MatchRequest => EMatchRequest}
+import play.api.libs.json.{Json, OFormat}
 
-case class MatchRequest(id: Option[Long], sender: Team, receiver: Team, date: Date, time: Time, location: Location)
+case class MatchRequest(id: Option[Long], sender: Team, receiver: Team, date: Date, time: Time, location: String)
 
 object MatchRequest extends MatchRequestFormat {
   def apply(eMatchRequest: EMatchRequest): MatchRequest = {
@@ -16,7 +15,7 @@ object MatchRequest extends MatchRequestFormat {
       Team(eMatchRequest.getReceiver),
       Date(eMatchRequest.getDate),
       Time(eMatchRequest.getTime),
-      Location(eMatchRequest.getLocation)
+      eMatchRequest.getLocation
     )
   }
 }

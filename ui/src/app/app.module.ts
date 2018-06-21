@@ -18,8 +18,9 @@ import {AuthService} from "./core/services/auth/auth.service";
 import {HttpService} from "./core/services/shared/http.service";
 import {CookieService} from "angular2-cookie/core";
 import {HttpModule} from '@angular/http';
-import {RegisterService} from './core/services/register.service';
+import {PlayerService} from './core/services/player.service';
 import {TeamModule} from "./main/content/team/team.module";
+import {TeamService} from "./core/services/team.service";
 
 const appRoutes: Routes = [
     {
@@ -46,7 +47,8 @@ const appRoutes: Routes = [
     providers   : [
         CookieService,
         HttpService,
-        RegisterService,
+        PlayerService,
+        TeamService,
         FuseSplashScreenService,
         FuseConfigService,
         AuthService,

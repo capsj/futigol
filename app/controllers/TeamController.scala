@@ -1,6 +1,5 @@
 package controllers
 
-import models.domain.Location
 import models.domain.authentication.CaseUser
 import models.domain.player.Player
 import models.domain.team.{Team, TeamCreate}
@@ -25,14 +24,14 @@ class TeamController extends Controller {
                 )
               )
             case None =>
-              Location.getById(teamCreate.locationId) match {
-                case Some(location) =>
-                  Player.getById(teamCreate.captainId) match {
+              request.jwtSession.getAs[CaseUser]("user") match {
+                case Some(user) =>
+                  Player.getById(user.id) match {
                     case Some(player) =>
                       Ok(
                         Json.toJson(
                           ResponseGenerated(
-                            OK, "Team saved", Json.toJson(Team.saveOrUpdate(teamCreate.toTeam(location, player)))
+                            OK, "Team saved", Json.toJson(Team.saveOrUpdate(teamCreate.toTeam(player)))
                           )
                         )
                       )
@@ -46,13 +45,7 @@ class TeamController extends Controller {
                       )
                   }
                 case None =>
-                  BadRequest(
-                    Json.toJson(
-                      ResponseGenerated(
-                        BAD_REQUEST, "No location found for that id"
-                      )
-                    )
-                  )
+                  BadRequest
               }
           }
         case None =>
@@ -140,8 +133,8 @@ class TeamController extends Controller {
     }
   }
 
-  def getByLocation(locationId: Long) = Action {
-    Team.getByLocation(locationId) match {
+  def getByLocation(location: String) = Action {
+    Team.getByLocation(location) match {
       case Some(team) =>
         Ok(
           Json.toJson(

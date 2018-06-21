@@ -2,11 +2,11 @@ package models.domain.team
 
 import models.dao.TeamDAO
 import models.domain.player.Player
-import models.domain.{Location, TeamPlayer}
+import models.domain.TeamPlayer
 import models.ebean.{Team => ETeam}
 import play.api.libs.json.{Json, OFormat}
 
-case class Team(id: Option[Long], name: String, location: Location, size: Int, captain: Player)
+case class Team(id: Option[Long], name: String, location: String, size: Int, captain: Player)
 
 object Team extends TeamFormat {
 
@@ -14,7 +14,7 @@ object Team extends TeamFormat {
     Team(
       Some(eTeam.getId),
       eTeam.getName,
-      Location(eTeam.getLocation),
+      eTeam.getLocation,
       eTeam.getSize,
       Player(eTeam.getCaptain)
     )
@@ -32,8 +32,8 @@ object Team extends TeamFormat {
     TeamDAO.getByName(name)
   }
 
-  def getByLocation(locationId: Long): Option[Team] = {
-    TeamDAO.getByLocation(locationId)
+  def getByLocation(location: String): Option[Team] = {
+    TeamDAO.getByLocation(location)
   }
 
   def getAll: List[Team] = {

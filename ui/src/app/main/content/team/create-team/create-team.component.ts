@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fuseAnimations } from '../../../../core/animations';
-import {RegisterService} from "../../../../core/services/register.service";
-import {PlayerCreate} from '../../../../core/models/player/player-create.model';
+import {TeamService} from "../../../../core/services/team.service";
 import {Router} from "@angular/router";
 import {MatSnackBar} from '@angular/material';
+import {TeamCreate} from "../../../../core/models/team/team-create.model";
 
 @Component({
   selector   : 'create-team',
@@ -19,7 +19,7 @@ export class CreateTeamComponent implements OnInit
 
   constructor(
     private formBuilder: FormBuilder,
-    private registerService: RegisterService,
+    private teamService: TeamService,
     private router: Router,
     public snackBar: MatSnackBar
   )
@@ -33,12 +33,10 @@ export class CreateTeamComponent implements OnInit
 
   ngOnInit()
   {
-
-    //name: String, locationId: Long, size: Int, captainId: Long
     this.createTeamForm = this.formBuilder.group({
       name           : ['', Validators.required],
       location       : ['', Validators.required],
-      size           : ['', Validators.required],
+      size           : ['', Validators.required]
     });
 
     this.createTeamForm.valueChanges.subscribe(() => {
@@ -68,16 +66,17 @@ export class CreateTeamComponent implements OnInit
   }
 
   register() {
-    this.registerService.register(new PlayerCreate(this.createTeamForm.getRawValue()))
+    this.teamService.register(new TeamCreate(this.createTeamForm.getRawValue()))
       .then(res => {
         console.log(res);
-        this.router.navigate(['login']);
         this.snackBar.open('Registro exitoso, ahora inicia sesión!', '', {
           duration: 5000,
           verticalPosition: 'top'
         });
+        this.router.navigate(['team', 'general']);
       }).catch(err => {
       console.log(err);
     })
   }
+
 }

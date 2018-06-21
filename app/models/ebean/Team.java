@@ -18,15 +18,14 @@ public class Team extends Model {
     @NotNull
     @Column(unique = true)
     private String name;
-    @ManyToOne
-    private Location location;
+    private String location;
     private int size;
     @ManyToOne
     private Player captain;
 
     private static Finder<Double, Team> finder = new Finder<>(Team.class);
 
-    public Team(Long id, @NotNull String name, Location location, int size, Player captain) {
+    public Team(Long id, @NotNull String name, String location, int size, Player captain) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -43,8 +42,8 @@ public class Team extends Model {
         }
     }
 
-    public static Optional<Team> getByLocation(Long id) {
-        Team team = finder.where().eq("location_id", id).findUnique();
+    public static Optional<Team> getByLocation(String location) {
+        Team team = finder.where().eq("location", location).findUnique();
         if(team != null) {
             return  Optional.of(team);
         } else {
@@ -75,7 +74,7 @@ public class Team extends Model {
         return name;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 

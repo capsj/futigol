@@ -14,7 +14,7 @@ object TeamDAO {
     new ETeam(
       if(team.id.isDefined) team.id.get else null,
       team.name,
-      LocationDAO.toEbean(team.location),
+      team.location,
       team.size,
       PlayerDAO.toEbean(team.captain)
     )
@@ -43,8 +43,8 @@ object TeamDAO {
     toScalaOption[ETeam](ETeam.getByName(name)).map(Team.apply)
   }
 
-  def getByLocation(locationId: Long): Option[Team] = {
-    toScalaOption[ETeam](ETeam.getByLocation(locationId)).map(Team.apply)
+  def getByLocation(location: String): Option[Team] = {
+    toScalaOption[ETeam](ETeam.getByLocation(location)).map(Team.apply)
   }
 
   def getAll: List[Team] = {
