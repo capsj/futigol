@@ -21,7 +21,7 @@
     }
   }
 
-  .products-table {
+  .teams-table {
     flex: 1 1 auto;
     border-bottom: 1px solid rgba(0, 0, 0, .12);
     overflow: auto;
@@ -78,4 +78,8 @@
       border-radius: 50%;
     }
   }
+}
+
+.fullheight {
+  height: 100%;
 }

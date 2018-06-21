@@ -7,6 +7,7 @@ import {Observable} from "rxjs/Observable";
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AuthService} from "./auth/auth.service";
+import {Player} from "../models/player/player.model";
 
 @Injectable()
 export class TeamService implements Resolve<any>{
@@ -49,6 +50,20 @@ export class TeamService implements Resolve<any>{
       .post('/api/team', teamCreate)
       .then(res => {
         return new Team(res.data);
+      });
+  }
+
+  public getById(id: number): Promise<Team> {
+    return this.http.get('/api/team/id/' + id)
+      .then(res => {
+        return new Team(res.data);
+      })
+  }
+
+  public getTeamPlayers(id: number): Promise<Player[]> {
+    return this.http.get('/api/team/players/' + id)
+      .then(res => {
+        return res.data;
       });
   }
 }

@@ -1,0 +1,159 @@
+<div id="team" class="page-layout carded fullwidth fullheight" fusePerfectScrollbar>
+
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg mat-accent-bg"></div>
+  <!-- / TOP BACKGROUND -->
+
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- HEADER -->
+    <div class="header white-fg" fxLayout="row" fxLayoutAlign="space-between center">
+
+      <!-- APP TITLE -->
+      <div fxLayout="row" fxLayoutAlign="start center">
+
+        <button class="mr-0 mr-sm-16" mat-icon-button [routerLink]="'/team/general'">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <div fxLayout="column" fxLayoutAlign="start start"
+             *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+            {{team.name}}
+          <div class="subtitle secondary-text">
+            <span>Información del equipo</span>
+          </div>
+        </div>
+      </div>
+      <!-- / APP TITLE -->
+
+      <button mat-raised-button
+              [disabled]="teamForm.invalid || teamForm.pristine || !isCaptainBool"
+              class="save-team-button mat-white-bg mt-16 mt-sm-0"
+              (click)="saveTeam()">
+        <span>Actualizar</span>
+      </button>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT CARD -->
+    <div class="content-card mat-white-bg">
+
+      <!-- CONTENT -->
+      <div class="content">
+
+        <form name="teamForm" [formGroup]="teamForm" class="team w-100-p" fxLayout="column" fxFlex>
+
+          <mat-tab-group>
+
+            <mat-tab label="General">
+              <div class="tab-content p-24" fusePerfectScrollbar>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput
+                         [disabled]="!isCaptainBool"
+                         name="name"
+                         formControlName="name"
+                         placeholder="Nombre"
+                         required>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput
+                         [disabled]="!isCaptainBool"
+                         name="location"
+                         formControlName="location"
+                         placeholder="Ubicación"
+                         required>
+                </mat-form-field>
+
+                <mat-form-field class="w-100-p">
+                  <input matInput
+                         [disabled]="!isCaptainBool"
+                         name="size"
+                         formControlName="size"
+                         placeholder="Fútbol"
+                         required>
+                </mat-form-field>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Jugadores">
+              <div class="tab-content p-24 no-padding-top" fusePerfectScrollbar>
+                <mat-table class="players-table"
+                           [dataSource]="playerDataSource"
+                           [@animateStagger]="{value:'50'}"
+                           fusePerfectScrollbar>
+
+                  <!-- Name Column -->
+                  <ng-container cdkColumnDef="name">
+                    <mat-header-cell *cdkHeaderCellDef>Nombre</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <p class="text-truncate">{{player.name}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- Category Column -->
+                  <ng-container cdkColumnDef="email">
+                    <mat-header-cell *cdkHeaderCellDef>Mail</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <p class="category text-truncate">
+                        {{player.email}}
+                      </p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="phone">
+                    <mat-header-cell *cdkHeaderCellDef>Teléfono</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <p class="text-truncate">{{player.phone}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="delete">
+                    <mat-header-cell *cdkHeaderCellDef>Eliminar del equipo</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <mat-icon *ngIf="player.id !== team.captain.id" (click)="test(player)">delete</mat-icon>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="captain">
+                    <mat-header-cell *cdkHeaderCellDef>Capitán</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <mat-icon *ngIf="player.id === team.captain.id">copyright</mat-icon>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *cdkHeaderRowDef="playerColumns"></mat-header-row>
+
+                  <mat-row *cdkRowDef="let player; columns: playerColumns; let i = index;"
+                           class="player"
+                  >
+                  </mat-row>
+
+                </mat-table>
+
+                <div class="file-uploader fab-button-container" fxLayout="row" fxLayoutAlign="end center">
+                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" pageSize="10"></mat-paginator>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Historial">
+              <div class="tab-content p-24" fusePerfectScrollbar>
+
+              </div>
+            </mat-tab>
+
+          </mat-tab-group>
+        </form>
+
+      </div>
+      <!-- / CONTENT -->
+
+    </div>
+    <!-- / CONTENT CARD -->
+
+  </div>
+  <!-- / CENTER -->
+</div>

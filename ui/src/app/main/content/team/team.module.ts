@@ -11,6 +11,7 @@ import {AutocompleterModule} from "../../../core/components/autocompleter/autoco
 import {TeamComponent} from "./team.component";
 import {CreateTeamComponent} from "./create-team/create-team.component";
 import {MyTeamsComponent} from "./my-teams/my-teams.component";
+import {TeamInfoComponent} from "./team-info/team-info.component";
 
 const routes = [
   {
@@ -26,6 +27,11 @@ const routes = [
         path: 'general',
         // canActivate: [AuthGuard],
         component: MyTeamsComponent
+      },
+      {
+        path: 'info/:id',
+        // canActivate: [AuthGuard],
+        component: TeamInfoComponent
       }
     ]
   }
@@ -35,7 +41,8 @@ const routes = [
   declarations: [
     TeamComponent,
     CreateTeamComponent,
-    MyTeamsComponent
+    MyTeamsComponent,
+    TeamInfoComponent
   ],
   imports     : [
     SharedModule,

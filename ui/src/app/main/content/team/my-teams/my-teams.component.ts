@@ -25,7 +25,7 @@ export class MyTeamsComponent implements OnInit
   dataSource: FilesDataSource | null;
   displayedColumns = ['name', 'size', 'location'];
 
-  // @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('filter') filter: ElementRef;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -40,9 +40,7 @@ export class MyTeamsComponent implements OnInit
   {
     this.authService.loggedUser.then(user => {
       this.teamService.getTeams(user.id).then(x => {
-          // this.paginator,
-        this.dataSource = new FilesDataSource(this.teamService,
-          this.sort);
+        this.dataSource = new FilesDataSource(this.teamService, this.paginator, this.sort);
         Observable.fromEvent(this.filter.nativeElement, 'keyup')
           .debounceTime(150)
           .distinctUntilChanged()
@@ -55,6 +53,10 @@ export class MyTeamsComponent implements OnInit
           });
       });
     });
+  }
+
+  test(event) {
+    console.log(event);
   }
 }
 
@@ -83,9 +85,9 @@ export class FilesDataSource extends DataSource<any>
     this._filterChange.next(filter);
   }
 
-    // private _paginator: MatPaginator,
   constructor(
     private teamService: TeamService,
+    private _paginator: MatPaginator,
     private _sort: MatSort
   )
   {
@@ -96,9 +98,9 @@ export class FilesDataSource extends DataSource<any>
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<any[]>
   {
-      // this._paginator.page,
     const displayDataChanges = [
       this.teamService.onTeamsChanged,
+      this._paginator.page,
       this._filterChange,
       this._sort.sortChange
     ];
@@ -113,9 +115,8 @@ export class FilesDataSource extends DataSource<any>
       data = this.sortData(data);
 
       // Grab the page's slice of data.
-      // const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-      // return data.splice(startIndex, this._paginator.pageSize);
-      return data
+      const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
+      return data.splice(startIndex, this._paginator.pageSize);
     });
   }
 
