@@ -5,6 +5,9 @@ import {TeamService} from "../../../../core/services/team.service";
 import {Router} from "@angular/router";
 import {MatSnackBar} from '@angular/material';
 import {TeamCreate} from "../../../../core/models/team/team-create.model";
+import {FuseConfigService} from '../../../../core/services/config.service';
+import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
+import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 
 @Component({
   selector   : 'create-team',
@@ -21,9 +24,20 @@ export class CreateTeamComponent implements OnInit
     private formBuilder: FormBuilder,
     private teamService: TeamService,
     private router: Router,
-    public snackBar: MatSnackBar
-  )
-  {
+    public snackBar: MatSnackBar,
+    private fuseConfig: FuseConfigService,
+    private fuseNavigationService: FuseNavigationService) {
+    this.fuseConfig.setSettings({
+      layout: {
+        navigation: 'top',
+        toolbar   : 'above',
+        footer    : 'none'
+      },
+      colorClasses    : {
+        navbar: 'mat-fuse-dark-50-bg'
+      }
+    });
+    this.fuseNavigationService.setNavigationModel(new FuseNavigationModel());
     this.createTeamFormErrors = {
       name           : {},
       location       : {},

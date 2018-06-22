@@ -13,6 +13,10 @@ import 'rxjs/add/observable/fromEvent';
 import { FuseUtils } from '../../../../core/fuseUtils';
 import {TeamService} from "../../../../core/services/team.service";
 import {AuthService} from "../../../../core/services/auth/auth.service";
+import {Router} from "@angular/router";
+import {FuseConfigService} from "../../../../core/services/config.service";
+import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
+import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 
 @Component({
   selector   : 'my-teams',
@@ -31,9 +35,21 @@ export class MyTeamsComponent implements OnInit
 
   constructor(
     private teamService: TeamService,
-    private authService: AuthService
-  )
-  {
+    private authService: AuthService,
+    private router: Router,
+    private fuseConfig: FuseConfigService,
+    private fuseNavigationService: FuseNavigationService) {
+    this.fuseConfig.setSettings({
+      layout: {
+        navigation: 'top',
+        toolbar   : 'above',
+        footer    : 'none'
+      },
+      colorClasses    : {
+        navbar: 'mat-fuse-dark-50-bg'
+      }
+    });
+    this.fuseNavigationService.setNavigationModel(new FuseNavigationModel());
   }
 
   ngOnInit()
@@ -55,7 +71,8 @@ export class MyTeamsComponent implements OnInit
     });
   }
 
-  test(event) {
+  teamInfo(event) {
+    this.router.navigate(['team', 'info', this.dataSource.filteredData[event].id]);
     console.log(event);
   }
 }

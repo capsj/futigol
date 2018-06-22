@@ -8,14 +8,10 @@
   <div class="center">
 
     <!-- HEADER -->
-    <div class="header white-fg"
-         fxLayout="column" fxLayoutAlign="center center"
-         fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+    <div class="header white-fg" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
 
       <!-- APP TITLE -->
-      <div class="logo my-12 m-sm-0"
-           fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon class="logo-icon mr-16" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">shopping_basket</mat-icon>
+      <div class="logo my-12 m-sm-0" fxLayout="row" fxLayoutAlign="start center">
         <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Mis equipos</span>
       </div>
       <!-- / APP TITLE -->
@@ -77,7 +73,7 @@
         <mat-row *cdkRowDef="let team; columns: displayedColumns; let i = index;"
                  class="team"
                  matRipple
-                 (click)="test(i)"
+                 (click)="teamInfo(i)"
         >
         </mat-row>
 

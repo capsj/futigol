@@ -6,10 +6,13 @@ import {TeamService} from "../../../../core/services/team.service";
 import {Subscription} from "rxjs/Subscription";
 import {MatPaginator, MatSnackBar, MatSort, MatTableDataSource} from "@angular/material";
 import {Team} from "../../../../core/models/team/team.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {FilesDataSource} from "../my-teams/my-teams.component";
 import {Player} from "../../../../core/models/player/player.model";
 import {AuthService} from "../../../../core/services/auth/auth.service";
+import {FuseConfigService} from "../../../../core/services/config.service";
+import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
+import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 
 @Component({
   selector   : 'team-info',
@@ -34,9 +37,21 @@ export class TeamInfoComponent implements OnInit
     private formBuilder: FormBuilder,
     public snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private authService: AuthService
-  )
-  {
+    private authService: AuthService,
+    private router: Router,
+    private fuseConfig: FuseConfigService,
+    private fuseNavigationService: FuseNavigationService) {
+    this.fuseConfig.setSettings({
+      layout: {
+        navigation: 'top',
+        toolbar   : 'above',
+        footer    : 'none'
+      },
+      colorClasses    : {
+        navbar: 'mat-fuse-dark-50-bg'
+      }
+    });
+    this.fuseNavigationService.setNavigationModel(new FuseNavigationModel());
 
   }
 
@@ -88,6 +103,10 @@ export class TeamInfoComponent implements OnInit
 
   test(event) {
     console.log(event);
+  }
+
+  back() {
+    this.router.navigate(['team', 'general']);
   }
 
 }

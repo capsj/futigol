@@ -35,6 +35,12 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
                 'title'    : 'Mis Equipos',
                 'type'     : 'item',
                 'url'      : 'team/general'
+              },
+              {
+                'id'       : 'search-team',
+                'title'    : 'Buscar equipo',
+                'type'     : 'item',
+                'url'      : 'team/search'
               }
             ]
           },

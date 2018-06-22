@@ -12,6 +12,7 @@ import {TeamComponent} from "./team.component";
 import {CreateTeamComponent} from "./create-team/create-team.component";
 import {MyTeamsComponent} from "./my-teams/my-teams.component";
 import {TeamInfoComponent} from "./team-info/team-info.component";
+import {SearchTeamComponent} from "./search-team/search-team.component";
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
         path: 'info/:id',
         // canActivate: [AuthGuard],
         component: TeamInfoComponent
+      },
+      {
+        path: 'search',
+        // canActivate: [AuthGuard],
+        component: SearchTeamComponent
       }
     ]
   }
@@ -42,7 +48,8 @@ const routes = [
     TeamComponent,
     CreateTeamComponent,
     MyTeamsComponent,
-    TeamInfoComponent
+    TeamInfoComponent,
+    SearchTeamComponent
   ],
   imports     : [
     SharedModule,

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { FuseConfigService } from '../../core/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
+import {AuthService} from "../../core/services/auth/auth.service";
 
 @Component({
     selector   : 'fuse-toolbar',
@@ -16,13 +17,18 @@ export class FuseToolbarComponent
     selectedLanguage: any;
     showLoadingBar: boolean;
     horizontalNav: boolean;
+    loggedUser: any;
 
     constructor(
         private router: Router,
         private fuseConfig: FuseConfigService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private authService: AuthService
     )
     {
+        this.authService.loggedUser.then(res => {
+          this.loggedUser = res;
+        });
         this.userStatusOptions = [
             {
                 'title': 'Online',
