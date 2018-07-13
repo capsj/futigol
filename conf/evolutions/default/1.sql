@@ -15,8 +15,11 @@ create table player (
   id                            bigint auto_increment not null,
   password                      varchar(255),
   name                          varchar(255),
+  last_name                     varchar(255),
+  location                      varchar(255),
   email                         varchar(255),
   phone                         varchar(255),
+  position                      varchar(255),
   constraint uq_player_email unique (email),
   constraint pk_player primary key (id)
 );

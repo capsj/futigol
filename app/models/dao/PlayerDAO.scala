@@ -14,8 +14,11 @@ object PlayerDAO {
       if(player.id.isDefined) player.id.get else null,
       player.password,
       player.name,
+      player.lastName,
+      player.location,
       player.email,
-      player.phone
+      player.phone,
+      player.position
     )
   }
 

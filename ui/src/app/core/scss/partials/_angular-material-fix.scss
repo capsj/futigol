@@ -1,3 +1,20 @@
+@font-face {
+    font-family: 'Raleway';
+    src: url('/assets/fonts/Raleway-Regular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/assets/fonts/OpenSans-Regular.ttf') format("truetype");
+}
+
+.mat-option {
+    font-family: 'Raleway', 'OpenSans', sans-serif!important;
+}
+.mat-select{
+    font-family: 'Raleway', 'OpenSans', sans-serif!important;
+}
+
 // Fix: "Icon button ripple radius is not correct on Edge & Safari"
 .mat-icon-button {
 
@@ -6,17 +23,24 @@
     }
 }
 
+.mat-tab-group .mat-tab-label{
+    font-family: 'Raleway', 'OpenSans', sans-serif!important;
+}
+
 // Fix: "Inconsistent font sizes across elements"
 .mat-input-wrapper {
     font-size: 16px;
+    font-family: 'Raleway', 'OpenSans', sans-serif; /* 1 */
 }
 
 .mat-checkbox {
     font-size: 16px;
+    font-family: 'Raleway', 'OpenSans', sans-serif; /* 1 */
 }
 
 .mat-radio-button {
     font-size: 16px;
+    font-family: 'Raleway', 'OpenSans', sans-serif; /* 1 */
 }
 
 .mat-pseudo-checkbox-checked:after {
@@ -31,6 +55,8 @@
 
 // Fix: "Some idiots using table-cell and inline-table in mat-select"
 .mat-form-field {
+
+    font-family: 'Raleway', 'OpenSans', sans-serif; /* 1 */
 
     &.mat-form-field-type-mat-select {
 
@@ -75,4 +101,8 @@ mat-vertical-stepper {
 
 mat-vertical-stepper {
     padding: 16px 0;
+}
+
+.mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #635c6f !important;
 }

@@ -4,10 +4,6 @@
 
         <div id="register-form" *fuseIfOnDom [@animate]="{value:'*',params:{duration:'300ms',y:'100px'}}">
 
-            <!--<div class="logo">-->
-                <!--<img src="assets/images/logos/fuse.svg">-->
-            <!--</div>-->
-
             <div class="title">Registrate</div>
 
             <form name="registerForm" [formGroup]="registerForm" novalidate>
@@ -17,7 +13,27 @@
                 </mat-form-field>
 
                 <mat-form-field>
+                  <input matInput placeholder="Apellido" formControlName="lastName">
+                </mat-form-field>
+
+                <mat-form-field>
                   <input matInput placeholder="Número de teléfono" formControlName="phone">
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-select matInput placeholder="Ubicación" formControlName="location" required>
+                    <mat-option *ngFor="let option of locations" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-select required placeholder="Posición" formControlName="position" required>
+                      <mat-option *ngFor="let option of positions" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
@@ -46,7 +62,7 @@
 
             <div class="register" fxLayout="column" fxLayoutAlign="center center">
                 <span class="text">Ya estas registrado?</span>
-                <a class="link">Inicia sesión</a>
+                <a class="link" (click)="toLogin()">Inicia sesión</a>
             </div>
 
         </div>

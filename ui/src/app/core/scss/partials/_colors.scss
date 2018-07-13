@@ -13,6 +13,15 @@
     color: rgba(0, 0, 0, 0.12);
 }
 
+.pilar-blue {
+    background-color: #0088cc!important;
+    color: white!important;
+}
+
+.pilar-gradient {
+    background: linear-gradient(to right, #00b3f0 0%,#0072bc 51%,#8dc63f 100%);
+}
+
 // Material colors map
 $matColorsMap: (
     primary: $primary,

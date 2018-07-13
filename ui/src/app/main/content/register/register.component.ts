@@ -6,6 +6,8 @@ import {PlayerService} from "../../../core/services/player.service";
 import {PlayerCreate} from '../../../core/models/player/player-create.model';
 import {Router} from "@angular/router";
 import {MatSnackBar} from '@angular/material';
+import {Position} from "../../../core/models/position";
+import {Location} from "../../../core/models/location";
 
 @Component({
     selector   : 'fuse-register',
@@ -17,6 +19,8 @@ export class RegisterComponent implements OnInit
 {
     registerForm: FormGroup;
     registerFormErrors: any;
+    positions: string[];
+    locations: string[];
 
     constructor(
         private fuseConfig: FuseConfigService,
@@ -36,7 +40,10 @@ export class RegisterComponent implements OnInit
 
         this.registerFormErrors = {
             name           : {},
+            lastName       : {},
             email          : {},
+            location       : {},
+            position       : {},
             password       : {},
             passwordConfirm: {}
         };
@@ -46,7 +53,10 @@ export class RegisterComponent implements OnInit
     {
         this.registerForm = this.formBuilder.group({
             name           : ['', Validators.required],
-            phone           : ['', Validators.required],
+            lastName       : ['', Validators.required],
+            phone          : ['', Validators.required],
+            location       : ['', Validators.required],
+            position       : ['', Validators.required],
             email          : ['', [Validators.required, Validators.pattern('[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}')]],
             password       : ['', Validators.required],
             passwordConfirm: ['', [Validators.required, confirmPassword]]
@@ -55,6 +65,13 @@ export class RegisterComponent implements OnInit
         this.registerForm.valueChanges.subscribe(() => {
             this.onRegisterFormValuesChanged();
         });
+
+        this.locations = new Location().options;
+
+        this.positions = [];
+        for(var p in Position) {
+          this.positions.push(p);
+        }
     }
 
     onRegisterFormValuesChanged() {
@@ -90,6 +107,10 @@ export class RegisterComponent implements OnInit
         }).catch(err => {
           console.log(err);
       })
+    }
+
+    toLogin() {
+      this.router.navigate(['login'])
     }
 }
 

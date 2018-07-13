@@ -68,6 +68,7 @@ main { /* 1 */
  */
 
 figure {
+    justify-content: left!important;
     margin: 1em 40px;
 }
 
@@ -236,18 +237,27 @@ svg:not(:root) {
  * 1. Change the font styles in all browsers (opinionated).
  * 2. Remove the margin in Firefox and Safari.
  */
+@font-face {
+    font-family: 'Raleway';
+    src: url('/assets/fonts/Raleway-Regular.ttf') format("truetype");
+}
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('/assets/fonts/OpenSans-Regular.ttf') format("truetype");
+}
 
 button,
 input,
 optgroup,
 select,
-textarea {
-    font-family: sans-serif; /* 1 */
+textarea,
+label {
+    font-family: 'Raleway', 'OpenSans', sans-serif; /* 1 */
     font-size: 100%; /* 1 */
     line-height: 1.15; /* 1 */
     margin: 0; /* 2 */
 }
-
 /**
  * Show the overflow in IE.
  * 1. Show the overflow in Edge.

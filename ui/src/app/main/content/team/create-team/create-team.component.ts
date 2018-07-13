@@ -8,6 +8,7 @@ import {TeamCreate} from "../../../../core/models/team/team-create.model";
 import {FuseConfigService} from '../../../../core/services/config.service';
 import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
 import {FuseNavigationModel} from "../../../../navigation/navigation.model";
+import {Location} from "../../../../core/models/location";
 
 @Component({
   selector   : 'create-team',
@@ -19,6 +20,7 @@ export class CreateTeamComponent implements OnInit
 {
   createTeamForm: FormGroup;
   createTeamFormErrors: any;
+  locations: string[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -56,6 +58,8 @@ export class CreateTeamComponent implements OnInit
     this.createTeamForm.valueChanges.subscribe(() => {
       this.onRegisterFormValuesChanged();
     });
+
+    this.locations = new Location().options;
   }
 
   onRegisterFormValuesChanged() {

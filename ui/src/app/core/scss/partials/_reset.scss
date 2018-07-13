@@ -27,6 +27,12 @@ html, body {
     overflow: hidden;
 }
 
+.login-snack-bar {
+    max-width: 60%!important;
+    margin-left: auto!important;
+    margin-right: auto!important;
+}
+
 // Reset non angular-material input's default browser/os styles
 *:not(mat-input-container) {
 

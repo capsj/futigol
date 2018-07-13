@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Montserrat-Medium';
+    src: url('/assets/fonts/Montserrat-Medium.ttf') format("truetype");
+}
+
 .nav {
 
     .nav-subheader {
@@ -28,6 +33,9 @@
     }
 
     .nav-item {
+        font-family: Montserrat-Medium, serif;
+        font-size: 14px;
+        font-weight: 100;
 
         .nav-link {
             text-decoration: none !important;
@@ -72,7 +80,7 @@
             }
 
             &.active {
-                background-color: mat-color($accent);
+                background-color: #0088cc;
 
                 .mat-ripple-element {
                     background-color: mat-color($accent, default-contrast, 0.1);

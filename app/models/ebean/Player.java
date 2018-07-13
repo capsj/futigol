@@ -16,18 +16,24 @@ public class Player extends Model {
     private Long id;
     private String password;
     private String name;
+    private String lastName;
+    private String location;
     @Column(unique = true)
     private String email;
     private String phone;
+    private String position;
 
     private static Finder<Long, Player> finder = new Finder<>(Player.class);
 
-    public Player(Long id, String password, String name, String email, String phone) {
+    public Player(Long id, String password, String name, String lastName, String location, String email, String phone, String position) {
         this.id = id;
         this.password = password;
         this.name = name;
+        this.lastName = lastName;
+        this.location = location;
         this.email = email;
         this.phone = phone;
+        this.position = position;
     }
 
     @Override
@@ -82,4 +88,15 @@ public class Player extends Model {
         return phone;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getPosition() {
+        return position;
+    }
 }
