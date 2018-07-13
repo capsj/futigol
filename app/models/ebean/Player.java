@@ -1,6 +1,8 @@
 package models.ebean;
 
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
+import play.api.Play;
 import utils.Encrypter;
 
 import javax.persistence.Column;
@@ -67,6 +69,15 @@ public class Player extends Model {
     public static Optional<Player> authenticatePlayer(String email, String clearPassword) {
         return getByEmail(email).filter((user) -> Encrypter.checkEncrypted(clearPassword, user.password));
     }
+
+    public static List<Player> search(String name, String lastName, String location, String position) {
+        ExpressionList<Player> query = finder.where().like("name", name + "%").like("last_name", lastName + "%");
+        if(!location.equals("")) query = query.eq("location", location);
+        if(!position.equals("")) query = query.eq("position", location);
+
+        return query.findList();
+    }
+
 
     public Long getId() {
         return id;

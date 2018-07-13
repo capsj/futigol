@@ -1,6 +1,6 @@
 package models.dao
 
-import models.domain.player.Player
+import models.domain.player.{Player, PlayerSearch}
 import models.domain.team.Team
 import models.ebean.{Player => EPlayer, TeamPlayer => ETeamPlayer}
 import utils.ScalaOptional.toScalaOption
@@ -63,6 +63,10 @@ object PlayerDAO {
 
   def getPlayerTeams(playerId: Long): List[Team] = {
     ETeamPlayer.getPlayerTeams(playerId).map(x => Team.apply(x.getTeam)).toList
+  }
+
+  def search(playerSearch: PlayerSearch): List[Player] = {
+    EPlayer.search(playerSearch.name.getOrElse(""), playerSearch.lastName.getOrElse(""), playerSearch.location.orNull, playerSearch.position.orNull).map(Player.apply).toList
   }
 
 }

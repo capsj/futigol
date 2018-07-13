@@ -1,1 +1,10 @@
+.nav.horizontal {
+  height: 100%!important;
+}
+.nav.horizontal > .nav-item.nav-collapse > .nav-link {
+  height: 100%!important;
+}
 
+.nav.horizontal > .nav-item > .nav-link {
+  height: 100%!important;
+}

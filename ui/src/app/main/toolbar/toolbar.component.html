@@ -1,10 +1,10 @@
 <mat-toolbar class="p-0 mat-elevation-z1">
 
-    <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
+  <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
 
-    <div fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
+    <div class="toolbar-container" fxFlex fxFill fxLayout="row" fxLayoutAlign="start center">
 
-        <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
+        <div style="height: 100%" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
 
             <button mat-button class="toggle-button-navbar mat-icon-button"
                     fuseNavbarVertical="toggleBar" fxHide.gt-md>
@@ -13,11 +13,18 @@
 
             <div class="toolbar-separator" fxHide.gt-md></div>
 
-            <div fxLayout="row" fxLayoutAlign="start center">
-              <div class="logo ml-0 ml-sm-16">
-                <img class="logo-icon" src="/assets/images/logo.png">
-              </div>
-            </div>
+            <!-- NAVBAR: Top -->
+            <fuse-navbar-horizontal class="top-navbar" fxHide fxShow.gt-md
+                                    [ngClass]="fuseSettings.colorClasses.navbar"
+                                    *ngIf="fuseSettings.layout.navigation === 'top'">
+            </fuse-navbar-horizontal>
+            <!-- / NAVBAR: Top -->
+
+          <!--<div fxLayout="row" fxLayoutAlign="start center">-->
+              <!--<div class="logo ml-0 ml-sm-16">-->
+                <!--<img class="logo-icon" src="/assets/images/logo.png">-->
+              <!--</div>-->
+            <!--</div>-->
         </div>
 
         <div class="button-container" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">

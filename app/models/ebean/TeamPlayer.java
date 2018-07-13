@@ -1,5 +1,7 @@
 package models.ebean;
 
+import com.avaje.ebean.Expr;
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
 
 import javax.persistence.Entity;

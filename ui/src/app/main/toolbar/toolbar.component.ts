@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { FuseConfigService } from '../../core/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import {AuthService} from "../../core/services/auth/auth.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector   : 'fuse-toolbar',
@@ -16,6 +17,9 @@ export class FuseToolbarComponent implements OnInit
     showLoadingBar: boolean;
     horizontalNav: boolean;
     loggedUser: any;
+    fuseSettings: any;
+    onSettingsChanged: Subscription;
+    @HostBinding('attr.fuse-layout-mode') layoutMode;
 
     constructor(
         private router: Router,
@@ -25,7 +29,16 @@ export class FuseToolbarComponent implements OnInit
     )
     {
 
-        router.events.subscribe(
+      this.onSettingsChanged =
+        this.fuseConfig.onSettingsChanged
+          .subscribe(
+            (newSettings) => {
+              this.fuseSettings = newSettings;
+              this.layoutMode = this.fuseSettings.layout.mode;
+            }
+          );
+
+      router.events.subscribe(
             (event) => {
                 if ( event instanceof NavigationStart )
                 {
@@ -51,6 +64,6 @@ export class FuseToolbarComponent implements OnInit
     logout() {
       this.authService.logout().then(() => {
         this.router.navigate(['login']);
-      });
+      }).catch(err => {});
     }
 }

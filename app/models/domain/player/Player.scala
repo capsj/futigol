@@ -43,6 +43,10 @@ object Player extends PlayerFormat {
   def getPlayerTeams(playerId: Long): List[Team] = {
     PlayerDAO.getPlayerTeams(playerId)
   }
+
+  def search(playerSearch: PlayerSearch): List[Player] = {
+    PlayerDAO.search(playerSearch)
+  }
 }
 
 trait PlayerFormat {

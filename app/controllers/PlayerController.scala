@@ -1,6 +1,6 @@
 package controllers
 
-import models.domain.player.{Player, PlayerUpdate}
+import models.domain.player.{Player, PlayerSearch, PlayerUpdate}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import utils.ResponseGenerated
@@ -143,6 +143,21 @@ class PlayerController extends Controller {
         )
       )
     )
+  }
+
+  def search = Action {
+    request =>
+      request.body.asJson.get.asOpt[PlayerSearch] match {
+        case Some(playerSearch) =>
+          Ok(
+            Json.toJson(
+              ResponseGenerated(
+                OK, "Results", Json.toJson(Player.search(playerSearch))
+              )
+            )
+          )
+        case None => BadRequest
+      }
   }
 
 //  def update = Action {

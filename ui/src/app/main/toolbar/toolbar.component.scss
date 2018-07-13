@@ -31,7 +31,7 @@
       }
     }
     .cart-div{
-      background-color: #039be5;
+      background-color: rgba(0, 0, 0, 0.69);
       height: 100%;
       width: 100px;
       @include media-breakpoint-down('xs') {
@@ -90,4 +90,27 @@
 
 .button-container {
   height: 100% !important;
+}
+
+.toolbar-container {
+  background-color: #ECECEE !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+  height: 100%;
+}
+
+.nav-item {
+  height: 100% !important;
+}
+
+fuse-navbar-horizontal {
+  height: 100% !important;
+}
+
+#main-navigation {
+  height: 100%!important;
+}
+
+fuse-nav-horizontal-item {
+  height: 100%!important;
+
 }

@@ -1,24 +1,24 @@
 <div class="page-layout carded fullwidth fullheight" fusePerfectScrollbar>
 
   <!-- TOP BACKGROUND -->
-  <div class="top-bg mat-accent-bg"></div>
+  <div class="top-bg futigol-green"></div>
   <!-- / TOP BACKGROUND -->
 
   <!-- CENTER -->
   <div class="center">
 
     <!-- HEADER -->
-    <div class="header white-fg" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+    <div fxLayout="row" class="mt-16 header" fxLayoutAlign="space-between center">
 
       <!-- APP TITLE -->
-      <div class="logo my-12 m-sm-0" fxLayout="row" fxLayoutAlign="start center">
+      <div class="logo my-12 m-sm-0 white-fg" fxLayout="row" fxLayoutAlign="start center">
         <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Buscá jugadores</span>
       </div>
       <!-- / APP TITLE -->
 
       <!-- SEARCH -->
-      <div class="search-input-wrapper mx-12 m-md-0" fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="end center">
-        <form>
+      <div class="mx-12 m-md-0"  fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="end center">
+        <form class="search-form search-resp" [formGroup]="searchForm">
           <mat-form-field>
             <input matInput placeholder="Nombre" formControlName="name">
           </mat-form-field>
@@ -34,13 +34,13 @@
           </mat-form-field>
 
           <mat-form-field>
-            <mat-select required placeholder="Posición" formControlName="position">
+            <mat-select placeholder="Posición" formControlName="position">
               <mat-option *ngFor="let option of positions" [value]="option">
                 {{option}}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-button color="accent">Buscar</button>
+          <button mat-button color="accent" (click)="search()">Buscar</button>
         </form>
       </div>
       <!-- / SEARCH -->
