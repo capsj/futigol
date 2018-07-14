@@ -19,7 +19,6 @@ export class TeamService implements Resolve<any>{
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any>
   {
-
     return new Promise((resolve, reject) => {
       this.authService.loggedUser.then(user => {
         this.getTeams(user.id)

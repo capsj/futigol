@@ -8,6 +8,7 @@ GET     /                                       controllers.HomeController.index
 POST    /api/player                             controllers.PlayerController.register
 POST    /api/player/search                      controllers.PlayerController.search
 GET     /api/player/id/:id                      controllers.PlayerController.getById(id: Long)
+GET     /api/player/info/:id                    controllers.PlayerController.playerInfo(id: Long)
 GET     /api/player/email/:email                controllers.PlayerController.getByEmail(email)
 GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: Long)
 GET     /api/player/all                         controllers.PlayerController.getAll

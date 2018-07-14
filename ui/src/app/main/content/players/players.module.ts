@@ -9,17 +9,24 @@ import {FuseDemoModule} from "../../../core/components/demo/demo.module";
 import {FusePipesModule} from "../../../core/pipes/pipes.module";
 import {AutocompleterModule} from "../../../core/components/autocompleter/autocompleter.module";
 import {PlayersComponent} from "./players.component";
+import {PlayerInfoComponent} from "./player-info/player-info.component";
 
 const routes = [
   {
     path: 'players',
     component: PlayersComponent,
+  },
+  {
+    path: 'players/info/:id',
+    // canActivate: [AuthGuard],
+    component: PlayerInfoComponent
   }
 ];
 
 @NgModule({
   declarations: [
-    PlayersComponent
+    PlayersComponent,
+    PlayerInfoComponent
   ],
   imports     : [
     SharedModule,

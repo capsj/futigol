@@ -19,7 +19,7 @@
 
         <div fxLayout="column" fxLayoutAlign="start start"
              *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-            {{team.name}}
+            <h2>{{team.name}}<h2>
           <div class="subtitle secondary-text">
             <span>Información del equipo</span>
           </div>
@@ -44,7 +44,7 @@
 
         <form name="teamForm" [formGroup]="teamForm" class="team w-100-p" fxLayout="column" fxFlex>
 
-          <mat-tab-group>
+          <mat-tab-group mat-stretch-tabs>
 
             <mat-tab label="General">
               <div class="tab-content p-24" fusePerfectScrollbar>

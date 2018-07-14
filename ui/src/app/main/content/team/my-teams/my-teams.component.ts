@@ -73,7 +73,6 @@ export class MyTeamsComponent implements OnInit
 
   teamInfo(event) {
     this.router.navigate(['team', 'info', this.dataSource.filteredData[event].id]);
-    console.log(event);
   }
 }
 

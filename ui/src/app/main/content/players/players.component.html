@@ -27,6 +27,7 @@
           </mat-form-field>
           <mat-form-field>
             <mat-select matInput placeholder="Ubicación" formControlName="location">
+              <mat-option>Ninguna</mat-option>
               <mat-option *ngFor="let option of locations" [value]="option">
                 {{option}}
               </mat-option>
@@ -35,7 +36,8 @@
 
           <mat-form-field>
             <mat-select placeholder="Posición" formControlName="position">
-              <mat-option *ngFor="let option of positions" [value]="option">
+              <mat-option>Ninguna</mat-option>
+              <mat-option *ngFor="let option of positions" [value]="option" >
                 {{option}}
               </mat-option>
             </mat-select>
@@ -51,56 +53,70 @@
     <!-- CONTENT CARD -->
     <div class="content-card mat-white-bg">
 
-      <!--<mat-table class="teams-table"-->
-                 <!--#table [dataSource]="dataSource"-->
-                 <!--matSort-->
-                 <!--[@animateStagger]="{value:'50'}"-->
-                 <!--fusePerfectScrollbar>-->
+      <mat-panel-description *ngIf="dataSource.filteredData.size === 0" class="empty-commerce-message">
+        No se encontró ningun jugador
+      </mat-panel-description>
 
-        <!--&lt;!&ndash; Name Column &ndash;&gt;-->
-        <!--<ng-container cdkColumnDef="name">-->
-          <!--<mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>-->
-          <!--<mat-cell *cdkCellDef="let team">-->
-            <!--<p class="text-truncate">{{team.name}}</p>-->
-          <!--</mat-cell>-->
-        <!--</ng-container>-->
+      <mat-table class="player-table"
+                 #table [dataSource]="dataSource"
+                 matSort
+                 [@animateStagger]="{value:'50'}"
+                 fusePerfectScrollbar>
 
-        <!--&lt;!&ndash; Category Column &ndash;&gt;-->
-        <!--<ng-container cdkColumnDef="size">-->
-          <!--<mat-header-cell *cdkHeaderCellDef mat-sort-header>Fútbol</mat-header-cell>-->
-          <!--<mat-cell *cdkCellDef="let team">-->
-            <!--<p class="category text-truncate">-->
-              <!--{{team.size}}-->
-            <!--</p>-->
-          <!--</mat-cell>-->
-        <!--</ng-container>-->
+        <!-- Name Column -->
+        <ng-container cdkColumnDef="name">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+          <mat-cell *cdkCellDef="let player">
+            <p class="text-truncate">{{player.name}}</p>
+          </mat-cell>
+        </ng-container>
 
-        <!--&lt;!&ndash; Ubicación Column &ndash;&gt;-->
-        <!--<ng-container cdkColumnDef="location">-->
-          <!--<mat-header-cell *cdkHeaderCellDef mat-sort-header>Ubicación</mat-header-cell>-->
-          <!--<mat-cell *cdkCellDef="let team">-->
-            <!--<p class="price text-truncate">-->
-              <!--{{team.location}}-->
-            <!--</p>-->
-          <!--</mat-cell>-->
-        <!--</ng-container>-->
+        <!-- Last name Column -->
+        <ng-container cdkColumnDef="lastName">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Apellido</mat-header-cell>
+          <mat-cell *cdkCellDef="let player">
+            <p class="category text-truncate">
+              {{player.lastName}}
+            </p>
+          </mat-cell>
+        </ng-container>
 
-        <!--<mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>-->
+        <!-- Ubicación Column -->
+        <ng-container cdkColumnDef="location">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Ubicación</mat-header-cell>
+          <mat-cell *cdkCellDef="let player">
+            <p class="price text-truncate">
+              {{player.location}}
+            </p>
+          </mat-cell>
+        </ng-container>
 
-        <!--<mat-row *cdkRowDef="let team; columns: displayedColumns; let i = index;"-->
-                 <!--class="team"-->
-                 <!--matRipple-->
-                 <!--(click)="teamInfo(i)"-->
-        <!--&gt;-->
-        <!--</mat-row>-->
+        <!-- Posicion Column -->
+        <ng-container cdkColumnDef="position">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Posición</mat-header-cell>
+          <mat-cell *cdkCellDef="let player">
+            <p class="price text-truncate">
+              {{player.position}}
+            </p>
+          </mat-cell>
+        </ng-container>
 
-      <!--</mat-table>-->
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
 
-      <!--<mat-paginator #paginator-->
-                     <!--[pageIndex]="0"-->
-                     <!--[pageSize]="10"-->
-                     <!--[pageSizeOptions]="[5, 10, 25, 100]">-->
-      <!--</mat-paginator>-->
+        <mat-row *cdkRowDef="let player; columns: displayedColumns; let i = index;"
+                 class="player"
+                 matRipple
+                 (click)="playerInfo(i)"
+        >
+        </mat-row>
+
+      </mat-table>
+
+      <mat-paginator #paginator
+                     [pageIndex]="0"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
 
     </div>
     <!-- / CONTENT CARD -->

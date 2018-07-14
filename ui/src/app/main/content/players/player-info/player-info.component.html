@@ -1,0 +1,110 @@
+<div id="team" class="page-layout carded fullwidth fullheight" fusePerfectScrollbar>
+
+  <!-- TOP BACKGROUND -->
+  <div class="top-bg mat-accent-bg futigol-green"></div>
+  <!-- / TOP BACKGROUND -->
+
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- HEADER -->
+    <div class="header white-fg" fxLayout="row" fxLayoutAlign="space-between center">
+
+      <!-- APP TITLE -->
+      <div fxLayout="row" fxLayoutAlign="start center">
+
+        <button class="mr-0 mr-sm-16" mat-icon-button (click)="back()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+
+        <div fxLayout="column" fxLayoutAlign="start start"
+             *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+          <h2>{{player.name}}</h2>
+          <div class="secondary-text">
+            <span>Información del jugador</span>
+          </div>
+        </div>
+      </div>
+      <!-- / APP TITLE -->
+
+      <button mat-raised-button
+              class="save-player-button mat-white-bg mt-16 mt-sm-0"
+              (click)="invitePlayer()">
+        <span>Invitar</span>
+      </button>
+    </div>
+    <!-- / HEADER -->
+
+    <!-- CONTENT CARD -->
+    <div class="content-card mat-white-bg">
+
+      <!-- CONTENT -->
+      <div class="content">
+
+        <div class="tab-content p-24" fusePerfectScrollbar>
+
+          <div class="profile-box info-box general left">
+
+            <header class="mat-accent-bg futigol-green">
+              <div class="title">General</div>
+            </header>
+
+            <div class="content">
+
+              <div class="info-label">
+                <div class="title">Nombre: </div>
+                <div class="info">{{player.name}}</div>
+              </div>
+
+              <div class="info-label">
+                <div class="title">Apellido: </div>
+                <div class="info">{{player.lastName}}</div>
+              </div>
+
+              <div class="info-label">
+                <div class="title">Posición: </div>
+                <div class="info">{{player.position}}</div>
+              </div>
+
+              <div class="info-label">
+                <div class="title">Ubicación: </div>
+                <div class="info">{{player.location}}</div>
+              </div>
+
+              <div class="info-label">
+                <div class="title">Teléfono: </div>
+                <div class="info">{{player.phone}}</div>
+              </div>
+
+              <div class="info-label">
+                <div class="title">Mail: </div>
+                <div class="info">{{player.email}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-box info-box general right">
+
+            <header class="mat-accent-bg futigol-green">
+              <div class="title">Equipos</div>
+            </header>
+
+            <div class="content">
+              <div *ngFor="let team of teams">
+                <div class="info-label">
+                  <div class="title clickable" (click)="teamRedirect(team.id)">{{team.name}}</div>
+                  <div class="info">Fútbol: {{ team.size}}</div>
+                  <div class="info">Ubicación: {{ team.location}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!-- / CONTENT -->
+
+    </div>
+    <!-- / CONTENT CARD -->
+
+  </div>
+  <!-- / CENTER -->
+</div>

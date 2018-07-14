@@ -72,8 +72,8 @@ public class Player extends Model {
 
     public static List<Player> search(String name, String lastName, String location, String position) {
         ExpressionList<Player> query = finder.where().like("name", name + "%").like("last_name", lastName + "%");
-        if(!location.equals("")) query = query.eq("location", location);
-        if(!position.equals("")) query = query.eq("position", location);
+        if(location != null && !location.equals("")) query = query.eq("location", location);
+        if(position != null && !position.equals("")) query = query.eq("position", location);
 
         return query.findList();
     }

@@ -1,6 +1,6 @@
 package controllers
 
-import models.domain.player.{Player, PlayerSearch, PlayerUpdate}
+import models.domain.player.{Player, PlayerInfo, PlayerSearch, PlayerUpdate}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import utils.ResponseGenerated
@@ -158,6 +158,20 @@ class PlayerController extends Controller {
           )
         case None => BadRequest
       }
+  }
+
+  def playerInfo(id: Long) = Action {
+    Player.getById(id) match {
+      case Some(player) =>
+        Ok(
+          Json.toJson(
+            ResponseGenerated(
+              OK, "Player info", Json.toJson(PlayerInfo(id, player, Player.getPlayerTeams(id)))
+            )
+          )
+        )
+      case None => BadRequest
+    }
   }
 
 //  def update = Action {
