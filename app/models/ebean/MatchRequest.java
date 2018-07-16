@@ -8,12 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 public class MatchRequest extends Model {
 
     @Id
-    private Long id;
+    private UUID id;
     @NotNull
     private Team sender;
     @NotNull
@@ -24,9 +25,9 @@ public class MatchRequest extends Model {
     private DateTime time;
     private String location;
 
-    private static Finder<Long, MatchRequest> finder = new Finder<>(MatchRequest.class);
+    private static Finder<UUID, MatchRequest> finder = new Finder<>(MatchRequest.class);
 
-    public MatchRequest(Long id, @NotNull Team sender, @NotNull Team receiver, @NotNull DateTime date, @NotNull DateTime time, String location) {
+    public MatchRequest(UUID id, @NotNull Team sender, @NotNull Team receiver, @NotNull DateTime date, @NotNull DateTime time, String location) {
         this.id = id;
         this.sender = sender;
         this.receiver = receiver;
@@ -35,7 +36,7 @@ public class MatchRequest extends Model {
         this.location = location;
     }
 
-    public static Optional<MatchRequest> getById(Long id) {
+    public static Optional<MatchRequest> getById(UUID id) {
         MatchRequest matchRequest = finder.where().eq("id", id).findUnique();
         if(matchRequest != null) {
             return  Optional.of(matchRequest);
@@ -44,15 +45,15 @@ public class MatchRequest extends Model {
         }
     }
 
-    public static List<MatchRequest> getSentRequests(Long teamId) {
+    public static List<MatchRequest> getSentRequests(UUID teamId) {
         return finder.where().eq("sender", teamId).findList();
     }
 
-    public static List<MatchRequest> getReceivedRequests(Long teamId) {
+    public static List<MatchRequest> getReceivedRequests(UUID teamId) {
         return finder.where().eq("receiver", teamId).findList();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

@@ -17,6 +17,7 @@ import {RegisterModule} from "./content/register/register.module";
 import {ReverseAuthGuard} from "../core/services/auth/reverse-auth-guard";
 import {TeamModule} from "./content/team/team.module";
 import {PlayersModule} from "./content/players/players.module";
+import {DialogContentComponent} from "../core/components/dialog/dialog-content.component";
 
 const routes = [
   {
@@ -39,6 +40,7 @@ const routes = [
         FuseNavbarHorizontalComponent,
         FuseToolbarComponent,
         FuseNavbarVerticalToggleDirective,
+        DialogContentComponent
     ],
     imports     : [
         SharedModule,
@@ -55,7 +57,8 @@ const routes = [
     ],
     providers : [
       ReverseAuthGuard,
-    ]
+    ],
+    entryComponents: [DialogContentComponent]
 })
 
 export class FuseMainModule

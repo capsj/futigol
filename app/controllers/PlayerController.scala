@@ -1,15 +1,21 @@
 package controllers
 
-import models.domain.player.{Player, PlayerInfo, PlayerSearch, PlayerUpdate}
+import java.util.UUID
+
+import models.domain.authentication.CaseUser
+import models.domain.invite.{Invite, RequestType}
+import models.domain.player._
+import models.domain.team.Team
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import utils.ResponseGenerated
+import pdi.jwt._
 
 class PlayerController extends Controller {
 
   def register = Action {
     request =>
-      request.body.asJson.get.asOpt[Player] match {
+      request.body.asJson.get.asOpt[PlayerCreate] match {
         case Some(player) =>
           Player.getByEmail(player.email) match {
             case Some(_) =>
@@ -24,7 +30,7 @@ class PlayerController extends Controller {
               Ok(
                 Json.toJson(
                   ResponseGenerated(
-                    OK, "Player saved", Json.toJson(Player.saveOrUpdate(player))
+                    OK, "Player saved", Json.toJson(Player.saveOrUpdate(player.toPlayer()))
                   )
                 )
               )
@@ -40,7 +46,7 @@ class PlayerController extends Controller {
       }
   }
 
-  def delete(id: Long) = Action {
+  def delete(id: UUID) = Action {
     Player.getById(id) match {
       case Some(player) =>
         Player.delete(player) match {
@@ -72,7 +78,7 @@ class PlayerController extends Controller {
     }
   }
 
-  def getById(id: Long) = Action {
+  def getById(id: UUID) = Action {
     Player.getById(id) match {
       case Some(player) =>
         Ok(
@@ -114,7 +120,7 @@ class PlayerController extends Controller {
     }
   }
 
-  def getPlayerTeams(playerId: Long) = Action {
+  def getPlayerTeams(playerId: UUID) = Action {
     Player.getById(playerId) match {
       case Some(_) =>
         Ok(
@@ -149,18 +155,28 @@ class PlayerController extends Controller {
     request =>
       request.body.asJson.get.asOpt[PlayerSearch] match {
         case Some(playerSearch) =>
-          Ok(
-            Json.toJson(
-              ResponseGenerated(
-                OK, "Results", Json.toJson(Player.search(playerSearch))
+          request.jwtSession.getAs[CaseUser]("user") match {
+            case Some(user) =>
+              Ok(
+                Json.toJson(
+                  ResponseGenerated(
+                    OK, "Results", Json.toJson(Player.search(playerSearch).filter(_.id != user.id))
+                  )
+                )
+              )
+            case None => BadRequest(
+              Json.toJson(
+                ResponseGenerated(
+                  BAD_REQUEST, "No session started"
+                )
               )
             )
-          )
+          }
         case None => BadRequest
       }
   }
 
-  def playerInfo(id: Long) = Action {
+  def playerInfo(id: UUID) = Action {
     Player.getById(id) match {
       case Some(player) =>
         Ok(
@@ -174,6 +190,53 @@ class PlayerController extends Controller {
     }
   }
 
+  def invitePlayer = Action {
+    request =>
+      request.body.asJson.get.asOpt[PlayerInvite] match {
+        case Some(playerInvite) =>
+          Team.getById(playerInvite.teamId) match {
+            case Some(team) =>
+              request.jwtSession.getAs[CaseUser]("user") match {
+                case Some(user) =>
+                  Player.getById(user.id) match {
+                    case Some(sender) =>
+                      Player.getById(playerInvite.playerId) match {
+                        case Some(receiver) =>
+                          Ok(
+                            Json.toJson(
+                              ResponseGenerated(
+                                OK, "Invite sent", Json.toJson(Invite.save(sender, receiver, team, RequestType.INVITE.value)))
+                              )
+                            )
+                        case None => BadRequest
+                      }
+                    case None =>
+                      BadRequest(
+                        Json.toJson(
+                          ResponseGenerated(
+                            BAD_REQUEST, "No player found for that id"
+                          )
+                        )
+                      )
+                  }
+                case None => BadRequest
+              }
+            case None => BadRequest
+          }
+        case None => BadRequest
+      }
+  }
+  
+  def getCaptainTeams(id: UUID) = Action {
+      Ok(
+        Json.toJson(
+          ResponseGenerated(
+            OK, "Captain teams", Json.toJson(Team.getByCaptain(id))
+          )
+        )
+      )
+  }
+  
 //  def update = Action {
 //    request =>
 //      request.body.asJson.get.asOpt[PlayerUpdate] match {

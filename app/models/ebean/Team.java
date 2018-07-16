@@ -1,5 +1,6 @@
 package models.ebean;
 
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,12 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 public class Team extends Model {
 
     @Id
-    private Long id;
+    private UUID id;
     @NotNull
     @Column(unique = true)
     private String name;
@@ -25,7 +27,7 @@ public class Team extends Model {
 
     private static Finder<Double, Team> finder = new Finder<>(Team.class);
 
-    public Team(Long id, @NotNull String name, String location, int size, Player captain) {
+    public Team(UUID id, @NotNull String name, String location, int size, Player captain) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -33,7 +35,7 @@ public class Team extends Model {
         this.captain = captain;
     }
 
-    public static Optional<Team> getById(Long id) {
+    public static Optional<Team> getById(UUID id) {
         Team team = finder.where().eq("id", id).findUnique();
         if(team != null) {
             return  Optional.of(team);
@@ -60,12 +62,23 @@ public class Team extends Model {
         }
     }
 
+    public static List<Team> getByCaptain(UUID id) {
+        return finder.where().eq("captain_id", id).findList();
+    }
+
     public static List<Team> getAll() {
         return finder.all();
     }
 
+    public static List<Team> search(String name, String location, String size) {
+        ExpressionList<Team> query = finder.where().like("name", name + "%");
+        if(location != null && !location.equals("")) query = query.eq("location", location);
+        if(size != null && !size.equals("")) query = query.eq("size", size);
 
-    public Long getId() {
+        return query.findList();
+    }
+
+    public UUID getId() {
         return id;
     }
 

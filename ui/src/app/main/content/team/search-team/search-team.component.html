@@ -1,7 +1,7 @@
 <div class="page-layout carded fullwidth fullheight" fusePerfectScrollbar>
 
   <!-- TOP BACKGROUND -->
-  <div class="top-bg mat-accent-bg"></div>
+  <div class="top-bg mat-accent-bg futigol-green"></div>
   <!-- / TOP BACKGROUND -->
 
   <!-- CENTER -->
@@ -15,96 +15,93 @@
       <!-- APP TITLE -->
       <div class="logo my-12 m-sm-0"
            fxLayout="row" fxLayoutAlign="start center">
-        <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Buscar equipo</span>
+        <span class="logo-text h1" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Buscá equipos</span>
       </div>
       <!-- / APP TITLE -->
+
+      <!-- SEARCH -->
+      <div class="mx-12 m-md-0"  fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="end center">
+        <form class="search-form search-resp" [formGroup]="searchForm">
+          <mat-form-field>
+            <input matInput placeholder="Nombre" formControlName="name">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select matInput placeholder="Ubicación" formControlName="location">
+              <mat-option>Ninguna</mat-option>
+              <mat-option *ngFor="let option of locations" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select placeholder="Fútbol" formControlName="size">
+              <mat-option>Ninguno</mat-option>
+              <mat-option *ngFor="let option of sizes" [value]="option" >
+                {{option}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-button color="accent" (click)="search()">Buscar</button>
+        </form>
+      </div>
+      <!-- / SEARCH -->
     </div>
     <!-- / HEADER -->
 
     <!-- CONTENT CARD -->
     <div class="content-card mat-white-bg">
 
-      <div id="search">
-        <mat-horizontal-stepper class="mat-elevation-z4" [linear]="true">
+      <mat-table class="team-table"
+                 #table [dataSource]="dataSource"
+                 matSort
+                 [@animateStagger]="{value:'50'}"
+                 fusePerfectScrollbar>
 
-          <mat-step [stepControl]="horizontalStepperStep1">
+        <!-- Name Column -->
+        <ng-container cdkColumnDef="name">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+          <mat-cell *cdkCellDef="let team">
+            <p class="text-truncate">{{team.name}}</p>
+          </mat-cell>
+        </ng-container>
 
-            <form [formGroup]="horizontalStepperStep1">
+        <!-- Ubicación Column -->
+        <ng-container cdkColumnDef="location">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Ubicación</mat-header-cell>
+          <mat-cell *cdkCellDef="let team">
+            <p class="price text-truncate">
+              {{team.location}}
+            </p>
+          </mat-cell>
+        </ng-container>
 
-              <ng-template matStepLabel>Nombre</ng-template>
+        <!-- Futbol Column -->
+        <ng-container cdkColumnDef="size">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Fútbol</mat-header-cell>
+          <mat-cell *cdkCellDef="let team">
+            <p class="price text-truncate">
+              {{team.size}}
+            </p>
+          </mat-cell>
+        </ng-container>
 
-              <div>
+        <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
 
-                <mat-form-field fxFlex="50">
-                  <input matInput placeholder="Nombre" formControlName="name" required>
-                </mat-form-field>
-              </div>
+        <mat-row *cdkRowDef="let team; columns: displayedColumns; let i = index;"
+                 class="team"
+                 matRipple
+                 (click)="teamInfo(i)"
+        >
+        </mat-row>
 
-              <div class="pt-24" fxLayout="row" fxLayoutAlign="center center">
-                <button mat-raised-button matStepperNext type="button" color="accent">
-                  Next
-                </button>
-              </div>
+      </mat-table>
 
-            </form>
-
-          </mat-step>
-
-          <mat-step [stepControl]="horizontalStepperStep2">
-
-            <form [formGroup]="horizontalStepperStep2">
-
-              <ng-template matStepLabel>Ubicación</ng-template>
-
-              <div>
-
-                <mat-form-field fxFlex="33">
-                  <input matInput placeholder="City" formControlName="location" required>
-                </mat-form-field>
-
-              </div>
-
-              <div class="pt-24" fxLayout="row" fxLayoutAlign="center center">
-                <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
-                  Previous
-                </button>
-                <button mat-raised-button matStepperNext type="button" color="accent">
-                  Next
-                </button>
-              </div>
-
-            </form>
-
-          </mat-step>
-
-          <mat-step [stepControl]="horizontalStepperStep3">
-
-            <form [formGroup]="horizontalStepperStep3">
-
-              <ng-template matStepLabel>Tamaño</ng-template>
-
-              <div>
-
-                <mat-form-field fxFlex="33">
-                  <input matInput placeholder="Tamaño" formControlName="size" required>
-                </mat-form-field>
-
-              </div>
-
-              <div class="pt-24" fxLayout="row" fxLayoutAlign="center center">
-                <button class="mr-8" mat-raised-button matStepperPrevious type="button" color="accent">
-                  Previous
-                </button>
-                <button mat-raised-button matStepperNext type="button" color="accent">
-                  Next
-                </button>
-              </div>
-
-            </form>
-
-          </mat-step>
-        </mat-horizontal-stepper>
-      </div>
+      <mat-paginator #paginator
+                     [pageIndex]="0"
+                     [pageSize]="10"
+                     [pageSizeOptions]="[5, 10, 25, 100]">
+      </mat-paginator>
 
     </div>
     <!-- / CONTENT CARD -->

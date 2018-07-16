@@ -1,11 +1,13 @@
 package models.domain.team
 
+import java.util.UUID
+
 import models.domain.player.Player
 import play.api.libs.json.{Json, OFormat}
 
 case class TeamCreate(name: String, location: String, size: Int) {
   def toTeam(player: Player): Team = {
-    Team(None, name, location, size, player)
+    Team(UUID.randomUUID(), name, location, size, player)
   }
 }
 

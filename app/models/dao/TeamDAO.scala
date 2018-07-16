@@ -1,8 +1,10 @@
 package models.dao
 
+import java.util.UUID
+
 import models.domain.TeamPlayer
 import models.domain.player.Player
-import models.domain.team.Team
+import models.domain.team.{Team, TeamSearch}
 import models.ebean.{Team => ETeam, TeamPlayer => ETeamPlayer}
 import utils.ScalaOptional.toScalaOption
 
@@ -12,7 +14,7 @@ object TeamDAO {
 
   def toEbean(team: Team): ETeam = {
     new ETeam(
-      if(team.id.isDefined) team.id.get else null,
+      team.id,
       team.name,
       team.location,
       team.size,
@@ -21,21 +23,14 @@ object TeamDAO {
   }
 
   def saveOrUpdate(team: Team): Team = {
-    team.id match {
-      case Some(_) =>
-        val eTeam: ETeam = toEbean(team)
-        eTeam.update()
-        Team(eTeam)
-      case None =>
-        val eTeam: ETeam = toEbean(team)
-        eTeam.save()
-        val savedTeam = Team(eTeam)
-        addCaptain(savedTeam, team.captain)
-        savedTeam
-    }
+    val eTeam: ETeam = toEbean(team)
+    eTeam.save()
+    val savedTeam = Team(eTeam)
+    addCaptain(savedTeam, team.captain)
+    savedTeam
   }
 
-  def getById(id: Long): Option[Team] = {
+  def getById(id: UUID): Option[Team] = {
     toScalaOption[ETeam](ETeam.getById(id)).map(Team.apply)
   }
 
@@ -51,14 +46,14 @@ object TeamDAO {
     ETeam.getAll.map(Team.apply).toList
   }
 
+  def getByCaptain(captainId: UUID): List[Team] = {
+    ETeam.getByCaptain(captainId).map(Team.apply).toList
+  }
+
   def delete(team: Team): Option[Boolean] = {
-    team.id match {
-      case Some(_) =>
-        val eTeam: ETeam = toEbean(team)
-        eTeam.delete()
-        Some(true)
-      case None => None
-    }
+    val eTeam: ETeam = toEbean(team)
+    eTeam.delete()
+    Some(true)
   }
 
   def addPlayer(team: Team, player: Player): TeamPlayer = {
@@ -73,7 +68,11 @@ object TeamDAO {
     TeamPlayer(eTeamPlayer)
   }
 
-  def getTeamPlayers(teamId: Long): List[Player] = {
+  def getTeamPlayers(teamId: UUID): List[Player] = {
     ETeamPlayer.getTeamPlayers(teamId).map(x => Player(x.getPlayer)).toList
+  }
+
+  def search(teamSearch: TeamSearch): List[Team] = {
+    ETeam.search(teamSearch.name.getOrElse(""), teamSearch.location.orNull, teamSearch.size.orNull).map(Team.apply).toList
   }
 }

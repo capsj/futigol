@@ -10,12 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 public class Player extends Model {
 
     @Id
-    private Long id;
+    private UUID id;
     private String password;
     private String name;
     private String lastName;
@@ -25,9 +26,9 @@ public class Player extends Model {
     private String phone;
     private String position;
 
-    private static Finder<Long, Player> finder = new Finder<>(Player.class);
+    private static Finder<UUID, Player> finder = new Finder<>(Player.class);
 
-    public Player(Long id, String password, String name, String lastName, String location, String email, String phone, String position) {
+    public Player(UUID id, String password, String name, String lastName, String location, String email, String phone, String position) {
         this.id = id;
         this.password = password;
         this.name = name;
@@ -44,7 +45,7 @@ public class Player extends Model {
         super.save();
     }
 
-    public static Optional<Player> getById(Long id) {
+    public static Optional<Player> getById(UUID id) {
         Player player = finder.where().eq("id", id).findUnique();
         if(player != null) {
             return  Optional.of(player);
@@ -73,13 +74,12 @@ public class Player extends Model {
     public static List<Player> search(String name, String lastName, String location, String position) {
         ExpressionList<Player> query = finder.where().like("name", name + "%").like("last_name", lastName + "%");
         if(location != null && !location.equals("")) query = query.eq("location", location);
-        if(position != null && !position.equals("")) query = query.eq("position", location);
+        if(position != null && !position.equals("")) query = query.eq("position", position);
 
         return query.findList();
     }
 
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

@@ -1,4 +1,7 @@
 import com.google.inject.AbstractModule
+import play.api.libs.concurrent.AkkaGuiceSupport
+import services.{OnStart, OnStartImpl}
+import utils.EmailActor
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -10,10 +13,11 @@ import com.google.inject.AbstractModule
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.
  */
-class Module extends AbstractModule {
+class Module extends AbstractModule with AkkaGuiceSupport {
 
-  override def configure() = {
-    print("capo")
+  override def configure(): Unit = {
+    bind(classOf[OnStart]).to(classOf[OnStartImpl]).asEagerSingleton()
+    bindActor[EmailActor]("futigol-email")
   }
 
 }

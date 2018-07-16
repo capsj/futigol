@@ -1,14 +1,16 @@
 package models.domain.authentication
 
+import java.util.UUID
+
 import models.domain.player.Player
 import play.api.libs.json.{Json, OFormat}
 
-case class CaseUser(id: Long, name: String, email: String)
+case class CaseUser(id: UUID, name: String, email: String)
 
 object CaseUser extends CaseUserJsonFormat {
   def toCaseUser(player: Player): CaseUser = {
     CaseUser(
-      player.id.get,
+      player.id,
       player.name,
       player.email
     )

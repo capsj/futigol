@@ -25,7 +25,8 @@ export class TeamInfoComponent implements OnInit
   team: Team;
   teamForm: FormGroup;
   teamPlayers: Player[];
-  playerColumns = ['name', 'email', 'phone', 'delete', 'captain'];
+  playerColumns = ['name', 'email', 'phone', 'captain'];
+  captainColumns = ['name', 'email', 'phone', 'delete', 'captain'];
   playerDataSource: MatTableDataSource<Player>;
   loggedPlayer: any;
   isCaptainBool: boolean;
@@ -99,6 +100,14 @@ export class TeamInfoComponent implements OnInit
 
   saveTeam() {
     console.log('updateado');
+  }
+
+  challengeTeam() {
+    console.log('desafiando');
+  }
+
+  joinRequest() {
+    console.log('desafiando');
   }
 
   test(event) {

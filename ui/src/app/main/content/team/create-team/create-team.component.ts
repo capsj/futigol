@@ -86,8 +86,7 @@ export class CreateTeamComponent implements OnInit
   register() {
     this.teamService.register(new TeamCreate(this.createTeamForm.getRawValue()))
       .then(res => {
-        console.log(res);
-        this.snackBar.open('Registro exitoso, ahora inicia sesión!', '', {
+        this.snackBar.open('Equipo creado exitosamente!', '', {
           duration: 5000,
           verticalPosition: 'top'
         });
@@ -95,6 +94,10 @@ export class CreateTeamComponent implements OnInit
       }).catch(err => {
       console.log(err);
     })
+  }
+
+  reset() {
+    this.createTeamForm.reset();
   }
 
 }

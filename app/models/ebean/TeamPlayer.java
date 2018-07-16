@@ -9,43 +9,44 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 public class TeamPlayer extends Model {
 
     @Id
-    private Long id;
+    private UUID id;
     @ManyToOne
     private Player player;
     @ManyToOne
     private Team team;
     private boolean isCaptain;
 
-    private static Finder<Long, TeamPlayer> finder = new Finder<>(TeamPlayer.class);
+    private static Finder<UUID, TeamPlayer> finder = new Finder<>(TeamPlayer.class);
 
-    public TeamPlayer(Long id, Player player, Team team, boolean isCaptain) {
+    public TeamPlayer(UUID id, Player player, Team team, boolean isCaptain) {
         this.id = id;
         this.player = player;
         this.team = team;
         this.isCaptain = isCaptain;
     }
 
-    public static List<TeamPlayer> getTeamPlayers(Long teamId) {
+    public static List<TeamPlayer> getTeamPlayers(UUID teamId) {
         return finder.where().eq("team_id", teamId).findList();
     }
 
-    public static List<TeamPlayer> getPlayerTeams(Long playerId) {
+    public static List<TeamPlayer> getPlayerTeams(UUID playerId) {
         return finder.where().eq("player_id", playerId).findList();
     }
 
-    public static Optional<TeamPlayer> getTeamCaptain(Long teamId) {
+    public static Optional<TeamPlayer> getTeamCaptain(UUID teamId) {
         TeamPlayer teamPlayer = finder.where().eq("team_id", teamId).eq("team_captain", true).findUnique();
         if(teamPlayer != null) {
             return Optional.of(teamPlayer);
         } else return Optional.empty();
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 

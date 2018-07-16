@@ -46,29 +46,10 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
           },
           {
             'id'      : 'matches',
-            'title'   : 'Partidos',
-            'type'    : 'collapse',
-            'children' : [
-              {
-                'id'       : 'challenge',
-                'title'    : 'Desafiar equipo',
-                'type'     : 'item',
-                'url'      : 'match/challenge'
-              },
-              {
-                'id'       : 'active_challenges',
-                'title'    : 'Partidos confirmados',
-                'type'     : 'item',
-                'url'      : 'match/active'
-              },
-              {
-                'id'       : 'history',
-                'title'    : 'Historial',
-                'type'     : 'item',
-                'url'      : 'match/history'
-              }
-            ]
-          },
+            'title'   : 'Partidos confirmados',
+            'type'    : 'item',
+            'url'     : 'matches'
+          }
         ];
     }
 }

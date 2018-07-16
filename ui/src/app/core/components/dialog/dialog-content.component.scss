@@ -1,0 +1,39 @@
+dialog {
+  width: 50%;
+}
+
+.loader::ng-deep circle{
+  stroke: white;
+}
+
+::ng-deep {
+  @media (min-width: 768px) {
+    .mat-calendar {
+      width: auto !important;
+      height: auto !important;
+    }
+  }
+}
+
+.file_input {
+  float: right;
+}
+
+#file_input_text_div {
+  margin-top: -8px;
+}
+
+.none {
+  display: none;
+}
+
+.hint {
+  position: absolute;
+  left: 5px;
+  right: auto;
+  bottom: 0px;
+  font-size: 14px;
+  line-height: 14px;
+  transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+  color: grey;
+}

@@ -10,6 +10,8 @@ import {FuseConfigService} from "../../../../core/services/config.service";
 import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
 import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 import {Team} from "../../../../core/models/team/team.model";
+import {MatDialog} from '@angular/material';
+import {DialogContentComponent} from "../../../../core/components/dialog/dialog-content.component";
 
 @Component({
   selector   : 'player-info',
@@ -21,6 +23,7 @@ export class PlayerInfoComponent implements OnInit
 {
   player: Player;
   teams: Team[];
+  captainTeams: Team[];
   playerForm: FormGroup;
   playerColumns = ['name', 'email', 'phone', 'delete', 'captain'];
   loggedPlayer: any;
@@ -30,6 +33,7 @@ export class PlayerInfoComponent implements OnInit
   constructor(
     private playerService: PlayerService,
     public snackBar: MatSnackBar,
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
@@ -51,6 +55,7 @@ export class PlayerInfoComponent implements OnInit
   ngOnInit()
   {
     this.teams = [];
+    this.captainTeams = [];
     this.authService.loggedUser.then(res => {this.loggedPlayer = res});
     this.playerForm = new FormGroup({
       id: new FormControl(''),
@@ -71,7 +76,12 @@ export class PlayerInfoComponent implements OnInit
   }
 
   invitePlayer() {
-    console.log('updateado');
+    this.playerService.getCaptainTeams(this.loggedPlayer.id).then(res => {
+      this.captainTeams = res;
+      this.openDialog();
+    }).catch(err => {
+      console.log(err)
+    });
   }
 
   back() {
@@ -81,5 +91,55 @@ export class PlayerInfoComponent implements OnInit
   teamRedirect(id) {
     this.router.navigate(['team', 'info', id]);
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DialogContentComponent, {
+      panelClass: 'dialog',
+      data: {
+        title: 'Invitar jugador',
+        form:  new FormGroup({
+          team: new FormControl('', Validators.required)
+        }),
+        element: {
+          empty() {
+            return { team: ''}
+          }
+        },
+        selects: [
+          {
+            placeholder: 'Equipo',
+            options: this.captainTeams.map(x => {
+              return {
+                id: x.id,
+                value: x.name
+              }
+            }),
+            formControlName: 'team'
+          }
+        ],
+        buttonLabel: 'INVITAR',
+        formErrors: {},
+        errorMessages: {}
+      }
+    });
+    dialogRef.afterClosed().subscribe(
+      (data: any) => {
+        if (data) {
+          this.playerService.invite(data.team, this.player.id).then(res => {
+            this.snackBar.open('La invitación se envió con éxito.', '', {
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+          }).catch(err => {
+            this.snackBar.open('Hubo un error al invitar al jugador. Por favor, inténtelo nuevamente', '', {
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+          })
+        }
+      }
+    );
+  }
+
 
 }

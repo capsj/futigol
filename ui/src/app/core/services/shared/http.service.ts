@@ -7,6 +7,7 @@ import { Observable }       from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
 import { ResponseData }     from './response-data';
+import {HttpHeaders} from "@angular/common/http";
 
 @Injectable()
 export class HttpService {
@@ -69,5 +70,9 @@ export class HttpService {
         return {
             headers: new Headers(Object.assign(this.DEFAULT_HEADERS, authHeader, headers)),
         };
+    }
+
+    public getHeaders(): HttpHeaders {
+      return new HttpHeaders({ Authorization: this._authToken })
     }
 }

@@ -7,22 +7,25 @@ GET     /                                       controllers.HomeController.index
 # Player
 POST    /api/player                             controllers.PlayerController.register
 POST    /api/player/search                      controllers.PlayerController.search
-GET     /api/player/id/:id                      controllers.PlayerController.getById(id: Long)
-GET     /api/player/info/:id                    controllers.PlayerController.playerInfo(id: Long)
+POST    /api/player/invite                      controllers.PlayerController.invitePlayer
+GET     /api/player/id/:id                      controllers.PlayerController.getById(id: java.util.UUID)
+GET     /api/player/info/:id                    controllers.PlayerController.playerInfo(id: java.util.UUID)
 GET     /api/player/email/:email                controllers.PlayerController.getByEmail(email)
-GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: Long)
+GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: java.util.UUID)
+GET     /api/player/team/captain/:id            controllers.PlayerController.getCaptainTeams(id: java.util.UUID)
 GET     /api/player/all                         controllers.PlayerController.getAll
-DELETE  /api/player/:id                         controllers.PlayerController.delete(id: Long)
+DELETE  /api/player/:id                         controllers.PlayerController.delete(id: java.util.UUID)
 
 # Team
 POST    /api/team                               controllers.TeamController.register
 POST    /api/team/add                           controllers.TeamController.joinRequest
-GET     /api/team/id/:id                        controllers.TeamController.getById(id: Long)
+POST    /api/team/search                        controllers.TeamController.search
+GET     /api/team/id/:id                        controllers.TeamController.getById(id: java.util.UUID)
 GET     /api/team/name/:name                    controllers.TeamController.getByName(name)
 GET     /api/team/location/:location            controllers.TeamController.getByLocation(location)
-GET     /api/team/players/:teamId               controllers.TeamController.getTeamPlayers(teamId: Long)
+GET     /api/team/players/:teamId               controllers.TeamController.getTeamPlayers(teamId: java.util.UUID)
 GET     /api/team/all                           controllers.TeamController.getAll
-DELETE  /api/team/:id                           controllers.TeamController.delete(id: Long)
+DELETE  /api/team/:id                           controllers.TeamController.delete(id: java.util.UUID)
 
 # Login
 POST    /api/login                              controllers.LoginController.login

@@ -15,10 +15,13 @@ export class TeamService implements Resolve<any>{
   teams: any[];
   onTeamsChanged: BehaviorSubject<any> = new BehaviorSubject({});
 
-  constructor(private http: HttpService, private httpClient: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpService, private httpClient: HttpClient, private authService: AuthService) {
+    this.teams = []
+  }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any>
   {
+
     return new Promise((resolve, reject) => {
       this.authService.loggedUser.then(user => {
         this.getTeams(user.id)
@@ -64,5 +67,17 @@ export class TeamService implements Resolve<any>{
       .then(res => {
         return res.data;
       });
+  }
+
+  public search(searchObject: any): Promise<Team[]> {
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .post('/api/team/search', searchObject, {headers: this.http.getHeaders()})
+        .subscribe((response: any) => {
+          this.teams = response.data.map(x => new Team(x));
+          this.onTeamsChanged.next(this.teams);
+          resolve(response)
+        }, reject);
+    });
   }
 }

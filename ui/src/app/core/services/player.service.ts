@@ -6,6 +6,8 @@ import {SearchModel} from "../models/player/search.model";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {HttpClient} from "@angular/common/http";
 import {PlayerInfo} from "../models/player/player-info.model";
+import {Team} from "../models/team/team.model";
+import {Invite} from "../models/invite/invite.model";
 
 @Injectable()
 export class PlayerService {
@@ -28,7 +30,7 @@ export class PlayerService {
   public search(searchModel: SearchModel): Promise<Player[]> {
     return new Promise((resolve, reject) => {
       this.httpClient
-        .post('/api/player/search', searchModel)
+        .post('/api/player/search', searchModel, {headers: this.http.getHeaders()})
         .subscribe((response: any) => {
           this.players = response.data.map(x => new Player(x));
           this.onPlayersChanged.next(this.players);
@@ -48,6 +50,20 @@ export class PlayerService {
     return this.http.get('/api/player/info/' + id)
       .then(res => {
         return new PlayerInfo(res.data);
+      })
+  }
+
+  public getCaptainTeams(id: number): Promise<Team[]> {
+    return this.http.get('/api/player/team/captain/' + id)
+      .then(res => {
+        return res.data;
+      });
+  }
+
+  public invite(teamId: string, playerId: string): Promise<Invite>{
+    return this.http.post('/api/player/invite', {teamId: teamId, playerId: playerId})
+      .then( res => {
+        return res.data
       })
   }
 }

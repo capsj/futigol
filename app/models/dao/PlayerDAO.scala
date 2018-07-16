@@ -1,5 +1,7 @@
 package models.dao
 
+import java.util.UUID
+
 import models.domain.player.{Player, PlayerSearch}
 import models.domain.team.Team
 import models.ebean.{Player => EPlayer, TeamPlayer => ETeamPlayer}
@@ -11,7 +13,7 @@ object PlayerDAO {
 
   def toEbean(player: Player): EPlayer = {
     new EPlayer(
-      if(player.id.isDefined) player.id.get else null,
+      player.id,
       player.password,
       player.name,
       player.lastName,
@@ -23,19 +25,12 @@ object PlayerDAO {
   }
 
   def saveOrUpdate(player: Player): Player = {
-    player.id match {
-      case Some(id) =>
-        val ePlayer: EPlayer = toEbean(player)
-        ePlayer.update()
-        Player(ePlayer)
-      case None =>
-        val ePlayer: EPlayer = toEbean(player)
-        ePlayer.save()
-        Player(ePlayer)
-    }
+    val ePlayer: EPlayer = toEbean(player)
+    ePlayer.save()
+    Player(ePlayer)
   }
 
-  def getById(id: Long): Option[Player] = {
+  def getById(id: UUID): Option[Player] = {
     toScalaOption[EPlayer](EPlayer.getById(id)).map(Player.apply)
   }
 
@@ -48,20 +43,16 @@ object PlayerDAO {
   }
 
   def delete(player: Player): Option[Boolean] = {
-    player.id match {
-      case Some(_) =>
-        val ePlayer: EPlayer = toEbean(player)
-        ePlayer.delete()
-        Some(true)
-      case None => None
-    }
+    val ePlayer: EPlayer = toEbean(player)
+    ePlayer.delete()
+    Some(true)
   }
 
   def authenticate(email: String, password: String): Option[Player] = {
     toScalaOption[EPlayer](EPlayer.authenticatePlayer(email, password)).map(Player.apply)
   }
 
-  def getPlayerTeams(playerId: Long): List[Team] = {
+  def getPlayerTeams(playerId: UUID): List[Team] = {
     ETeamPlayer.getPlayerTeams(playerId).map(x => Team.apply(x.getTeam)).toList
   }
 
