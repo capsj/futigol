@@ -1,7 +1,10 @@
 package models.dao
 
+import java.util.UUID
+
 import models.domain.invite.Invite
 import models.ebean.{Invite => EInvite}
+import scala.collection.JavaConversions._
 
 object InviteDAO {
 
@@ -20,5 +23,9 @@ object InviteDAO {
     val eInvite = toEbean(invite)
     eInvite.save()
     Invite(eInvite)
+  }
+
+  def checkJoinRequests(senderId: UUID, teamId: UUID): List[Invite] = {
+    EInvite.checkJoinRequests(senderId, teamId).map(Invite.apply).toList
   }
 }

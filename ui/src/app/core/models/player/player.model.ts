@@ -18,4 +18,8 @@ export class Player {
     this.password = data.password;
     this.position = data.position;
   }
+
+  empty(): Player {
+    return new Player({id: '', name: '', lastName: '', phone: '', location: '', email: '', password: '', position: ''})
+  }
 }

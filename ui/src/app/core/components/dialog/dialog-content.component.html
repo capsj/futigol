@@ -1,30 +1,11 @@
 <h2>{{title}}</h2>
 <mat-dialog-content [formGroup]="form" fxLayout="column">
 
-    <mat-form-field *ngFor="let input of formInputs" [hintLabel]="input.hintLabel">
-        <input matInput
-               *ngIf="!textArea"
-               [placeholder]="input.placeholder"
-               [type]="input.type"
-               [(ngModel)]="newElement[input.formControlName]"
-               [formControlName]="input.formControlName"
-               [pattern]="input.pattern"
-               [min]="input.min"
-               [required]="!input.notRequired"
-        >
-        <textarea matInput
-                  *ngIf="textArea"
-                  [placeholder]="input.placeholder"
-                  [(ngModel)]="newElement[input.formControlName]"
-                  [formControlName]="input.formControlName"
-                  rows="5"
-                  [required]="!input.notRequired"
-        >
-        </textarea>
-        <mat-error *ngIf="formErrors[input.formControlName]">
-            {{errorMessages[input.formControlName]}}
-        </mat-error>
-    </mat-form-field>
+    <div *ngIf="emptyMessageBool">
+      <div class="empty-message">
+        {{emptyMessage}}
+      </div>
+    </div>
 
     <mat-form-field *ngFor="let select of selects">
         <mat-select required [placeholder]="select.placeholder" [(ngModel)]="newElement[select.formControlName]" [formControlName]="select.formControlName">
@@ -42,9 +23,41 @@
         </mat-select>
     </mat-form-field>
 
+    <mat-form-field *ngFor="let date of dates; let i = index">
+      <input [required]="!date.notRequired" matInput [matDatepicker]="i" [placeholder]="date.placeholder" [(ngModel)]="newElement[date.formControlName]"
+             [formControlName]="date.formControlName" [max]="date.max !== undefined ? date.max : null" [min]="date.min !== undefined ? date.min : null">
+      <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+      <mat-datepicker #i></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field *ngFor="let input of formInputs" [hintLabel]="input.hintLabel">
+      <input matInput
+             *ngIf="!textArea"
+             [placeholder]="input.placeholder"
+             [type]="input.type"
+             [(ngModel)]="newElement[input.formControlName]"
+             [formControlName]="input.formControlName"
+             [pattern]="input.pattern"
+             [min]="input.min"
+             [required]="!input.notRequired"
+      >
+      <textarea matInput
+                *ngIf="textArea"
+                [placeholder]="input.placeholder"
+                [(ngModel)]="newElement[input.formControlName]"
+                [formControlName]="input.formControlName"
+                rows="5"
+                [required]="!input.notRequired"
+      >
+          </textarea>
+      <mat-error *ngIf="formErrors[input.formControlName]">
+        {{errorMessages[input.formControlName]}}
+      </mat-error>
+    </mat-form-field>
+
 </mat-dialog-content>
 
 <mat-dialog-actions>
     <button mat-button mat-dialog-close>CANCELAR</button>
-    <button mat-button [mat-dialog-close]="true" [color]="buttonColor" (click)="submitForm()" [disabled]="form.invalid">{{buttonLabel}}</button>
+    <button mat-button *ngIf="!emptyMessageBool" [mat-dialog-close]="true" [color]="buttonColor" (click)="submitForm()" [disabled]="form.invalid">{{buttonLabel}}</button>
 </mat-dialog-actions>

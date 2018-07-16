@@ -1,11 +1,12 @@
 import {Player} from "../player/player.model";
 
 export class Team {
-  public id: number;
+  public id: string;
   public name: string;
-  public location: Location;
+  public location: string;
   public size: number;
   public captain: Player;
+
 
   constructor(data: any) {
     this.id = data.id;

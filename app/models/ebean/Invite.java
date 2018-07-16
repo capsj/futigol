@@ -42,6 +42,11 @@ public class Invite extends Model{
         return finder.where().eq("receiver_id", receiverId).findList();
     }
 
+    public static List<Invite> checkJoinRequests(UUID senderId, UUID teamId) {
+        return finder.where().eq("sender_id", senderId).eq("team_id", teamId)
+                .eq("request_type", "Join").findList();
+    }
+
     public UUID getId() {
         return id;
     }

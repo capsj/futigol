@@ -20,4 +20,8 @@ object Invite {
   def save(sender: Player, receiver: Player, team: Team, requestType: String): Invite = {
     InviteDAO.save(Invite(UUID.randomUUID(), sender, receiver, team, false, requestType))
   }
+
+  def checkJoinRequests(senderId: UUID, teamId: UUID): List[Invite] = {
+    InviteDAO.checkJoinRequests(senderId, teamId)
+  }
 }

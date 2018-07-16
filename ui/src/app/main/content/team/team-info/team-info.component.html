@@ -29,7 +29,7 @@
 
       <div *ngIf="isCaptainBool">
         <button mat-raised-button
-                [disabled]="teamForm.invalid || teamForm.pristine || !isCaptainBool"
+                [disabled]="teamForm.invalid || teamForm.pristine"
                 class="save-team-button mat-white-bg mt-16 mt-sm-0"
                 (click)="saveTeam()">
           <span>Actualizar</span>
@@ -38,6 +38,7 @@
       <div *ngIf="!isCaptainBool">
         <button mat-raised-button
                 class="save-team-button mat-white-bg mt-16 mt-sm-0"
+                [disabled]="proposed"
                 (click)="joinRequest()">
           <span>Postularse</span>
         </button>
@@ -73,21 +74,19 @@
                 </mat-form-field>
 
                 <mat-form-field class="w-100-p">
-                  <input matInput
-                         [disabled]="!isCaptainBool"
-                         name="location"
-                         formControlName="location"
-                         placeholder="Ubicación"
-                         required>
+                  <mat-select [disabled]="!isCaptainBool" matInput placeholder="Ubicación" formControlName="location" required>
+                    <mat-option *ngFor="let option of locations" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
 
                 <mat-form-field class="w-100-p">
-                  <input matInput
-                         [disabled]="!isCaptainBool"
-                         name="size"
-                         formControlName="size"
-                         placeholder="Fútbol"
-                         required>
+                  <mat-select [disabled]="!isCaptainBool" matInput placeholder="Fútbol" formControlName="size" required>
+                    <mat-option *ngFor="let option of sizes" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
               </div>
             </mat-tab>

@@ -15,6 +15,8 @@ create table invite (
 
 create table match_request (
   id                            varchar(40) not null,
+  sender_id                     varchar(40),
+  receiver_id                   varchar(40),
   date                          datetime(6),
   time                          datetime(6),
   location                      varchar(255),
@@ -61,6 +63,12 @@ create index ix_invite_receiver_id on invite (receiver_id);
 alter table invite add constraint fk_invite_team_id foreign key (team_id) references team (id) on delete restrict on update restrict;
 create index ix_invite_team_id on invite (team_id);
 
+alter table match_request add constraint fk_match_request_sender_id foreign key (sender_id) references team (id) on delete restrict on update restrict;
+create index ix_match_request_sender_id on match_request (sender_id);
+
+alter table match_request add constraint fk_match_request_receiver_id foreign key (receiver_id) references team (id) on delete restrict on update restrict;
+create index ix_match_request_receiver_id on match_request (receiver_id);
+
 alter table team add constraint fk_team_captain_id foreign key (captain_id) references player (id) on delete restrict on update restrict;
 create index ix_team_captain_id on team (captain_id);
 
@@ -81,6 +89,12 @@ drop index ix_invite_receiver_id on invite;
 
 alter table invite drop foreign key fk_invite_team_id;
 drop index ix_invite_team_id on invite;
+
+alter table match_request drop foreign key fk_match_request_sender_id;
+drop index ix_match_request_sender_id on match_request;
+
+alter table match_request drop foreign key fk_match_request_receiver_id;
+drop index ix_match_request_receiver_id on match_request;
 
 alter table team drop foreign key fk_team_captain_id;
 drop index ix_team_captain_id on team;

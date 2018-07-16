@@ -11,8 +11,7 @@ object a extends App {
 }
 
 case class Time(hour: Int, minute: Int, second: Int){
-  def toDateTime : DateTime = {
-    val date = Date.now
+  def toDateTime(date: Date): DateTime = {
     new DateTime(date.year, date.month, date.day, hour, minute, second)
   }
 

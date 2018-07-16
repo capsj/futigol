@@ -17,6 +17,7 @@ import scala.concurrent.duration._
 import utils.EmailActor.SendEmail
 import akka.pattern.ask
 import models.domain.invite.{Invite, RequestType}
+import models.domain.matchRequest.{MatchRequest, RequestCreate}
 import play.api.libs.mailer.{AttachmentFile, Email}
 
 class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  extends Controller {
@@ -177,62 +178,52 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
     )
   }
 
-  def joinRequest = Action {
+  def joinRequest(teamId: UUID) = Action {
     request =>
-      request.body.asJson.get.asOpt[UUID] match {
-        case Some(teamId) =>
-          Team.getById(teamId) match {
-            case Some(team) =>
-              request.jwtSession.getAs[CaseUser]("user") match {
-                case Some(user) =>
-                  if(Player.getPlayerTeams(user.id).exists(_.id == teamId)) {
+      Team.getById(teamId) match {
+        case Some(team) =>
+          request.jwtSession.getAs[CaseUser]("user") match {
+            case Some(user) =>
+              if(Player.getPlayerTeams(user.id).exists(_.id == teamId)) {
+                BadRequest(
+                  Json.toJson(
+                    ResponseGenerated(
+                      BAD_REQUEST, "The player is already part of the team"
+                    )
+                  )
+                )
+              } else {
+                Player.getById(user.id) match {
+                  case Some(sender) =>
+                    val email = Email(
+                      "Pedido de Inscripción",
+                      "info@futigol.com <from@email.com>",
+                      Seq("jcarlos@sirius.com.ar"),
+                      Some("futigol papa")
+                    )
+                    emailActor ? SendEmail(email)
+                    Ok(
+                      Json.toJson(
+                        ResponseGenerated(
+                          OK, "Request sent", Json.toJson(Invite.save(sender, team.captain, team, RequestType.JOIN.value))
+                        )
+                      )
+                    )
+                  case None =>
                     BadRequest(
                       Json.toJson(
                         ResponseGenerated(
-                          BAD_REQUEST, "The player is already part of the team"
+                          BAD_REQUEST, "No player found for that id"
                         )
                       )
                     )
-                  } else {
-                    Player.getById(user.id) match {
-                      case Some(sender) =>
-                        val email = Email(
-                          "Pedido de Inscripción",
-                          "info@futigol.com <from@email.com>",
-                          Seq()
-                        )
-                        emailActor ? SendEmail(email)
-                        Ok(
-                          Json.toJson(
-                            ResponseGenerated(
-                              OK, "Request sent", Json.toJson(Invite.save(sender, team.captain, team, RequestType.INVITE.value))
-                            )
-                          )
-                        )
-                      case None =>
-                        BadRequest(
-                          Json.toJson(
-                            ResponseGenerated(
-                              BAD_REQUEST, "No player found for that id"
-                            )
-                          )
-                        )
-                    }
-                  }
-                case None =>
-                  BadRequest(
-                    Json.toJson(
-                      ResponseGenerated(
-                        BAD_REQUEST, "Session error"
-                      )
-                    )
-                  )
+                }
               }
             case None =>
               BadRequest(
                 Json.toJson(
                   ResponseGenerated(
-                    BAD_REQUEST, "No team with that id"
+                    BAD_REQUEST, "Session error"
                   )
                 )
               )
@@ -241,7 +232,7 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
           BadRequest(
             Json.toJson(
               ResponseGenerated(
-                BAD_REQUEST, "Invalid data"
+                BAD_REQUEST, "No team with that id"
               )
             )
           )
@@ -288,7 +279,90 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
       }
   }
 
-  def checkJoinRequests(teamId: UUID, playerId: UUID) = Action {
-    Ok
+  def checkJoinRequests(teamId: UUID) = Action {
+    request =>
+      Team.getById(teamId) match {
+        case Some(_) =>
+          request.jwtSession.getAs[CaseUser]("user") match {
+            case Some(user) =>
+              if(Player.getPlayerTeams(user.id).exists(_.id == teamId)) {
+                Ok(
+                  Json.toJson(
+                    ResponseGenerated(
+                      OK, "Part of team", Json.toJson(true)
+                    )
+                  )
+                )
+              } else {
+                if(Invite.checkJoinRequests(user.id, teamId).isEmpty) {
+                  Ok(
+                    Json.toJson(
+                      ResponseGenerated(
+                        OK, "Ok", Json.toJson(false)
+                      )
+                    )
+                  )
+                } else {
+                  Ok(
+                    Json.toJson(
+                      ResponseGenerated(
+                        OK, "Already sent", Json.toJson(true)
+                      )
+                    )
+                  )
+                }
+              }
+            case None =>
+              BadRequest(
+                Json.toJson(
+                  ResponseGenerated(
+                    BAD_REQUEST, "Session error"
+                  )
+                )
+              )
+          }
+        case None =>
+          BadRequest(
+            Json.toJson(
+              ResponseGenerated(
+                BAD_REQUEST, "No team with that id"
+              )
+            )
+          )
+      }
+  }
+
+  def challenge = Action {
+    request =>
+      request.body.asJson.get.asOpt[RequestCreate] match {
+        case Some(requestCreate) =>
+          Team.getById(requestCreate.sender) match {
+            case Some(sender) =>
+              Team.getById(requestCreate.receiver) match {
+                case Some(receiver) =>
+                  val matchRequest = MatchRequest(requestCreate, sender, receiver)
+                  if(MatchRequest.checkRequests(matchRequest).isEmpty) {
+                    Ok(
+                      Json.toJson(
+                        ResponseGenerated(
+                          OK, "Request sent", Json.toJson(MatchRequest.save(matchRequest))
+                        )
+                      )
+                    )
+                  } else {
+                    BadRequest(
+                      Json.toJson(
+                        ResponseGenerated(
+                          BAD_REQUEST, "Team is busy"
+                        )
+                      )
+                    )
+                  }
+                case None => BadRequest
+              }
+            case None => BadRequest
+          }
+        case None => BadRequest
+      }
   }
 }

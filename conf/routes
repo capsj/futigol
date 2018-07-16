@@ -18,8 +18,10 @@ DELETE  /api/player/:id                         controllers.PlayerController.del
 
 # Team
 POST    /api/team                               controllers.TeamController.register
-POST    /api/team/add                           controllers.TeamController.joinRequest
 POST    /api/team/search                        controllers.TeamController.search
+POST    /api/team/challenge                     controllers.TeamController.challenge
+GET     /api/team/join/:teamId                  controllers.TeamController.joinRequest(teamId: java.util.UUID)
+GET     /api/team/join/check/:teamId            controllers.TeamController.checkJoinRequests(teamId: java.util.UUID)
 GET     /api/team/id/:id                        controllers.TeamController.getById(id: java.util.UUID)
 GET     /api/team/name/:name                    controllers.TeamController.getByName(name)
 GET     /api/team/location/:location            controllers.TeamController.getByLocation(location)

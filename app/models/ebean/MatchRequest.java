@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,8 +17,10 @@ public class MatchRequest extends Model {
     @Id
     private UUID id;
     @NotNull
+    @ManyToOne
     private Team sender;
     @NotNull
+    @ManyToOne
     private Team receiver;
     @NotNull
     private DateTime date;
@@ -51,6 +54,11 @@ public class MatchRequest extends Model {
 
     public static List<MatchRequest> getReceivedRequests(UUID teamId) {
         return finder.where().eq("receiver", teamId).findList();
+    }
+
+    public static List<MatchRequest> checkRequests(UUID teamId, DateTime date, DateTime time) {
+        return finder.where().eq("receiver_id", teamId).eq("date", date)
+                .between("time", time.minusHours(2), time.plusHours(2)).findList();
     }
 
     public UUID getId() {

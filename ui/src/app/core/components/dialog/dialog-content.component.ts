@@ -26,6 +26,7 @@ export class DialogContentComponent implements OnInit{
     selects: any[];
     multipleSelects: any[];
     dates: any[];
+    times: any[];
     fileInput: any;
     fileUploaded: boolean;
     buttonLabel: string;
@@ -37,6 +38,8 @@ export class DialogContentComponent implements OnInit{
         fileNumber: boolean,
         registrationNumber: boolean
     };
+    emptyMessageBool: boolean;
+    emptyMessage: string;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<DialogContentComponent>, private adapter: DateAdapter<any>){
         this.title = data.title;
@@ -48,6 +51,7 @@ export class DialogContentComponent implements OnInit{
         this.selects = data.selects || [];
         this.multipleSelects = data.multipleSelects || [];
         this.dates = data.dates || [];
+        this.times = data.times || [];
         this.fileInput = data.fileInput || undefined;
         this.fileUploaded = false;
         this.buttonLabel = data.buttonLabel != undefined ? data.buttonLabel : "CREAR";
@@ -59,6 +63,8 @@ export class DialogContentComponent implements OnInit{
             fileNumber: false,
             registrationNumber: false
         };
+        this.emptyMessageBool = data.emptyMessageBool || false;
+        this.emptyMessage = data.emptyMessage || '';
     }
 
     ngOnInit() {

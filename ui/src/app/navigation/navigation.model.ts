@@ -47,8 +47,21 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
           {
             'id'      : 'matches',
             'title'   : 'Partidos confirmados',
-            'type'    : 'item',
-            'url'     : 'matches'
+            'type'    : 'collapse',
+            'children' : [
+              {
+                'id'       : 'pending',
+                'title'    : 'Pendientes',
+                'type'     : 'item',
+                'url'      : 'matches/pending'
+              },
+              {
+                'id'       : 'confirmed',
+                'title'    : 'Confirmados',
+                'type'     : 'item',
+                'url'      : 'matches/confirmed'
+              }
+            ]
           }
         ];
     }

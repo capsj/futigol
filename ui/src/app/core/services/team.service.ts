@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AuthService} from "./auth/auth.service";
 import {Player} from "../models/player/player.model";
+import {Challenge} from "../models/challenge/challenge.model";
 
 @Injectable()
 export class TeamService implements Resolve<any>{
@@ -80,4 +81,27 @@ export class TeamService implements Resolve<any>{
         }, reject);
     });
   }
+
+  public joinRequest(teamId: string): Promise<any> {
+    return this.http.get('/api/team/join/' + teamId)
+      .then( res => {
+        return res.data
+      });
+  }
+
+  public checkJoinRequest(teamId: string): Promise<boolean> {
+    return this.http.get('/api/team/join/check/' + teamId)
+      .then( res => {
+        return res.data
+      });
+  }
+
+  public challenge(challenge: Challenge): Promise<any> {
+    return this.http.post('/api/team/challenge', challenge)
+      .then(res => {
+        return res.data;
+      })
+  }
+
+
 }
