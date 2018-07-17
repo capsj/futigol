@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import {PlayerInfo} from "../models/player/player-info.model";
 import {Team} from "../models/team/team.model";
 import {Invite} from "../models/invite/invite.model";
+import {Challenge} from "../models/challenge/challenge.model";
 
 @Injectable()
 export class PlayerService {
@@ -70,6 +71,27 @@ export class PlayerService {
 
   public invite(teamId: string, playerId: string): Promise<Invite>{
     return this.http.post('/api/player/invite', {teamId: teamId, playerId: playerId})
+      .then( res => {
+        return res.data
+      })
+  }
+
+  public getPendingRequests(playerId: string): Promise<any>{
+    return this.http.get('/api/player/pending/' + playerId)
+      .then( res => {
+        return res.data
+      })
+  }
+
+  public getConfirmedRequests(playerId: string): Promise<any>{
+    return this.http.get('/api/player/confirmed/' + playerId)
+      .then( res => {
+        return res.data
+      })
+  }
+
+  public updateRequest(request: Challenge): Promise<any>{
+    return this.http.put('/api/match', request)
       .then( res => {
         return res.data
       })

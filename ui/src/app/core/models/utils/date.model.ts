@@ -37,6 +37,12 @@ export class DateModel {
         return new Date(date.year, date.month - 1, date.day);
     }
 
+    static dateFromOtherString(dateString: string): Date {
+      const split = dateString.split('/');
+      const date = new DateModel(+split[2], (+split[1]), +split[0], 0, 0 , 0 );
+      return new Date(date.year, date.month - 1, date.day);
+    }
+
     static compareDateModel(date1: DateModel, date2: DateModel): number {
         const parsedDate1 = this.dateFromDateModel(date1);
         const parsedDate2 = this.dateFromDateModel(date2);

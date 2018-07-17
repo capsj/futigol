@@ -1,0 +1,45 @@
+<h2>{{title}}</h2>
+<mat-dialog-content [formGroup]="form" fxLayout="column">
+
+  <div *ngFor="let info of labels">
+    <div class="info-label">
+      <div class="title">{{info.title}} </div>
+      <div class="info">{{info.text}}</div>
+    </div>
+  </div>
+
+  <mat-form-field *ngFor="let select of selects">
+      <mat-select required [placeholder]="select.placeholder" [formControlName]="select.formControlName">
+          <mat-option *ngFor="let option of select.options" [value]="option.id">
+              {{option.value}}
+          </mat-option>
+      </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngFor="let date of dates; let i = index">
+    <input [required]="!date.notRequired" matInput [matDatepicker]="i" [placeholder]="date.placeholder"
+           [formControlName]="date.formControlName"[min]="date.min !== undefined ? date.min : null">
+    <mat-datepicker-toggle matSuffix [for]="i"></mat-datepicker-toggle>
+    <mat-datepicker #i></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field *ngFor="let input of formInputs" [hintLabel]="input.hintLabel">
+    <input matInput
+           [placeholder]="input.placeholder"
+           [type]="input.type"
+           [formControlName]="input.formControlName"
+           [pattern]="input.pattern"
+           [min]="input.min"
+           [required]="!input.notRequired"
+    >
+    <mat-error *ngIf="formErrors[input.formControlName]">
+      {{errorMessages[input.formControlName]}}
+    </mat-error>
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>CANCELAR</button>
+    <button mat-button [mat-dialog-close]="true" [color]="buttonColor" (click)="submitForm()" [disabled]="form.invalid">{{buttonLabel}}</button>
+</mat-dialog-actions>

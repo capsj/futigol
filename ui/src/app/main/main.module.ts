@@ -19,6 +19,7 @@ import {TeamModule} from "./content/team/team.module";
 import {PlayersModule} from "./content/players/players.module";
 import {DialogContentComponent} from "../core/components/dialog/dialog-content.component";
 import {MatchesModule} from "./content/matches/matches.module";
+import {RequestDialogComponent} from "../core/components/request-dialog/request-dialog.component";
 
 const routes = [
   {
@@ -41,7 +42,8 @@ const routes = [
         FuseNavbarHorizontalComponent,
         FuseToolbarComponent,
         FuseNavbarVerticalToggleDirective,
-        DialogContentComponent
+        DialogContentComponent,
+        RequestDialogComponent
     ],
     imports     : [
         SharedModule,
@@ -60,7 +62,7 @@ const routes = [
     providers : [
       ReverseAuthGuard,
     ],
-    entryComponents: [DialogContentComponent]
+    entryComponents: [DialogContentComponent, RequestDialogComponent]
 })
 
 export class FuseMainModule

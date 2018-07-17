@@ -20,6 +20,7 @@ create table match_request (
   date                          datetime(6),
   time                          datetime(6),
   location                      varchar(255),
+  state                         varchar(255),
   constraint pk_match_request primary key (id)
 );
 

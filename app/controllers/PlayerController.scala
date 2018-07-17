@@ -4,6 +4,7 @@ import java.util.UUID
 
 import models.domain.authentication.CaseUser
 import models.domain.invite.{Invite, RequestType}
+import models.domain.matchRequest.{MatchRequest, RequestState, RequestUpdate}
 import models.domain.player._
 import models.domain.team.Team
 import play.api.libs.json.Json
@@ -228,13 +229,13 @@ class PlayerController extends Controller {
   }
   
   def getCaptainTeams(id: UUID) = Action {
-      Ok(
-        Json.toJson(
-          ResponseGenerated(
-            OK, "Captain teams", Json.toJson(Team.getByCaptain(id))
-          )
+    Ok(
+      Json.toJson(
+        ResponseGenerated(
+          OK, "Captain teams", Json.toJson(Team.getByCaptain(id))
         )
       )
+    )
   }
 
   def update = Action {
@@ -302,4 +303,49 @@ class PlayerController extends Controller {
       }
   }
 
+  def getPendingMatches(playerId: UUID) = Action {
+    Player.getById(playerId) match {
+      case Some(player) =>
+        Ok(
+          Json.toJson(
+            ResponseGenerated(
+              OK, "Pending requests", Json.toJson(
+                Team.getByCaptain(player.id).flatMap(x =>
+                  MatchRequest.getPendingRequests(x.id).map(y => {
+                    if(y.sender.id == x.id) y.copy(state = "Enviada")
+                    else y
+                  })
+                )
+              )
+            )
+          )
+        )
+      case None => BadRequest
+    }
+  }
+
+  def getConfirmedMatches(playerId: UUID) = Action {
+
+    Ok
+  }
+
+  def confirmMatch = Action {
+    request =>
+      request.body.asJson.get.asOpt[RequestUpdate] match {
+        case Some(requestUpdate) =>
+          MatchRequest.getById(requestUpdate.id) match {
+            case Some(matchRequest) =>
+              Ok(
+                Json.toJson(
+                  ResponseGenerated(
+                    OK, "Match accepted", Json.toJson(MatchRequest.update(requestUpdate.toRequest(matchRequest)))
+                  )
+                )
+              )
+            case None =>
+              BadRequest
+          }
+        case None => BadRequest
+      }
+  }
 }

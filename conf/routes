@@ -15,7 +15,11 @@ GET     /api/player/email/:email                controllers.PlayerController.get
 GET     /api/player/teams/:id                   controllers.PlayerController.getPlayerTeams(id: java.util.UUID)
 GET     /api/player/team/captain/:id            controllers.PlayerController.getCaptainTeams(id: java.util.UUID)
 GET     /api/player/all                         controllers.PlayerController.getAll
+GET     /api/player/pending/:playerId           controllers.PlayerController.getPendingMatches(playerId: java.util.UUID)
+GET     /api/player/confirmed/:playerId         controllers.PlayerController.getConfirmedMatches(playerId: java.util.UUID)
 DELETE  /api/player/:id                         controllers.PlayerController.delete(id: java.util.UUID)
+
+PUT     /api/match                              controllers.PlayerController.confirmMatch
 
 # Team
 POST    /api/team                               controllers.TeamController.register

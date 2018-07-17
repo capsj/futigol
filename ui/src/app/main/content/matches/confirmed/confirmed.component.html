@@ -11,43 +11,11 @@
 
           <mat-icon class="logo-icon" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">today</mat-icon>
 
-          <span class="logo-text" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Calendar</span>
+          <span class="logo-text" *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">Partidos confirmados</span>
 
         </div>
 
-        <!-- TOOLBAR -->
-        <div class="toolbar" fxLayout="row" fxLayoutAlign="start center">
-
-          <button mat-button class="mat-icon-button" aria-label="Search" matTooltip="Search">
-            <mat-icon>search</mat-icon>
-          </button>
-
-          <button mat-button class="mat-icon-button"
-                  mwlCalendarToday
-                  [(viewDate)]="viewDate"
-                  (viewDateChange)="selectedDay = {date:$event}"
-                  aria-label="Today" matTooltip="Today">
-            <!--(click)="selectedDay = viewDate"-->
-            <mat-icon>today</mat-icon>
-          </button>
-
-          <button mat-button class="mat-icon-button" (click)="view='day'"
-                  aria-label="Day" matTooltip="Day">
-            <mat-icon>view_day</mat-icon>
-          </button>
-
-          <button mat-button class="mat-icon-button" (click)="view='week'"
-                  aria-label="Week" matTooltip="Week">
-            <mat-icon>view_week</mat-icon>
-          </button>
-
-          <button mat-button class="mat-icon-button" (click)="view='month'"
-                  aria-label="Month" matTooltip="Month">
-            <mat-icon>view_module</mat-icon>
-          </button>
-        </div>
       </div>
-      <!-- / TOOLBAR -->
 
       <!-- HEADER BOTTOM -->
       <div class="header-bottom" fxLayout="row" fxLayoutAlign="center center"
@@ -55,7 +23,7 @@
 
         <button mat-button class="mat-icon-button arrow"
                 mwlCalendarPreviousView
-                [view]="view"
+                view="month"
                 [(viewDate)]="viewDate"
                 (viewDateChange)="selectedDay = {date:$event}"
                 aria-label="Previous">
@@ -63,12 +31,12 @@
         </button>
 
         <div class="title">
-          {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}
+          {{ viewDate | calendarDate:('monthViewTitle'):'en' }}
         </div>
 
         <button mat-button class="mat-icon-button arrow"
                 mwlCalendarNextView
-                [view]="view"
+                view="month"
                 [(viewDate)]="viewDate"
                 (viewDateChange)="selectedDay = {date:$event}"
                 aria-label="Next">
@@ -77,21 +45,12 @@
       </div>
       <!-- / HEADER BOTTOM -->
     </div>
-
-    <!-- ADD EVENT BUTTON -->
-    <button mat-fab class="add-event-button mat-warn" (click)="addEvent()" aria-label="Add event"
-            *fuseIfOnDom [@animate]="{value:'*',params:{delay:'300ms',scale:'0.2'}}">
-      <mat-icon>add</mat-icon>
-    </button>
-    <!-- / ADD EVENT BUTTON -->
   </div>
   <!-- / HEADER -->
 
   <!-- CONTENT -->
   <div class="content" fusePerfectScrollbar *fuseIfOnDom [@animate]="{value:'*',params:{delay:'200ms',y:'50px'}}">
-    <div [ngSwitch]="view">
       <mwl-calendar-month-view
-        *ngSwitchCase="'month'"
         [viewDate]="viewDate"
         [events]="events"
         [refresh]="refresh"
@@ -101,27 +60,6 @@
         (eventTimesChanged)="eventTimesChanged($event)"
         (beforeViewRender)="beforeMonthViewRender($event)">
       </mwl-calendar-month-view>
-      <mwl-calendar-week-view
-        *ngSwitchCase="'week'"
-        [viewDate]="viewDate"
-        (viewDateChange)="selectedDay = {date:$event}"
-        [events]="events"
-        [refresh]="refresh"
-        (dayClicked)="dayClicked($event.day)"
-        (eventClicked)="editEvent('edit', $event.event)"
-        (eventTimesChanged)="eventTimesChanged($event)">
-      </mwl-calendar-week-view>
-      <mwl-calendar-day-view
-        *ngSwitchCase="'day'"
-        [viewDate]="viewDate"
-        (viewDateChange)="selectedDay = {date:$event}"
-        [events]="events"
-        [refresh]="refresh"
-        (dayClicked)="dayClicked($event.day)"
-        (eventClicked)="editEvent('edit', $event.event)"
-        (eventTimesChanged)="eventTimesChanged($event)">
-      </mwl-calendar-day-view>
-    </div>
   </div>
   <!-- / CONTENT -->
 </div>

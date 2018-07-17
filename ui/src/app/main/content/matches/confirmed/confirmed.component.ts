@@ -25,7 +25,6 @@ import { fuseAnimations } from '../../../../core/animations';
 
 export class ConfirmedComponent implements OnInit
 {
-  view: string;
   viewDate: Date;
   events: CalendarEvent[];
   public actions: CalendarEventAction[];
@@ -40,7 +39,6 @@ export class ConfirmedComponent implements OnInit
     public calendarService: CalendarService
   )
   {
-    this.view = 'month';
     this.viewDate = new Date();
     this.activeDayIsOpen = true;
     this.selectedDay = {date: startOfDay(new Date())};
@@ -230,31 +228,6 @@ export class ConfirmedComponent implements OnInit
 
             break;
         }
-      });
-  }
-
-  /**
-   * Add Event
-   */
-  addEvent(): void
-  {
-    this.dialogRef = this.dialog.open(FuseCalendarEventFormDialogComponent, {
-      panelClass: 'event-form-dialog',
-      data      : {
-        action: 'new',
-        date  : this.selectedDay.date
-      }
-    });
-    this.dialogRef.afterClosed()
-      .subscribe((response: FormGroup) => {
-        if ( !response )
-        {
-          return;
-        }
-        const newEvent = response.getRawValue();
-        newEvent.actions = this.actions;
-        this.events.push(newEvent);
-        this.refresh.next(true);
       });
   }
 }

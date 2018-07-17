@@ -1,4 +1,3 @@
-import {Player} from "../player/player.model";
 import {Team} from "../team/team.model";
 import {Time} from "../utils/time.model";
 import {DateModel} from "../utils/date.model";
@@ -9,7 +8,8 @@ export class Challenge {
   public receiver: Team;
   public date: DateModel;
   public time: Time;
-  public location: String;
+  public location: string;
+  public state: string;
 
   constructor(data: any) {
     this.id = data.id;
@@ -18,6 +18,7 @@ export class Challenge {
     this.date = data.date;
     this.time = data.time;
     this.location = data.location;
+    this.state = data.state;
   }
 
 }

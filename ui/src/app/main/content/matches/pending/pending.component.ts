@@ -1,16 +1,54 @@
-import {Component} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {fuseAnimations} from "../../../../core/animations";
 import {FuseConfigService} from "../../../../core/services/config.service";
 import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
 import {FuseNavigationModel} from "../../../../navigation/navigation.model";
+import {FormBuilder, FormGroup, Validators, FormControl} from "@angular/forms";
+import {
+  MatDialog, MatPaginator, MatSnackBar, MatSort, MatTableDataSource, DateAdapter,
+  MAT_DATE_FORMATS, MAT_DATE_LOCALE
+} from "@angular/material";
+import {Router} from "@angular/router";
+import {Location} from "../../../../core/models/location";
+import {PlayerService} from "../../../../core/services/player.service";
+import {AuthService} from "../../../../core/services/auth/auth.service";
+import {DateModel} from "../../../../core/models/utils/date.model";
+import {Time} from "../../../../core/models/utils/time.model";
+import {DialogContentComponent} from "../../../../core/components/dialog/dialog-content.component";
+import {RequestDialogComponent} from "../../../../core/components/request-dialog/request-dialog.component";
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from "@angular/material-moment-adapter";
 
 @Component({
   selector   : 'pending-component',
   templateUrl: './pending.component.html',
-  styleUrls  : ['./pending.component.scss']
+  styleUrls  : ['./pending.component.scss'],
+  animations : fuseAnimations,
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+  ]
 })
 
-export class PendingComponent {
-  constructor(private fuseConfig: FuseConfigService, private fuseNavigationService: FuseNavigationService) {
+export class PendingComponent implements OnInit {
+
+  public searchForm: FormGroup;
+  dataSource: MatTableDataSource<any>;
+  displayedColumns = ['sender', 'receiver', 'date', 'time', 'location', 'state'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  locations: string[];
+  sizes: string[];
+
+  constructor(private fuseConfig: FuseConfigService,
+              private fuseNavigationService: FuseNavigationService,
+              private formBuilder: FormBuilder,
+              public snackBar: MatSnackBar,
+              private router: Router,
+              public dialog: MatDialog,
+              private authService: AuthService,
+              private playerService: PlayerService) {
     this.fuseConfig.setSettings({
       layout: {
         navigation: 'top',
@@ -23,4 +61,139 @@ export class PendingComponent {
     });
     this.fuseNavigationService.setNavigationModel(new FuseNavigationModel());
   }
+
+  ngOnInit(): void {
+    this.locations = new Location().options;
+    this.sizes = ['5', '7', '11'];
+
+    this.searchForm = this.formBuilder.group({
+      name : [''],
+      location  : [''],
+      size   : ['']
+    });
+    this.dataSource = new MatTableDataSource([]);
+    this.authService.loggedUser.then(user => {
+      this.playerService.getPendingRequests(user.id).then(res => {
+        this.dataSource.data = res.map(x => {
+          return {
+            sender: x.sender,
+            receiver: x.receiver,
+            date: new DateModel(x.date.year, x.date.month, x.date.day, 0, 0, 0).toStringDate(),
+            time: Time.timeModelFromTime(x.time).toStringTime(),
+            location: x.location,
+            state: x.state
+          }
+        })
+      });
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  teamInfo(event) {
+    this.router.navigate(['team', 'info', this.dataSource.filteredData[event].id]);
+  }
+
+  openDialog(event) {
+    if(this.dataSource.filteredData[event].state === 'Pendiente') {
+      let x = this.dataSource.filteredData[event];
+      let date = DateModel.dateFromOtherString(x.date);
+      const dialogRef = this.dialog.open(RequestDialogComponent, {
+        panelClass: 'dialog',
+        data: {
+          title: 'Confirmar Partido',
+          form: new FormGroup({
+            date: new FormControl(date, Validators.required),
+            time: new FormControl(x.time, Validators.required),
+            location: new FormControl(x.location, Validators.required),
+            state: new FormControl(x.state, Validators.required),
+          }),
+          element: {
+            sender: x.sender,
+            receiver: x.receiver,
+            date: date,
+            time: x.time,
+            location: x.location,
+            state: x.state
+          },
+          labels: [
+            {
+              title: 'Equipo desafiante: ',
+              text: x.sender.name
+            }, {
+              title: 'Equipo desafiado: ',
+              text: x.receiver.name
+            }
+          ],
+          selects: [
+            {
+              placeholder: 'Lugar',
+              options: new Location().options.map(x => {
+                return {
+                  id: x,
+                  value: x
+                }
+              }),
+              formControlName: 'location'
+            }
+          ],
+          dates: [
+            {
+              placeholder: 'Fecha',
+              formControlName: 'date',
+              min: new Date()
+            }
+          ],
+          formInputs: [
+            {
+              placeholder: 'Hora',
+              type: 'time',
+              formControlName: 'time',
+              hintLabel: ''
+            }
+          ],
+          buttonLabel: 'CONFIRMAR',
+          formErrors: {},
+          errorMessages: {}
+        }
+      });
+      dialogRef.afterClosed().subscribe(
+        (data: any) => {
+          if (data) {
+            let date = undefined
+            if(data.date instanceof Date) date = DateModel.dateModelFromDate(data.date);
+            else data.date != null ? date = DateModel.dateModelFromDate(data.date.toDate()) : date = null;
+            let xDate = DateModel.dateModelFromDate(DateModel.dateFromOtherString(x.date));
+            let equal = DateModel.compareDateModel(date, xDate)
+            if(equal === 0 && data.time === x.time && data.location === x.location) {
+              console.log("iguales");
+            }
+            let challenge: any;
+            this.playerService.update(challenge).then(res => {
+              this.snackBar.open('El desafio se envió con éxito.', '', {
+                duration: 5000,
+                verticalPosition: 'top'
+              });
+            }).catch(err => {
+              if(JSON.parse(err._body).msg == 'Team is busy') {
+                this.snackBar.open('El equipo se encuentra ocupado en esa fecha y horario.', '', {
+                  duration: 5000,
+                  verticalPosition: 'top'
+                });
+              } else {
+                this.snackBar.open('Hubo un error al desafiar al equipo. Por favor, inténtelo nuevamente.', '', {
+                  duration: 5000,
+                  verticalPosition: 'top'
+                });
+              }
+            })
+          }
+        }
+      );
+    }
+  }
+
 }

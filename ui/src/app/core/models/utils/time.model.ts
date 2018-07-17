@@ -13,4 +13,12 @@ export class Time {
     let array = time.split(':');
     return new Time({hour: Number(array[0]), minute: Number(array[1]), second: 0})
   }
+
+  static timeModelFromTime(time: any): Time {
+    return new Time({hour: time.hour, minute: time.minute, second: 0})
+  }
+
+  toStringTime(): string {
+    return this.hour.toString() + ':' + this.minute.toString();
+  }
 }
