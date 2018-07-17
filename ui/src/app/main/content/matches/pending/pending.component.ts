@@ -17,6 +17,7 @@ import {Time} from "../../../../core/models/utils/time.model";
 import {DialogContentComponent} from "../../../../core/components/dialog/dialog-content.component";
 import {RequestDialogComponent} from "../../../../core/components/request-dialog/request-dialog.component";
 import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from "@angular/material-moment-adapter";
+import {Challenge} from "../../../../core/models/challenge/challenge.model";
 
 @Component({
   selector   : 'pending-component',
@@ -76,6 +77,7 @@ export class PendingComponent implements OnInit {
       this.playerService.getPendingRequests(user.id).then(res => {
         this.dataSource.data = res.map(x => {
           return {
+            id: x.id,
             sender: x.sender,
             receiver: x.receiver,
             date: new DateModel(x.date.year, x.date.month, x.date.day, 0, 0, 0).toStringDate(),
@@ -163,33 +165,66 @@ export class PendingComponent implements OnInit {
       dialogRef.afterClosed().subscribe(
         (data: any) => {
           if (data) {
-            let date = undefined
+            let date = undefined;
             if(data.date instanceof Date) date = DateModel.dateModelFromDate(data.date);
             else data.date != null ? date = DateModel.dateModelFromDate(data.date.toDate()) : date = null;
             let xDate = DateModel.dateModelFromDate(DateModel.dateFromOtherString(x.date));
-            let equal = DateModel.compareDateModel(date, xDate)
+            let equal = DateModel.compareDateModel(date, xDate);
             if(equal === 0 && data.time === x.time && data.location === x.location) {
-              console.log("iguales");
-            }
-            let challenge: any;
-            this.playerService.update(challenge).then(res => {
-              this.snackBar.open('El desafio se envió con éxito.', '', {
-                duration: 5000,
-                verticalPosition: 'top'
+              this.playerService.updateRequest(new Challenge({
+                id: x.id,
+                sender: x.sender,
+                receiver : x.receiver,
+                date : date,
+                time : Time.timeModelFromString(data.time),
+                location : data.location,
+                state : 'Confirmada'
+              })).then(res => {
+                this.dataSource.data = this.dataSource.data.filter(req => req.id !== x.id);
+                this.snackBar.open('El desafio se confirmó con éxito.', '', {
+                  duration: 5000,
+                  verticalPosition: 'top'
+                });
+              }).catch(err => {
+                this.snackBar.open('Hubo un error al confirmar el desafo. Por favor, inténtelo nuevamente.', '', {
+                  duration: 5000,
+                  verticalPosition: 'top'
+                });
               });
-            }).catch(err => {
-              if(JSON.parse(err._body).msg == 'Team is busy') {
-                this.snackBar.open('El equipo se encuentra ocupado en esa fecha y horario.', '', {
+            } else {
+              this.playerService.updateRequest(new Challenge({
+                id: x.id,
+                sender: x.receiver,
+                receiver : x.sender,
+                date : date,
+                time : Time.timeModelFromString(data.time),
+                location : data.location,
+                state : 'Pendiente'
+              })).then(res => {
+                this.dataSource.data = this.dataSource.data.map(req => {
+                  if(req.id === x.id) {
+                    return {
+                      id: res.id,
+                      sender: res.sender,
+                      receiver: res.receiver,
+                      date: new DateModel(res.date.year, res.date.month, res.date.day, 0, 0, 0).toStringDate(),
+                      time: Time.timeModelFromTime(res.time).toStringTime(),
+                      location: res.location,
+                      state: 'Enviada'
+                    }
+                  } else return req
+                });
+                this.snackBar.open('El desafio se modificó con éxito. Ahora debes esperar a que sea confirmado por el otro equipo.', '', {
                   duration: 5000,
                   verticalPosition: 'top'
                 });
-              } else {
-                this.snackBar.open('Hubo un error al desafiar al equipo. Por favor, inténtelo nuevamente.', '', {
+              }).catch(err => {
+                this.snackBar.open('Hubo un error al confirmar el desafío. Por favor, inténtelo nuevamente.', '', {
                   duration: 5000,
                   verticalPosition: 'top'
                 });
-              }
-            })
+              });
+            }
           }
         }
       );

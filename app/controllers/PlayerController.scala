@@ -343,9 +343,22 @@ class PlayerController extends Controller {
                 )
               )
             case None =>
-              BadRequest
+              BadRequest(
+                Json.toJson(
+                  ResponseGenerated(
+                    BAD_REQUEST, "No request found for that id"
+                  )
+                )
+              )
           }
-        case None => BadRequest
+        case None =>
+          BadRequest(
+            Json.toJson(
+              ResponseGenerated(
+                BAD_REQUEST, "Invalid data"
+              )
+            )
+          )
       }
   }
 }

@@ -8,6 +8,5 @@ object RequestState {
   implicit val format: OFormat[RequestState] = Json.format
 
   val SENT = RequestState("Pendiente")
-  val MODIFIED = RequestState("Modificada")
   val CONFIRMED = RequestState("Confirmada")
 }
