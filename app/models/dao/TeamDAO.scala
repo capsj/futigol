@@ -22,12 +22,18 @@ object TeamDAO {
     )
   }
 
-  def saveOrUpdate(team: Team): Team = {
+  def save(team: Team): Team = {
     val eTeam: ETeam = toEbean(team)
     eTeam.save()
     val savedTeam = Team(eTeam)
     addCaptain(savedTeam, team.captain)
     savedTeam
+  }
+
+  def update(team: Team): Team = {
+    val eTeam: ETeam = toEbean(team)
+    eTeam.update()
+    Team(eTeam)
   }
 
   def getById(id: UUID): Option[Team] = {

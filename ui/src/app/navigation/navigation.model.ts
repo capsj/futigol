@@ -46,7 +46,7 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
           },
           {
             'id'      : 'matches',
-            'title'   : 'Partidos confirmados',
+            'title'   : 'Partidos',
             'type'    : 'collapse',
             'children' : [
               {

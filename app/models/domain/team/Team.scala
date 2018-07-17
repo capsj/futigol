@@ -23,7 +23,11 @@ object Team extends TeamFormat {
   }
 
   def saveOrUpdate(team: Team): Team = {
-    TeamDAO.saveOrUpdate(team)
+    TeamDAO.save(team)
+  }
+
+  def update(team: Team): Team = {
+    TeamDAO.update(team)
   }
 
   def getById(id: UUID): Option[Team] = {

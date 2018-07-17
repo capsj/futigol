@@ -27,7 +27,15 @@ export class PlayerService {
       });
   }
 
-  public search(searchModel: SearchModel): Promise<Player[]> {
+  public update(player: Player): Promise<Player> {
+    return this.http
+      .put('/api/player', player)
+      .then(res => {
+        return new Player(res.data);
+      });
+  }
+
+  public search(searchModel: SearchModel): Promise<any> {
     return new Promise((resolve, reject) => {
       this.httpClient
         .post('/api/player/search', searchModel, {headers: this.http.getHeaders()})

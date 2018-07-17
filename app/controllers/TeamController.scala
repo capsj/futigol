@@ -7,7 +7,7 @@ import akka.actor.ActorRef
 import akka.util.Timeout
 import models.domain.authentication.CaseUser
 import models.domain.player.Player
-import models.domain.team.{Team, TeamCreate, TeamSearch}
+import models.domain.team.{Team, TeamCreate, TeamSearch, TeamUpdate}
 import pdi.jwt._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
@@ -166,6 +166,71 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
           )
         )
     }
+  }
+
+  def update = Action {
+    request =>
+      request.body.asJson.get.asOpt[TeamUpdate] match {
+        case Some(teamUpdate) =>
+          Team.getById(teamUpdate.id) match {
+            case Some(team) =>
+              teamUpdate.name match {
+                case Some(name) =>
+                  Team.getByName(name) match {
+                    case Some(nResult) =>
+                      if(nResult.id == teamUpdate.id) {
+                        Ok(
+                          Json.toJson(
+                            ResponseGenerated(
+                              OK, "Team updated", Json.toJson(Team.update(teamUpdate.toTeam(team)))
+                            )
+                          )
+                        )
+                      } else {
+                        BadRequest(
+                          Json.toJson(
+                            ResponseGenerated(
+                              BAD_REQUEST, "Name already in use"
+                            )
+                          )
+                        )
+                      }
+                    case None =>
+                      Ok(
+                        Json.toJson(
+                          ResponseGenerated(
+                            OK, "Team updated", Json.toJson(Team.update(teamUpdate.toTeam(team)))
+                          )
+                        )
+                      )
+                  }
+                case None =>
+                  Ok(
+                    Json.toJson(
+                      ResponseGenerated(
+                        OK, "Team updated", Json.toJson(Team.update(teamUpdate.toTeam(team)))
+                      )
+                    )
+                  )
+              }
+            case None =>
+              BadRequest(
+                Json.toJson(
+                  ResponseGenerated(
+                    BAD_REQUEST, "No team with that id"
+                  )
+                )
+              )
+          }
+        case None =>
+          BadRequest(
+            Json.toJson(
+              ResponseGenerated(
+                BAD_REQUEST, "Invalid data"
+              )
+            )
+          )
+      }
   }
 
   def getAll = Action {

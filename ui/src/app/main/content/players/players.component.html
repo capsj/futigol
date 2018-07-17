@@ -104,7 +104,7 @@
         <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
 
         <mat-row *cdkRowDef="let player; columns: displayedColumns; let i = index;"
-                 class="player"
+                 class="table-row"
                  matRipple
                  (click)="playerInfo(i)"
         >

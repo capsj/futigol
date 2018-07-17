@@ -35,7 +35,7 @@
           <span>Actualizar</span>
         </button>
       </div>
-      <div *ngIf="!isCaptainBool">
+      <div *ngIf="!isCaptainBool && !isTeamPlayer">
         <button mat-raised-button
                 class="save-team-button mat-white-bg mt-16 mt-sm-0"
                 [disabled]="proposed"
@@ -56,161 +56,208 @@
 
       <!-- CONTENT -->
       <div class="content">
+        <mat-tab-group mat-stretch-tabs>
+          <mat-tab label="General">
+            <div class="tab-content p-24" fusePerfectScrollbar>
+              <div *ngIf="isCaptainBool">
+                <form name="teamForm" [formGroup]="teamForm" class="team w-100-p" fxLayout="column" fxFlex>
 
-        <form name="teamForm" [formGroup]="teamForm" class="team w-100-p" fxLayout="column" fxFlex>
+                  <mat-form-field class="w-100-p">
+                    <input matInput
+                           name="name"
+                           formControlName="name"
+                           placeholder="Nombre"
+                           required>
+                  </mat-form-field>
 
-          <mat-tab-group mat-stretch-tabs>
+                  <mat-form-field class="w-100-p">
+                    <mat-select matInput placeholder="Ubicación" formControlName="location" required>
+                      <mat-option *ngFor="let option of locations" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
 
-            <mat-tab label="General">
-              <div class="tab-content p-24" fusePerfectScrollbar>
-
-                <mat-form-field class="w-100-p">
-                  <input matInput
-                         [disabled]="!isCaptainBool"
-                         name="name"
-                         formControlName="name"
-                         placeholder="Nombre"
-                         required>
-                </mat-form-field>
-
-                <mat-form-field class="w-100-p">
-                  <mat-select [disabled]="!isCaptainBool" matInput placeholder="Ubicación" formControlName="location" required>
-                    <mat-option *ngFor="let option of locations" [value]="option">
-                      {{option}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-
-                <mat-form-field class="w-100-p">
-                  <mat-select [disabled]="!isCaptainBool" matInput placeholder="Fútbol" formControlName="size" required>
-                    <mat-option *ngFor="let option of sizes" [value]="option">
-                      {{option}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+                  <mat-form-field class="w-100-p">
+                    <mat-select matInput placeholder="Fútbol" formControlName="size" required>
+                      <mat-option *ngFor="let option of sizes" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </form>
               </div>
-            </mat-tab>
-
-            <mat-tab label="Jugadores">
-              <div class="tab-content p-24 no-padding-top" fusePerfectScrollbar>
-                <div *ngIf="isCaptainBool">
-                  <mat-table class="players-table"
-                             [dataSource]="playerDataSource"
-                             [@animateStagger]="{value:'50'}"
-                             fusePerfectScrollbar>
-
-                    <!-- Name Column -->
-                    <ng-container cdkColumnDef="name">
-                      <mat-header-cell *cdkHeaderCellDef>Nombre</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="text-truncate">{{player.name}}</p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <!-- Category Column -->
-                    <ng-container cdkColumnDef="email">
-                      <mat-header-cell *cdkHeaderCellDef>Mail</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="category text-truncate">
-                          {{player.email}}
-                        </p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <ng-container cdkColumnDef="phone">
-                      <mat-header-cell *cdkHeaderCellDef>Teléfono</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="text-truncate">{{player.phone}}</p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <ng-container cdkColumnDef="delete">
-                      <mat-header-cell *cdkHeaderCellDef>Eliminar del equipo</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <mat-icon *ngIf="player.id !== team.captain.id" (click)="test(player)">delete</mat-icon>
-                      </mat-cell>
-                    </ng-container>
-
-                    <ng-container cdkColumnDef="captain">
-                      <mat-header-cell *cdkHeaderCellDef>Capitán</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <mat-icon *ngIf="player.id === team.captain.id">copyright</mat-icon>
-                      </mat-cell>
-                    </ng-container>
-
-                    <mat-header-row *cdkHeaderRowDef="captainColumns"></mat-header-row>
-
-                    <mat-row *cdkRowDef="let player; columns: captainColumns; let i = index;"
-                             class="player"
-                    >
-                    </mat-row>
-
-                  </mat-table>
+              <div *ngIf="!isCaptainBool">
+                <div class="info-label">
+                  <div class="title">Nombre: </div>
+                  <div class="info">{{team.name}}</div>
                 </div>
 
-                <div *ngIf="!isCaptainBool">
-                  <mat-table class="players-table"
-                             [dataSource]="playerDataSource"
-                             [@animateStagger]="{value:'50'}"
-                             fusePerfectScrollbar>
-
-                    <!-- Name Column -->
-                    <ng-container cdkColumnDef="name">
-                      <mat-header-cell *cdkHeaderCellDef>Nombre</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="text-truncate">{{player.name}}</p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <!-- Category Column -->
-                    <ng-container cdkColumnDef="email">
-                      <mat-header-cell *cdkHeaderCellDef>Mail</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="category text-truncate">
-                          {{player.email}}
-                        </p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <ng-container cdkColumnDef="phone">
-                      <mat-header-cell *cdkHeaderCellDef>Teléfono</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <p class="text-truncate">{{player.phone}}</p>
-                      </mat-cell>
-                    </ng-container>
-
-                    <ng-container cdkColumnDef="captain">
-                      <mat-header-cell *cdkHeaderCellDef>Capitán</mat-header-cell>
-                      <mat-cell *cdkCellDef="let player">
-                        <mat-icon *ngIf="player.id === team.captain.id">copyright</mat-icon>
-                      </mat-cell>
-                    </ng-container>
-
-                    <mat-header-row *cdkHeaderRowDef="playerColumns"></mat-header-row>
-
-                    <mat-row *cdkRowDef="let player; columns: playerColumns; let i = index;"
-                             class="player"
-                    >
-                    </mat-row>
-
-                  </mat-table>
+                <div class="info-label">
+                  <div class="title">Ubicación: </div>
+                  <div class="info">{{team.location}}</div>
                 </div>
 
-                <div class="file-uploader fab-button-container" fxLayout="row" fxLayoutAlign="end center">
-                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" pageSize="10"></mat-paginator>
+                <div class="info-label">
+                  <div class="title">Fútbol: </div>
+                  <div class="info">{{team.size}}</div>
                 </div>
               </div>
-            </mat-tab>
+            </div>
+          </mat-tab>
 
-            <mat-tab label="Historial">
-              <div class="tab-content p-24" fusePerfectScrollbar>
+          <mat-tab label="Jugadores">
+            <div class="tab-content p-24 no-padding-top" fusePerfectScrollbar>
+              <div *ngIf="isCaptainBool">
+                <mat-table class="players-table"
+                           #table
+                           matSort
+                           [dataSource]="playerDataSource"
+                           [@animateStagger]="{value:'50'}"
+                           fusePerfectScrollbar>
 
+                  <!-- Name Column -->
+                  <ng-container cdkColumnDef="name">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.name}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- LastName Column -->
+                  <ng-container cdkColumnDef="lastName">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Apellido</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.lastName}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- Category Column -->
+                  <ng-container cdkColumnDef="email">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Mail</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="category text-truncate">
+                        {{player.email}}
+                      </p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="phone">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.phone}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="position">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Posición</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.position}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="delete">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Eliminar del equipo</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="test(player)">
+                      <mat-icon *ngIf="player.id !== team.captain.id">delete</mat-icon>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="captain">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Capitán</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player">
+                      <mat-icon *ngIf="player.id === team.captain.id">copyright</mat-icon>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *cdkHeaderRowDef="captainColumns"></mat-header-row>
+
+                  <mat-row *cdkRowDef="let player; columns: captainColumns; let i = index;"
+                           class="table-row"
+                  >
+                  </mat-row>
+
+                </mat-table>
               </div>
-            </mat-tab>
 
-          </mat-tab-group>
-        </form>
+              <div *ngIf="!isCaptainBool">
+                <mat-table class="players-table"
+                           #table
+                           matSort
+                           [dataSource]="playerDataSource"
+                           [@animateStagger]="{value:'50'}"
+                           fusePerfectScrollbar>
 
+                  <!-- Name Column -->
+                  <ng-container cdkColumnDef="name">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.name}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- LastName Column -->
+                  <ng-container cdkColumnDef="lastName">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Apellido</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.lastName}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- Category Column -->
+                  <ng-container cdkColumnDef="email">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Mail</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="category text-truncate">
+                        {{player.email}}
+                      </p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="phone">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Teléfono</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.phone}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="position">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Posición</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <p class="text-truncate">{{player.position}}</p>
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container cdkColumnDef="captain">
+                    <mat-header-cell *cdkHeaderCellDef mat-sort-header>Capitán</mat-header-cell>
+                    <mat-cell *cdkCellDef="let player" (click)="redirectPlayer(player)">
+                      <mat-icon *ngIf="player.id === team.captain.id">copyright</mat-icon>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *cdkHeaderRowDef="playerColumns"></mat-header-row>
+
+                  <mat-row *cdkRowDef="let player; columns: playerColumns; let i = index;"
+                           class="table-row"
+                  >
+                  </mat-row>
+
+                </mat-table>
+              </div>
+
+              <div class="file-uploader fab-button-container" fxLayout="row" fxLayoutAlign="end center">
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 50, 100]" pageSize="10"></mat-paginator>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab label="Historial">
+            <div class="tab-content p-24" fusePerfectScrollbar>
+
+            </div>
+          </mat-tab>
+
+        </mat-tab-group>
       </div>
       <!-- / CONTENT -->
 

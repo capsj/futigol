@@ -18,6 +18,7 @@ import {ReverseAuthGuard} from "../core/services/auth/reverse-auth-guard";
 import {TeamModule} from "./content/team/team.module";
 import {PlayersModule} from "./content/players/players.module";
 import {DialogContentComponent} from "../core/components/dialog/dialog-content.component";
+import {MatchesModule} from "./content/matches/matches.module";
 
 const routes = [
   {
@@ -50,7 +51,8 @@ const routes = [
         LoginModule,
         RegisterModule,
         TeamModule,
-        PlayersModule
+        PlayersModule,
+        MatchesModule
     ],
     exports     : [
         FuseMainComponent

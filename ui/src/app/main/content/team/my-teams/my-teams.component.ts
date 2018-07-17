@@ -27,7 +27,7 @@ import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 export class MyTeamsComponent implements OnInit
 {
   dataSource: FilesDataSource | null;
-  displayedColumns = ['name', 'size', 'location'];
+  displayedColumns = ['name', 'size', 'location', 'delete'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('filter') filter: ElementRef;
@@ -71,8 +71,12 @@ export class MyTeamsComponent implements OnInit
     });
   }
 
-  teamInfo(event) {
-    this.router.navigate(['team', 'info', this.dataSource.filteredData[event].id]);
+  teamInfo(team) {
+    this.router.navigate(['team', 'info', team.id]);
+  }
+
+  test(team) {
+    console.log(team);
   }
 }
 

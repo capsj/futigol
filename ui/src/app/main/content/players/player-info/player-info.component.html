@@ -19,7 +19,7 @@
 
         <div fxLayout="column" fxLayoutAlign="start start"
              *fuseIfOnDom [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-          <h2>{{player.name}}</h2>
+          <h2>{{player.name}} {{player.lastName}}</h2>
           <div class="secondary-text">
             <span>Información del jugador</span>
           </div>
@@ -99,6 +99,7 @@
               </div>
             </div>
           </div>
+        </div>
       </div>
       <!-- / CONTENT -->
 

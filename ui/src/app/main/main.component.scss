@@ -86,3 +86,13 @@ fuse-main {
   //background-color: rgba(19, 107, 29, 0.83) !important;
   background-color: rgba(19, 107, 29, 0.75) !important;
 }
+
+.clickable {
+  cursor: pointer;
+}
+
+.table-row {
+  position: relative;
+  cursor: pointer;
+  height: 60px;
+}

@@ -16,7 +16,7 @@ export class FuseToolbarComponent implements OnInit
 
     showLoadingBar: boolean;
     horizontalNav: boolean;
-    loggedUser: any;
+    name: any;
     fuseSettings: any;
     onSettingsChanged: Subscription;
     @HostBinding('attr.fuse-layout-mode') layoutMode;
@@ -56,9 +56,16 @@ export class FuseToolbarComponent implements OnInit
     }
 
     ngOnInit(): void {
+      this.name = '';
       this.authService.loggedUser.then(res => {
-        this.loggedUser = res;
+        this.name = res.name;
+      }).catch(err => {
+        this.name = '';
       });
+    }
+
+    toProfile() {
+      this.router.navigate(['profile'])
     }
 
     logout() {

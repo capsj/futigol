@@ -31,17 +31,19 @@ export class TeamInfoComponent implements OnInit
   team: Team;
   teamForm: FormGroup;
   teamPlayers: Player[];
-  playerColumns = ['name', 'email', 'phone', 'captain'];
-  captainColumns = ['name', 'email', 'phone', 'delete', 'captain'];
+  playerColumns = ['name', 'lastName', 'email', 'phone', 'position', 'captain'];
+  captainColumns = ['name', 'lastName', 'email', 'phone', 'position', 'delete', 'captain'];
   playerDataSource: MatTableDataSource<Player>;
   loggedPlayer: any;
   isCaptainBool: boolean;
   proposed: boolean;
+  isTeamPlayer: boolean;
   captainTeams: Team[];
   locations: string[];
   sizes: number[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private teamService: TeamService,
@@ -70,9 +72,11 @@ export class TeamInfoComponent implements OnInit
 
   ngOnInit()
   {
+    this.team = Team.empty();
     this.locations = new Location().options;
     this.sizes = [5, 7, 11];
     this.proposed = false;
+    this.isTeamPlayer = false;
     this.captainTeams = [];
     this.isCaptainBool = false;
     this.authService.loggedUser.then(res => {this.loggedPlayer = res});
@@ -101,7 +105,10 @@ export class TeamInfoComponent implements OnInit
           this.teamService.getTeamPlayers(params.id)
             .then(players => {
               this.teamPlayers = players;
+              this.isTeamPlayer = players.filter(x => x.id === this.loggedPlayer.id).length > 0;
               this.playerDataSource = new MatTableDataSource<Player>(this.teamPlayers);
+              this.playerDataSource.paginator = this.paginator;
+              this.playerDataSource.sort = this.sort;
             })
             .catch(err => {
               console.log(err);
@@ -118,7 +125,26 @@ export class TeamInfoComponent implements OnInit
   }
 
   saveTeam() {
-    console.log('updateado');
+    this.teamService.update(this.teamForm.getRawValue())
+      .then(res => {
+        this.teamForm.reset();
+        this.team = res;
+        this.teamForm = this.formBuilder.group({
+          id              : [this.team.id],
+          name            : [this.team.name],
+          size            : [this.team.size],
+          location        : [this.team.location]
+        });
+        this.snackBar.open('Equipo actualizado correctamente.', '', {
+          duration: 5000,
+          verticalPosition: 'top'
+        });
+      }).catch(err => {
+      this.snackBar.open('Hubo un error al actualizar el equipo. Por favor, inténtelo nuevamente.', '', {
+        duration: 5000,
+        verticalPosition: 'top'
+      });
+    })
   }
 
   challengeTeam() {
@@ -152,6 +178,10 @@ export class TeamInfoComponent implements OnInit
 
   back() {
     this.router.navigate(['team', 'general']);
+  }
+
+  redirectPlayer(player) {
+    this.router.navigate(['players', 'info', player.id]);
   }
 
   openEmptyDialog() {
@@ -253,7 +283,7 @@ export class TeamInfoComponent implements OnInit
                 verticalPosition: 'top'
               });
             } else {
-              this.snackBar.open('Hubo un error al desafiar al equipo. Por favor, inténtelo nuevamente', '', {
+              this.snackBar.open('Hubo un error al desafiar al equipo. Por favor, inténtelo nuevamente.', '', {
                 duration: 5000,
                 verticalPosition: 'top'
               });

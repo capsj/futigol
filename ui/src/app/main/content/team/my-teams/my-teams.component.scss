@@ -30,10 +30,10 @@
       min-height: 64px;
     }
 
-    .product {
+    .team {
       position: relative;
       cursor: pointer;
-      height: 84px;
+      height: 60px;
     }
 
     .mat-cell {
@@ -44,16 +44,6 @@
 
     .mat-column-id {
       flex: 0 1 84px;
-    }
-
-    .mat-column-image {
-      flex: 0 1 84px;
-
-      .product-image {
-        width: 52px;
-        height: 52px;
-        border: 1px solid rgba(0, 0, 0, .12);
-      }
     }
 
     .mat-column-buttons {

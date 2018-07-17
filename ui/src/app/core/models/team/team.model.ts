@@ -16,4 +16,7 @@ export class Team {
     this.captain = data.captain;
   }
 
+  static empty() {
+    return new Team({id: '', name: '', location: '', size: 0, captain: Player.empty()})
+  }
 }

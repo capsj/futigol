@@ -70,7 +70,7 @@ export class TeamService implements Resolve<any>{
       });
   }
 
-  public search(searchObject: any): Promise<Team[]> {
+  public search(searchObject: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.httpClient
         .post('/api/team/search', searchObject, {headers: this.http.getHeaders()})
@@ -98,6 +98,13 @@ export class TeamService implements Resolve<any>{
 
   public challenge(challenge: Challenge): Promise<any> {
     return this.http.post('/api/team/challenge', challenge)
+      .then(res => {
+        return res.data;
+      })
+  }
+
+  public update(team: Team): Promise<Team> {
+    return this.http.put('/api/team', team)
       .then(res => {
         return res.data;
       })

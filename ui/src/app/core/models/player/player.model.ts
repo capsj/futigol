@@ -19,7 +19,7 @@ export class Player {
     this.position = data.position;
   }
 
-  empty(): Player {
+  static empty(): Player {
     return new Player({id: '', name: '', lastName: '', phone: '', location: '', email: '', password: '', position: ''})
   }
 }

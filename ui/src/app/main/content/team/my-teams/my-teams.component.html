@@ -43,7 +43,7 @@
         <!-- Name Column -->
         <ng-container cdkColumnDef="name">
           <mat-header-cell *cdkHeaderCellDef mat-sort-header>Nombre</mat-header-cell>
-          <mat-cell *cdkCellDef="let team">
+          <mat-cell *cdkCellDef="let team" (click)="teamInfo(team)">
             <p class="text-truncate">{{team.name}}</p>
           </mat-cell>
         </ng-container>
@@ -51,7 +51,7 @@
         <!-- Category Column -->
         <ng-container cdkColumnDef="size">
           <mat-header-cell *cdkHeaderCellDef mat-sort-header>Fútbol</mat-header-cell>
-          <mat-cell *cdkCellDef="let team">
+          <mat-cell *cdkCellDef="let team" (click)="teamInfo(team)">
             <p class="category text-truncate">
               {{team.size}}
             </p>
@@ -61,20 +61,25 @@
         <!-- Ubicación Column -->
         <ng-container cdkColumnDef="location">
           <mat-header-cell *cdkHeaderCellDef mat-sort-header>Ubicación</mat-header-cell>
-          <mat-cell *cdkCellDef="let team">
+          <mat-cell *cdkCellDef="let team" (click)="teamInfo(team)">
             <p class="price text-truncate">
               {{team.location}}
             </p>
           </mat-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="delete">
+          <mat-header-cell *cdkHeaderCellDef mat-sort-header>Dejar el equipo</mat-header-cell>
+          <mat-cell *cdkCellDef="let team" (click)="test(team)">
+              <mat-icon>delete</mat-icon>
+          </mat-cell>
+        </ng-container>
 
         <mat-header-row *cdkHeaderRowDef="displayedColumns"></mat-header-row>
 
         <mat-row *cdkRowDef="let team; columns: displayedColumns; let i = index;"
                  class="team"
                  matRipple
-                 (click)="teamInfo(i)"
         >
         </mat-row>
 

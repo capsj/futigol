@@ -8,6 +8,7 @@ GET     /                                       controllers.HomeController.index
 POST    /api/player                             controllers.PlayerController.register
 POST    /api/player/search                      controllers.PlayerController.search
 POST    /api/player/invite                      controllers.PlayerController.invitePlayer
+PUT     /api/player                             controllers.PlayerController.update
 GET     /api/player/id/:id                      controllers.PlayerController.getById(id: java.util.UUID)
 GET     /api/player/info/:id                    controllers.PlayerController.playerInfo(id: java.util.UUID)
 GET     /api/player/email/:email                controllers.PlayerController.getByEmail(email)
@@ -20,6 +21,7 @@ DELETE  /api/player/:id                         controllers.PlayerController.del
 POST    /api/team                               controllers.TeamController.register
 POST    /api/team/search                        controllers.TeamController.search
 POST    /api/team/challenge                     controllers.TeamController.challenge
+PUT     /api/team                               controllers.TeamController.update
 GET     /api/team/join/:teamId                  controllers.TeamController.joinRequest(teamId: java.util.UUID)
 GET     /api/team/join/check/:teamId            controllers.TeamController.checkJoinRequests(teamId: java.util.UUID)
 GET     /api/team/id/:id                        controllers.TeamController.getById(id: java.util.UUID)

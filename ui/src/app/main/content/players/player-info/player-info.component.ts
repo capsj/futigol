@@ -56,6 +56,7 @@ export class PlayerInfoComponent implements OnInit
   {
     this.teams = [];
     this.captainTeams = [];
+    this.player = Player.empty();
     this.authService.loggedUser.then(res => {this.loggedPlayer = res});
     this.playerForm = new FormGroup({
       id: new FormControl(''),

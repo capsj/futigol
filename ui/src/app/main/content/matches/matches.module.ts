@@ -8,32 +8,34 @@ import {FuseNavigationService} from "../../../core/components/navigation/navigat
 import {FuseDemoModule} from "../../../core/components/demo/demo.module";
 import {FusePipesModule} from "../../../core/pipes/pipes.module";
 import {AutocompleterModule} from "../../../core/components/autocompleter/autocompleter.module";
-import {PlayersComponent} from "./players.component";
-import {PlayerInfoComponent} from "./player-info/player-info.component";
-import {ProfileComponent} from "./profile/profile.component";
+import {MatchesComponent} from "./matches.component";
+import {ConfirmedComponent} from "./confirmed/confirmed.component";
+import {PendingComponent} from "./pending/pending.component";
 
 const routes = [
   {
-    path: 'players',
-    component: PlayersComponent,
-  },
-  {
-    path: 'players/info/:id',
-    // canActivate: [AuthGuard],
-    component: PlayerInfoComponent
-  },
-  {
-    path: 'profile',
-    // canActivate: [AuthGuard],
-    component: ProfileComponent
+    path: 'matches',
+    component: MatchesComponent,
+    children: [
+      {
+        path: 'create',
+        // canActivate: [AuthGuard],
+        component: ConfirmedComponent
+      },
+      {
+        path: 'general',
+        // canActivate: [AuthGuard],
+        component: PendingComponent
+      }
+    ]
   }
 ];
 
 @NgModule({
   declarations: [
-    PlayersComponent,
-    PlayerInfoComponent,
-    ProfileComponent
+    MatchesComponent,
+    ConfirmedComponent,
+    PendingComponent,
   ],
   imports     : [
     SharedModule,
@@ -43,7 +45,7 @@ const routes = [
     AutocompleterModule
   ],
   exports     : [
-    PlayersComponent
+    MatchesComponent
   ],
   providers: [
     ReverseAuthGuard,
@@ -52,5 +54,5 @@ const routes = [
   ]
 })
 
-export class PlayersModule {
+export class MatchesModule {
 }
