@@ -11,6 +11,10 @@ import {AutocompleterModule} from "../../../core/components/autocompleter/autoco
 import {MatchesComponent} from "./matches.component";
 import {ConfirmedComponent} from "./confirmed/confirmed.component";
 import {PendingComponent} from "./pending/pending.component";
+import {FuseAngularMaterialModule} from "../components/angular-material/angular-material.module";
+import { CalendarModule } from 'angular-calendar';
+import {FuseCalendarEventFormDialogComponent} from "./confirmed/event-form/event-form.component";
+import {CalendarService} from './confirmed/calendar.service';
 
 const routes = [
   {
@@ -18,12 +22,12 @@ const routes = [
     component: MatchesComponent,
     children: [
       {
-        path: 'create',
+        path: 'confirmed',
         // canActivate: [AuthGuard],
         component: ConfirmedComponent
       },
       {
-        path: 'general',
+        path: 'pending',
         // canActivate: [AuthGuard],
         component: PendingComponent
       }
@@ -36,13 +40,17 @@ const routes = [
     MatchesComponent,
     ConfirmedComponent,
     PendingComponent,
+    FuseCalendarEventFormDialogComponent
   ],
   imports     : [
     SharedModule,
     RouterModule.forChild(routes),
     FuseDemoModule,
     FusePipesModule,
-    AutocompleterModule
+    AutocompleterModule,
+    FuseAngularMaterialModule,
+    CalendarModule.forRoot()
+
   ],
   exports     : [
     MatchesComponent
@@ -50,8 +58,10 @@ const routes = [
   providers: [
     ReverseAuthGuard,
     AuthGuard,
-    FuseNavigationService
-  ]
+    FuseNavigationService,
+    CalendarService
+  ],
+  entryComponents: [FuseCalendarEventFormDialogComponent]
 })
 
 export class MatchesModule {
