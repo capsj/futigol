@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
@@ -37,6 +38,15 @@ public class Invite extends Model{
         this.answered = answered;
         this.requestType = requestType;
     }
+
+    public static Optional<Invite> getById(UUID id) {
+        Invite team = finder.where().eq("id", id).findUnique();
+        if(team != null) {
+            return  Optional.of(team);
+        } else {
+            return Optional.empty();
+        }
+    }
     
     public static List<Invite> getReceivedInvites(UUID receiverId) {
         return finder.where().eq("receiver_id", receiverId).findList();
@@ -46,6 +56,11 @@ public class Invite extends Model{
         return finder.where().eq("sender_id", senderId).eq("team_id", teamId)
                 .eq("request_type", "Join").findList();
     }
+
+    public static List<Invite> getPlayerNotifications(UUID receiverId) {
+        return finder.where().eq("receiver_id", receiverId).eq("answered", false).findList();
+    }
+
 
     public UUID getId() {
         return id;

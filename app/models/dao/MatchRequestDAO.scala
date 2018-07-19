@@ -44,6 +44,10 @@ object MatchRequestDAO {
     EMatchRequest.getPendingRequests(senderId).map(MatchRequest.apply).toList
   }
 
+  def getConfirmedRequests(senderId: UUID): List[MatchRequest] = {
+    EMatchRequest.getConfirmedRequests(senderId).map(MatchRequest.apply).toList
+  }
+
   def getById(id: UUID): Option[MatchRequest] = {
     toScalaOption[EMatchRequest](EMatchRequest.getById(id)).map(MatchRequest.apply)
   }

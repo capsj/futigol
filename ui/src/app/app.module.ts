@@ -10,7 +10,6 @@ import { FuseMainModule } from './main/main.module';
 import { FuseSplashScreenService } from './core/services/splash-screen.service';
 import { FuseConfigService } from './core/services/config.service';
 import { FuseNavigationService } from './core/components/navigation/navigation.service';
-import { FuseSampleModule } from './main/content/sample/sample.module';
 import { TranslateModule } from '@ngx-translate/core';
 import {APP_BASE_HREF} from "@angular/common";
 import {AuthGuard} from "./core/services/auth/auth-guard.service";
@@ -19,12 +18,13 @@ import {HttpService} from "./core/services/shared/http.service";
 import {CookieService} from "angular2-cookie/core";
 import {HttpModule} from '@angular/http';
 import {PlayerService} from './core/services/player.service';
-import {TeamModule} from "./main/content/team/team.module";
 import {TeamService} from "./core/services/team.service";
+import {ReverseAuthGuard} from "./core/services/auth/reverse-auth-guard";
 
 const appRoutes: Routes = [
     {
         path      : '**',
+        canActivate: [ReverseAuthGuard],
         redirectTo: 'login'
     }
 ];
@@ -41,8 +41,7 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes),
         SharedModule,
         TranslateModule.forRoot(),
-        FuseMainModule,
-        FuseSampleModule
+        FuseMainModule
     ],
     providers   : [
         CookieService,

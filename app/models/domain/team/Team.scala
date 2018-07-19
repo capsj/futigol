@@ -5,6 +5,7 @@ import java.util.UUID
 import models.dao.TeamDAO
 import models.domain.player.Player
 import models.domain.TeamPlayer
+import models.domain.matchRequest.MatchRequest
 import models.ebean.{Team => ETeam}
 import play.api.libs.json.{Json, OFormat}
 
@@ -54,6 +55,10 @@ object Team extends TeamFormat {
     TeamDAO.addPlayer(team, player)
   }
 
+  def removePlayer(teamId: UUID, playerId: UUID): Boolean = {
+    TeamDAO.removePlayer(teamId, playerId)
+  }
+
   def getTeamPlayers(teamId: UUID): List[Player] = {
     TeamDAO.getTeamPlayers(teamId)
   }
@@ -64,6 +69,10 @@ object Team extends TeamFormat {
 
   def search(teamSearch: TeamSearch): List[Team] = {
     TeamDAO.search(teamSearch)
+  }
+
+  def getPastMatches(teamId: UUID): List[MatchRequest] = {
+    TeamDAO.getPastMatches(teamId)
   }
 }
 

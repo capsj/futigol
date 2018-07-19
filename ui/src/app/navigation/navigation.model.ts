@@ -8,12 +8,6 @@ export class FuseNavigationModel implements FuseNavigationModelInterface
     {
         this.model = [
           {
-            'id'      : 'landing',
-            'title'   : 'Inicio',
-            'type'    : 'item',
-            'url'     : 'landing'
-          },
-          {
             'id'      : 'players',
             'title'   : 'Jugadores',
             'type'    : 'item',

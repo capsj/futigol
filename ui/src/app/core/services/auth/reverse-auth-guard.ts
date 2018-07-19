@@ -12,8 +12,8 @@ export class ReverseAuthGuard implements CanActivate {
     }
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        if (this.cookieService.get(this.tokenCookieKey) !== '') {
-            this.router.navigate(['sample']);
+        if (this.cookieService.get(this.tokenCookieKey) !== '' && this.cookieService.get(this.tokenCookieKey) !== undefined ) {
+            this.router.navigate(['profile']);
             return false;
         }
         else return true;

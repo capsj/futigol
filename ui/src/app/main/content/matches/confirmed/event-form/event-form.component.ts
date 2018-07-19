@@ -16,14 +16,12 @@ export class FuseCalendarEventFormDialogComponent implements OnInit
 {
     event: CalendarEvent;
     dialogTitle: string;
-    eventForm: FormGroup;
     action: string;
     presetColors = MatColors.presets;
 
     constructor(
         public dialogRef: MatDialogRef<FuseCalendarEventFormDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) private data: any,
-        private formBuilder: FormBuilder
+        @Inject(MAT_DIALOG_DATA) private data: any
     )
     {
         this.event = data.event;
@@ -42,29 +40,9 @@ export class FuseCalendarEventFormDialogComponent implements OnInit
             });
         }
 
-        this.eventForm = this.createEventForm();
     }
 
     ngOnInit()
     {
-    }
-
-    createEventForm()
-    {
-        return new FormGroup({
-            title : new FormControl(this.event.title),
-            start : new FormControl(this.event.start),
-            end   : new FormControl(this.event.end),
-            allDay: new FormControl(this.event.allDay),
-            color : this.formBuilder.group({
-                primary  : new FormControl(this.event.color.primary),
-                secondary: new FormControl(this.event.color.secondary)
-            }),
-            meta  :
-                this.formBuilder.group({
-                    location: new FormControl(this.event.meta.location),
-                    notes   : new FormControl(this.event.meta.notes)
-                })
-        });
     }
 }

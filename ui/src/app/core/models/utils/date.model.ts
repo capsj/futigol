@@ -1,3 +1,5 @@
+import {Time} from "./time.model";
+
 export class DateModel {
 
     public static from(jsonObject: any): DateModel {
@@ -29,12 +31,16 @@ export class DateModel {
     }
 
     static dateFromDateModel(date: DateModel): Date {
-        return new Date(date.year, date.month - 1, date.day, date.hours, date.minutes, date.seconds);
+        return new Date(date.year, date.month - 1, date.day, date.hours | 0, date.minutes | 0, date.seconds | 0);
     }
 
     static dateFromString(dateString: string): Date {
         const date = this.dateModelFromString(dateString);
         return new Date(date.year, date.month - 1, date.day);
+    }
+
+    static dateFromDateModelAndTime(date: DateModel, time: Time): Date {
+      return new Date(date.year, date.month - 1, date.day, time.hour | 0, time.hour | 0, 0);
     }
 
     static dateFromOtherString(dateString: string): Date {

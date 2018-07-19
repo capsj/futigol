@@ -22,6 +22,10 @@ object Player extends PlayerFormat {
     PlayerDAO.saveOrUpdate(player)
   }
 
+  def update(player: Player): Player = {
+    PlayerDAO.update(player)
+  }
+
   def getById(id: UUID): Option[Player] = {
     PlayerDAO.getById(id)
   }

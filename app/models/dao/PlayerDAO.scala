@@ -30,6 +30,12 @@ object PlayerDAO {
     Player(ePlayer)
   }
 
+  def update(player: Player): Player = {
+    val ePlayer: EPlayer = toEbean(player)
+    ePlayer.update()
+    Player(ePlayer)
+  }
+
   def getById(id: UUID): Option[Player] = {
     toScalaOption[EPlayer](EPlayer.getById(id)).map(Player.apply)
   }

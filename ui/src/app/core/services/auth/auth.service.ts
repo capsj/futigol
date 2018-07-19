@@ -18,8 +18,7 @@ export class AuthService {
     private _loggedUser: any;
 
     get isLoggedIn(): boolean {
-        const tokenAvailable = this.cookieService.get(this.tokenCookieKey) !== '';
-        return tokenAvailable;
+      return this.cookieService.get(this.tokenCookieKey) !== '' && this.cookieService.get(this.tokenCookieKey) !== undefined;
     }
 
     get redirectUrl(): string { return this._redirectUrl; }

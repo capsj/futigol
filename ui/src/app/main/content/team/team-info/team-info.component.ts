@@ -19,6 +19,7 @@ import {Location} from "../../../../core/models/location";
 import {Challenge} from "../../../../core/models/challenge/challenge.model";
 import {DateModel} from "../../../../core/models/utils/date.model";
 import {Time} from "../../../../core/models/utils/time.model";
+import {FuseConfirmDialogComponent} from "../../../../core/components/confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector   : 'team-info',
@@ -33,7 +34,9 @@ export class TeamInfoComponent implements OnInit
   teamPlayers: Player[];
   playerColumns = ['name', 'lastName', 'email', 'phone', 'position', 'captain'];
   captainColumns = ['name', 'lastName', 'email', 'phone', 'position', 'delete', 'captain'];
+  matchColumns = ['sender', 'receiver', 'date', 'time'];
   playerDataSource: MatTableDataSource<Player>;
+  matchDataSource: MatTableDataSource<any>;
   loggedPlayer: any;
   isCaptainBool: boolean;
   proposed: boolean;
@@ -82,6 +85,7 @@ export class TeamInfoComponent implements OnInit
     this.authService.loggedUser.then(res => {this.loggedPlayer = res});
     this.teamPlayers = [];
     this.playerDataSource = new MatTableDataSource<Player>(this.teamPlayers);
+    this.matchDataSource = new MatTableDataSource<Challenge>([]);
     this.teamForm = new FormGroup({
       id: new FormControl(''),
       name: new FormControl('', Validators.required),
@@ -112,7 +116,26 @@ export class TeamInfoComponent implements OnInit
             })
             .catch(err => {
               console.log(err);
+            });
+
+          this.teamService.getPastMatches(params.id)
+            .then(matches => {
+              let parsed = matches.map(x => { return {
+                id: x.id,
+                sender: x.sender,
+                receiver: x.receiver,
+                date: new DateModel(x.date.year, x.date.month, x.date.day, 0, 0, 0).toStringDate(),
+                time: Time.timeModelFromTime(x.time).toStringTime(),
+                location: x.location,
+                state: x.state
+              }});
+              this.matchDataSource = new MatTableDataSource<any>(parsed);
+              this.playerDataSource.paginator = this.paginator;
+              this.playerDataSource.sort = this.sort;
             })
+            .catch(err => {
+              console.log(err);
+            });
         })
         .catch(err => {
           console.log(err);
@@ -158,22 +181,57 @@ export class TeamInfoComponent implements OnInit
   }
 
   joinRequest() {
-    this.teamService.joinRequest(this.team.id).then(res => {
-      this.snackBar.open('El pedido se envió con éxito.', '', {
-        duration: 5000,
-        verticalPosition: 'top'
-      });
-      this.proposed = true;
-    }).catch(err => {
-      this.snackBar.open('Hubo un error al enviar el pedido. Por favor, inténtelo nuevamente', '', {
-        duration: 5000,
-        verticalPosition: 'top'
-      });
+    const dialogRef = this.dialog.open(FuseConfirmDialogComponent, {
+      data: {
+        confirmMessage: 'Estas seguro que querés postularte para ' + this.team.name + '?'
+      }
     });
+    dialogRef.afterClosed().subscribe(
+      (data: any) => {
+        if (data) {
+          this.teamService.joinRequest(this.team.id).then(res => {
+            this.snackBar.open('El pedido se envió con éxito.', '', {
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+            this.proposed = true;
+          }).catch(err => {
+            this.snackBar.open('Hubo un error al enviar el pedido. Por favor, inténtelo nuevamente', '', {
+              duration: 5000,
+              verticalPosition: 'top'
+            });
+          });
+        }
+      }
+    );
   }
 
-  test(event) {
-    console.log(event);
+  deletePlayer(player) {
+    const dialogRef = this.dialog.open(FuseConfirmDialogComponent, {
+      data: {
+        confirmMessage: 'Estas seguro que querés echar del equipo a ' + player.name + ' ' + player.lastName + '?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(
+      (data: any) => {
+        if (data) {
+          this.teamService.removePlayer({teamId: this.team.id, playerId: player.id}).then( res => {
+            if(res) {
+              this.playerDataSource.data = this.playerDataSource.data.filter(p => p.id !== player.id);
+              this.snackBar.open('El jugador fue eliminado del equipo con éxito.', '', {
+                duration: 5000,
+                verticalPosition: 'top'
+              });
+            }
+          }).catch(err => {
+              this.snackBar.open('Hubo un error al desafiar al equipo. Por favor, inténtelo nuevamente.', '', {
+                duration: 5000,
+                verticalPosition: 'top'
+              });
+          });
+        }
+      }
+    );
   }
 
   back() {

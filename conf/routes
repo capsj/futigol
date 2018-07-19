@@ -17,6 +17,7 @@ GET     /api/player/team/captain/:id            controllers.PlayerController.get
 GET     /api/player/all                         controllers.PlayerController.getAll
 GET     /api/player/pending/:playerId           controllers.PlayerController.getPendingMatches(playerId: java.util.UUID)
 GET     /api/player/confirmed/:playerId         controllers.PlayerController.getConfirmedMatches(playerId: java.util.UUID)
+GET     /api/player/notifications/:playerId     controllers.PlayerController.getNotifications(playerId: java.util.UUID)
 DELETE  /api/player/:id                         controllers.PlayerController.delete(id: java.util.UUID)
 
 PUT     /api/match                              controllers.PlayerController.confirmMatch
@@ -25,6 +26,7 @@ PUT     /api/match                              controllers.PlayerController.con
 POST    /api/team                               controllers.TeamController.register
 POST    /api/team/search                        controllers.TeamController.search
 POST    /api/team/challenge                     controllers.TeamController.challenge
+POST    /api/team/player/remove                 controllers.TeamController.removePlayer
 PUT     /api/team                               controllers.TeamController.update
 GET     /api/team/join/:teamId                  controllers.TeamController.joinRequest(teamId: java.util.UUID)
 GET     /api/team/join/check/:teamId            controllers.TeamController.checkJoinRequests(teamId: java.util.UUID)
@@ -33,7 +35,16 @@ GET     /api/team/name/:name                    controllers.TeamController.getBy
 GET     /api/team/location/:location            controllers.TeamController.getByLocation(location)
 GET     /api/team/players/:teamId               controllers.TeamController.getTeamPlayers(teamId: java.util.UUID)
 GET     /api/team/all                           controllers.TeamController.getAll
+GET     /api/team/past/matches/:teamId          controllers.TeamController.getPastMatches(teamId: java.util.UUID)
 DELETE  /api/team/:id                           controllers.TeamController.delete(id: java.util.UUID)
+
+GET     /api/invite/accept/mail/:inviteId       controllers.RequestController.acceptRequestByMail(inviteId: java.util.UUID)
+GET     /api/invite/accept/:inviteId            controllers.RequestController.acceptRequest(inviteId: java.util.UUID)
+GET     /api/invite/accept/team/mail/:inviteId  controllers.RequestController.acceptInviteByMail(inviteId: java.util.UUID)
+GET     /api/invite/accept/team/:inviteId       controllers.RequestController.acceptInvite(inviteId: java.util.UUID)
+GET     /api/invite/reject/:inviteId            controllers.RequestController.rejectRequest(inviteId: java.util.UUID)
+GET     /api/challenge/accept/mail/:challengeId controllers.RequestController.acceptMatchRequestByMail(challengeId: java.util.UUID)
+GET     /api/challenge/reject/mail/:inviteId    controllers.RequestController.rejectMatchRequestByMail(inviteId: java.util.UUID)
 
 # Login
 POST    /api/login                              controllers.LoginController.login

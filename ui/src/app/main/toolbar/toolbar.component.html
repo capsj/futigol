@@ -19,12 +19,6 @@
                                     *ngIf="fuseSettings.layout.navigation === 'top'">
             </fuse-navbar-horizontal>
             <!-- / NAVBAR: Top -->
-
-          <!--<div fxLayout="row" fxLayoutAlign="start center">-->
-              <!--<div class="logo ml-0 ml-sm-16">-->
-                <!--<img class="logo-icon" src="/assets/images/logo.png">-->
-              <!--</div>-->
-            <!--</div>-->
         </div>
 
         <div class="button-container" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
@@ -33,17 +27,55 @@
             <span>{{name}}</span>
           </div>
 
-          <div class="cart-div" fxLayoutAlign="center center">
-              <button mat-button class="menu-div" fxLayoutAlign="center center" (click)="toProfile()">
-                <mat-icon class="icon">person</mat-icon>
-              </button>
-            </div>
+          <!--<div class="toolbar-separator"></div>-->
 
-            <div class="logout-div" fxLayoutAlign="center center" (click)="logout()">
-              <button mat-button class="menu-div" fxLayoutAlign="center center">
-                <mat-icon class="icon">exit_to_app</mat-icon>
-              </button>
+          <button mat-button
+                  class="language-button"
+                  [matMenuTriggerFor]="notificationMenu"
+                  >
+            <div class="notifications">
+              <mat-icon class="icon notification-icon">notifications</mat-icon>
             </div>
+            <div *ngIf="notifications.length > 0">
+              <div class="unread-count ng-star-inserted">{{notifications.length}}</div>
+            </div>
+          </button>
+
+          <mat-menu #notificationMenu="matMenu" [overlapTrigger]="false">
+
+            <button *ngIf="notifications.length == 0" mat-menu-item>
+              <div fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="notification-div">
+                <span class="iso">No hay notificaciones</span>
+              </div>
+            </button>
+            <button mat-menu-item *ngFor="let notification of notifications">
+              <div *ngIf="notification.requestType == 'Join'"
+                   fxLayout="row"
+                   fxLayoutAlign="start center"
+                   class="notification-div"
+                   (click)="openJoinDialog(notification)">
+                <span class="iso">{{notification.sender.name}} {{notification.sender.lastName}} quiere unirse a {{notification.team.name}}</span>
+              </div>
+              <div *ngIf="notification.requestType == 'Invite'" fxLayout="row" fxLayoutAlign="start center" class="notification-div"
+                   (click)="openInviteDialog(notification)">
+                <span class="iso">{{notification.sender.name}} te invitó a unirte a {{notification.team.name}}</span>
+              </div>
+            </button>
+          </mat-menu>
+
+          <div class="cart-div" fxLayoutAlign="center center">
+            <button mat-button class="menu-div" fxLayoutAlign="center center" (click)="toProfile()">
+              <mat-icon class="icon">person</mat-icon>
+            </button>
+          </div>
+
+          <div class="logout-div" fxLayoutAlign="center center" (click)="logout()">
+            <button mat-button class="menu-div" fxLayoutAlign="center center">
+              <mat-icon class="icon">exit_to_app</mat-icon>
+            </button>
+          </div>
         </div>
     </div>
 </mat-toolbar>

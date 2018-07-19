@@ -7,6 +7,7 @@ case class Date(year: Int, month: Int, day: Int){
   def toDateTime : DateTime = new DateTime(year, month, day, 0, 0, 0)
   def isAfterNow : Boolean = toDateTime.isAfterNow
   def isBeforeNow : Boolean = toDateTime.isBeforeNow
+  def toDateString: String = day + "/" + month + "/" + year
 }
 
 object Date extends DateJsonFormat{

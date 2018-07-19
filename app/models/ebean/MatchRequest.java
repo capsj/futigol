@@ -2,6 +2,7 @@ package models.ebean;
 
 import com.avaje.ebean.Expr;
 import com.avaje.ebean.Model;
+import models.domain.util.Date;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
@@ -67,6 +68,17 @@ public class MatchRequest extends Model {
     public static List<MatchRequest> getPendingRequests(UUID senderId) {
         return finder.where().or(Expr.eq("sender_id", senderId), Expr.eq("receiver_id", senderId))
                 .or(Expr.eq("state", "Pendiente"), Expr.eq("state", "Enviada")).findList();
+    }
+
+    public static List<MatchRequest> getConfirmedRequests(UUID senderId) {
+        return finder.where().or(Expr.eq("sender_id", senderId), Expr.eq("receiver_id", senderId))
+                .eq("state", "Confirmada").findList();
+    }
+
+    public static List<MatchRequest> getPastMatches(UUID teamId) {
+        return finder.where().or(Expr.eq("sender_id", teamId), Expr.eq("receiver_id", teamId))
+                .eq("state", "Confirmada")
+                .between("date", new DateTime(2017, 1, 1, 0, 0, 0), DateTime.now()).findList();
     }
 
     public UUID getId() {

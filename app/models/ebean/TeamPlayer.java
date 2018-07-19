@@ -39,6 +39,13 @@ public class TeamPlayer extends Model {
         return finder.where().eq("player_id", playerId).findList();
     }
 
+    public static Optional<TeamPlayer> getTeamPlayer(UUID teamId, UUID playerId) {
+        TeamPlayer teamPlayer = finder.where().eq("team_id", teamId).eq("player_id", playerId).findUnique();
+        if(teamPlayer != null) {
+            return Optional.of(teamPlayer);
+        } else return Optional.empty();
+    }
+
     public static Optional<TeamPlayer> getTeamCaptain(UUID teamId) {
         TeamPlayer teamPlayer = finder.where().eq("team_id", teamId).eq("team_captain", true).findUnique();
         if(teamPlayer != null) {

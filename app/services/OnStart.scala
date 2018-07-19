@@ -16,10 +16,10 @@ trait OnStart {
 class OnStartImpl @Inject() (appLifecycle: ApplicationLifecycle) extends OnStart {
 
   override def save(): Unit = {
-    Player.getByEmail("jero@gmail.com") match {
+    Player.getByEmail("jeronimo.carlos@ing.austral.edu.ar") match {
       case Some(_) =>
       case None =>
-        val jero = Player.saveOrUpdate(PlayerCreate("123", "jero@gmail.com", "Jerónimo", "Carlos", "Zona Norte", "1154549422", "Defensor").toPlayer())
+        val jero = Player.saveOrUpdate(PlayerCreate("123", "jeronimo.carlos@ing.austral.edu.ar", "Jerónimo", "Carlos", "Zona Norte", "1154549422", "Defensor").toPlayer())
         val pon = Player.saveOrUpdate(PlayerCreate("123", "pon@gmail.com", "Felipe", "Beláustegui", "Zona Norte", "1135849312", "Delantero").toPlayer())
         val ivan = Player.saveOrUpdate(PlayerCreate("123", "ivan@gmail.com", "Iván", "Macris", "Zona Norte", "1159452371", "Volante").toPlayer())
         val ancho = Player.saveOrUpdate(PlayerCreate("123", "ancho@gmail.com", "Santiago Ernesto", "De Anchorena", "Zona Norte", "1148573168", "Defensor").toPlayer())

@@ -96,4 +96,34 @@ export class PlayerService {
         return res.data
       })
   }
+
+  public getNotifications(playerId: string): Promise<any> {
+    return this.http.get('/api/player/notifications/' + playerId)
+      .then( res => {
+        return res.data
+      })
+  }
+
+  //join
+  public acceptInvite(inviteId: string): Promise<any> {
+    return this.http.get('/api/invite/accept/' + inviteId)
+      .then( res => {
+        return res.data
+      })
+  }
+
+  public rejectInvite(inviteId: string): Promise<any> {
+    return this.http.get('/api/invite/reject/' + inviteId)
+      .then( res => {
+        return res.data
+      })
+  }
+
+  //invite
+  public acceptTeamInvite(inviteId: string): Promise<any> {
+    return this.http.get('/api/invite/accept/team/' + inviteId)
+      .then( res => {
+        return res.data
+      })
+  }
 }

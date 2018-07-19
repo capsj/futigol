@@ -158,7 +158,7 @@
 
                   <ng-container cdkColumnDef="delete">
                     <mat-header-cell *cdkHeaderCellDef mat-sort-header>Eliminar del equipo</mat-header-cell>
-                    <mat-cell *cdkCellDef="let player" (click)="test(player)">
+                    <mat-cell *cdkCellDef="let player" (click)="deletePlayer(player)">
                       <mat-icon *ngIf="player.id !== team.captain.id">delete</mat-icon>
                     </mat-cell>
                   </ng-container>
@@ -252,8 +252,50 @@
           </mat-tab>
 
           <mat-tab label="Historial">
-            <div class="tab-content p-24" fusePerfectScrollbar>
+            <div class="tab-content p-24 no-padding-top" fusePerfectScrollbar>
+              <mat-table class="players-table"
+                         #matchtable
+                         matSort
+                         [dataSource]="matchDataSource"
+                         [@animateStagger]="{value:'50'}"
+                         fusePerfectScrollbar>
 
+                <ng-container cdkColumnDef="sender">
+                  <mat-header-cell *cdkHeaderCellDef mat-sort-header>Desafiante</mat-header-cell>
+                  <mat-cell *cdkCellDef="let match">
+                    <p class="text-truncate">{{match.sender.name}}</p>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container cdkColumnDef="receiver">
+                  <mat-header-cell *cdkHeaderCellDef mat-sort-header>Desafiado</mat-header-cell>
+                  <mat-cell *cdkCellDef="let match">
+                    <p class="text-truncate">{{match.receiver.name}}</p>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container cdkColumnDef="date">
+                  <mat-header-cell *cdkHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+                  <mat-cell *cdkCellDef="let match">
+                    <p class="text-truncate">{{match.date}}</p>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container cdkColumnDef="time">
+                  <mat-header-cell *cdkHeaderCellDef mat-sort-header>Hora</mat-header-cell>
+                  <mat-cell *cdkCellDef="let match">
+                    <p class="text-truncate">{{match.time}}</p>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *cdkHeaderRowDef="matchColumns"></mat-header-row>
+
+                <mat-row *cdkRowDef="let match; columns: matchColumns; let i = index;"
+                         class="table-row"
+                >
+                </mat-row>
+
+              </mat-table>
             </div>
           </mat-tab>
 

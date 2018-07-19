@@ -3,9 +3,10 @@ package models.dao
 import java.util.UUID
 
 import models.domain.TeamPlayer
+import models.domain.matchRequest.MatchRequest
 import models.domain.player.Player
 import models.domain.team.{Team, TeamSearch}
-import models.ebean.{Team => ETeam, TeamPlayer => ETeamPlayer}
+import models.ebean.{Team => ETeam, TeamPlayer => ETeamPlayer, MatchRequest => EMatchRequest}
 import utils.ScalaOptional.toScalaOption
 
 import scala.collection.JavaConversions._
@@ -68,6 +69,15 @@ object TeamDAO {
     TeamPlayer(eTeamPlayer)
   }
 
+  def removePlayer(teamId: UUID, playerId: UUID): Boolean = {
+    toScalaOption[ETeamPlayer](ETeamPlayer.getTeamPlayer(teamId, playerId)) match {
+      case Some(teamPlayer) =>
+        teamPlayer.delete()
+        true
+      case None => false
+    }
+  }
+
   def addCaptain(team: Team, player: Player): TeamPlayer = {
     val eTeamPlayer: ETeamPlayer = TeamPlayerDAO.toEbean(TeamPlayer(None, player, team, isCaptain = true))
     eTeamPlayer.save()
@@ -80,5 +90,9 @@ object TeamDAO {
 
   def search(teamSearch: TeamSearch): List[Team] = {
     ETeam.search(teamSearch.name.getOrElse(""), teamSearch.location.orNull, teamSearch.size.orNull).map(Team.apply).toList
+  }
+
+  def getPastMatches(teamId: UUID): List[MatchRequest] = {
+    EMatchRequest.getPastMatches(teamId).map(MatchRequest.apply).toList
   }
 }

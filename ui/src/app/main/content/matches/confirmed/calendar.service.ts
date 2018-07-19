@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { HttpClient } from '@angular/common/http';
+import {AuthService} from "../../../../core/services/auth/auth.service";
 
 @Injectable()
 export class CalendarService implements Resolve<any>
@@ -10,7 +11,7 @@ export class CalendarService implements Resolve<any>
     events: any;
     onEventsUpdated = new Subject<any>();
 
-    constructor(private http: HttpClient)
+    constructor(private http: HttpClient, private authService: AuthService)
     {
 
     }
@@ -19,7 +20,9 @@ export class CalendarService implements Resolve<any>
     {
         return new Promise((resolve, reject) => {
             Promise.all([
-                this.getEvents()
+              this.authService.loggedUser.then(res => {
+                this.getEvents(res.id)
+              })
             ]).then(
                 ([events]: [any]) => {
                     resolve();
@@ -29,28 +32,15 @@ export class CalendarService implements Resolve<any>
         });
     }
 
-    getEvents()
+    getEvents(playerId: string)
     {
         return new Promise((resolve, reject) => {
 
-            this.http.get('api/calendar/events')
+            this.http.get('/api/player/confirmed/' + playerId)
                 .subscribe((response: any) => {
                     this.events = response.data;
                     this.onEventsUpdated.next(this.events);
                     resolve(this.events);
-                }, reject);
-        });
-    }
-
-    updateEvents(events)
-    {
-        return new Promise((resolve, reject) => {
-            this.http.post('api/calendar/events', {
-                id  : 'events',
-                data: [...events]
-            })
-                .subscribe((response: any) => {
-                    this.getEvents();
                 }, reject);
         });
     }

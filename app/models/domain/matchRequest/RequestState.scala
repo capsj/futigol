@@ -9,4 +9,5 @@ object RequestState {
 
   val SENT = RequestState("Pendiente")
   val CONFIRMED = RequestState("Confirmada")
+  val REJECTED = RequestState("Rechazada")
 }

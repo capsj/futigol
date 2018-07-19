@@ -9,6 +9,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AuthService} from "./auth/auth.service";
 import {Player} from "../models/player/player.model";
 import {Challenge} from "../models/challenge/challenge.model";
+import {Invite} from "../models/invite/invite.model";
 
 @Injectable()
 export class TeamService implements Resolve<any>{
@@ -110,5 +111,18 @@ export class TeamService implements Resolve<any>{
       })
   }
 
+  public removePlayer(obj: any): Promise<any> {
+    return this.http.post('/api/team/player/remove', obj)
+      .then(res => {
+        return res.data;
+      })
+  }
+
+  public getPastMatches(teamId: string): Promise<Challenge[]> {
+    return this.http.get('/api/team/past/matches/' + teamId)
+      .then( res => {
+        return res.data
+      });
+  }
 
 }

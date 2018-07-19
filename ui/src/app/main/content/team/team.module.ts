@@ -17,26 +17,23 @@ import {SearchTeamComponent} from "./search-team/search-team.component";
 const routes = [
   {
     path: 'team',
+    canActivate: [AuthGuard],
     component: TeamComponent,
     children: [
       {
         path: 'create',
-        // canActivate: [AuthGuard],
         component: CreateTeamComponent
       },
       {
         path: 'general',
-        // canActivate: [AuthGuard],
         component: MyTeamsComponent
       },
       {
         path: 'info/:id',
-        // canActivate: [AuthGuard],
         component: TeamInfoComponent
       },
       {
         path: 'search',
-        // canActivate: [AuthGuard],
         component: SearchTeamComponent
       }
     ]

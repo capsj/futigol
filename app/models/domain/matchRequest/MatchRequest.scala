@@ -43,6 +43,10 @@ object MatchRequest extends MatchRequestFormat {
     MatchRequestDAO.getPendingRequests(senderId)
   }
 
+  def getConfirmedRequests(senderId: UUID): List[MatchRequest] = {
+    MatchRequestDAO.getConfirmedRequests(senderId)
+  }
+
   def getById(requestId: UUID): Option[MatchRequest] = {
     MatchRequestDAO.getById(requestId: UUID)
   }

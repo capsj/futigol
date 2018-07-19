@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     selector   : 'fuse-confirm-dialog',
@@ -9,9 +9,20 @@ import { MatDialogRef } from '@angular/material';
 export class FuseConfirmDialogComponent implements OnInit
 {
     public confirmMessage: string;
+    public confirmButton: {
+      text: string,
+      colour: string
+    };
+    public rejectButton: {
+      text: string,
+      colour: string
+    };
 
-    constructor(public dialogRef: MatDialogRef<FuseConfirmDialogComponent>)
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<FuseConfirmDialogComponent>)
     {
+      this.confirmMessage = data.confirmMessage;
+      this.confirmButton = data.confirmButton || {text: 'Confirmar', colour: ''};
+      this.rejectButton = data.rejectButton || {text: 'Cancelar', colour: ''};
     }
 
     ngOnInit()

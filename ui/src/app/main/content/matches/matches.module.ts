@@ -19,16 +19,15 @@ import {CalendarService} from './confirmed/calendar.service';
 const routes = [
   {
     path: 'matches',
+    canActivate: [AuthGuard],
     component: MatchesComponent,
     children: [
       {
         path: 'confirmed',
-        // canActivate: [AuthGuard],
         component: ConfirmedComponent
       },
       {
         path: 'pending',
-        // canActivate: [AuthGuard],
         component: PendingComponent
       }
     ]

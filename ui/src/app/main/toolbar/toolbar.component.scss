@@ -88,6 +88,16 @@
   }
 }
 
+.toolbar-separator {
+  height: 64px;
+  width: 1px;
+  background: rgba(0, 0, 0, .12);
+
+  @include media-breakpoint-down('xs') {
+    height: 56px;
+  }
+}
+
 .button-container {
   height: 100% !important;
 }
@@ -113,4 +123,35 @@ fuse-navbar-horizontal {
 fuse-nav-horizontal-item {
   height: 100%!important;
 
+}
+
+.notifications {
+  color: #3c4252!important;
+  padding: 20px;
+}
+
+.unread-count {
+  position: absolute;
+  min-width: 18px;
+  height: 18px;
+  top: 8px;
+  left: 12px;
+  border-radius: 9px;
+  padding: 0 5px;
+  font-size: 11px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3f51b5;
+  color: #fff;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.35);
+}
+
+.notification-icon {
+  color: #3c4252 !important;
+}
+
+.notification-div {
+  overflow: overlay;
 }

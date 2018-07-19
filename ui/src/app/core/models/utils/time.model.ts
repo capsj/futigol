@@ -19,6 +19,6 @@ export class Time {
   }
 
   toStringTime(): string {
-    return this.hour.toString() + ':' + this.minute.toString();
+    return this.hour.toString() + ':' + ((this.minute == 0) ? '00' : this.minute.toString());
   }
 }

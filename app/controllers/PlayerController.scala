@@ -1,7 +1,9 @@
 package controllers
 
 import java.util.UUID
+import javax.inject.{Inject, Named}
 
+import akka.actor.ActorRef
 import models.domain.authentication.CaseUser
 import models.domain.invite.{Invite, RequestType}
 import models.domain.matchRequest.{MatchRequest, RequestState, RequestUpdate}
@@ -11,8 +13,16 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import utils.ResponseGenerated
 import pdi.jwt._
+import play.api.libs.mailer.Email
 
-class PlayerController extends Controller {
+import scala.concurrent.duration._
+import utils.EmailActor.SendEmail
+import akka.pattern.ask
+import akka.util.Timeout
+
+class PlayerController @Inject() (@Named("futigol-email") emailActor: ActorRef) extends Controller {
+
+  implicit val timeout: Timeout = 300.seconds
 
   def register = Action {
     request =>
@@ -203,10 +213,35 @@ class PlayerController extends Controller {
                     case Some(sender) =>
                       Player.getById(playerInvite.playerId) match {
                         case Some(receiver) =>
+                          val invite = Invite.save(sender, receiver, team, RequestType.INVITE.value)
+                          val email = Email(
+                            "Invitación a equipo",
+                            "info@futigol.com <from@email.com>",
+                            Seq(receiver.email),
+                            bodyHtml = Some("<html>\n" +
+                              "<head>\n" +
+                              "    <meta http-equiv=\"Content-Type\" content=\"text/html\" charset=\"utf-8\">\n" +
+                              "</head>\n" + "<body style=\"font-family: Helvetica Light, Helvetica, sans-serif\">\n" +
+                              "<div id=\"full-container\" style=\"width: 90%; margin: 20px auto; ;border: solid 1px #EFEFEF\">\n" +
+                              "    <div>\n" +
+                              "        <div style=\"padding: 20px\">\n" +
+                              "            <h2>Futigol</h2>\n" +
+                              "            <p>Recibiste una invitación de " + sender.name + " " + sender.lastName + " para unirte a " + team.name + "</p>\n" +
+                              "            <p>Confirmala haciendo click en el siguiente link</p>\n" +
+                              "            <p><a href= \"http://localhost:9000/api/invite/accept/team/mail/" + invite.id + "\">Confirmar</a>" +
+                              "            <p>O inicia sesión para más opciones</p>\n" +
+                              "            <p><a href= \"http://localhost:9000/login\">Iniciar Sesión</a>" +
+                              "            <p>Saludos!</p>" +
+                              "        </div>\n" +
+                              "    </div>\n" +
+                              "</body>\n" +
+                              "</html>")
+                          )
+                          emailActor ? SendEmail(email)
                           Ok(
                             Json.toJson(
                               ResponseGenerated(
-                                OK, "Invite sent", Json.toJson(Invite.save(sender, receiver, team, RequestType.INVITE.value)))
+                                OK, "Invite sent", Json.toJson(invite))
                               )
                             )
                         case None => BadRequest
@@ -252,7 +287,7 @@ class PlayerController extends Controller {
                         Ok(
                           Json.toJson(
                             ResponseGenerated(
-                              OK, "Player updated", Json.toJson(update.toPlayer(player))
+                              OK, "Player updated", Json.toJson(Player.update(update.toPlayer(player)))
                             )
                           )
                         )
@@ -269,7 +304,7 @@ class PlayerController extends Controller {
                       Ok(
                         Json.toJson(
                           ResponseGenerated(
-                            OK, "Player updated", Json.toJson(update.toPlayer(player))
+                            OK, "Player updated", Json.toJson(Player.update(update.toPlayer(player)))
                           )
                         )
                       )
@@ -278,7 +313,7 @@ class PlayerController extends Controller {
                   Ok(
                     Json.toJson(
                       ResponseGenerated(
-                        OK, "Player updated", Json.toJson(update.toPlayer(player))
+                        OK, "Player updated", Json.toJson(Player.update(update.toPlayer(player)))
                       )
                     )
                   )
@@ -325,8 +360,21 @@ class PlayerController extends Controller {
   }
 
   def getConfirmedMatches(playerId: UUID) = Action {
-
-    Ok
+    Player.getById(playerId) match {
+      case Some(_) =>
+        Ok(
+          Json.toJson(
+            ResponseGenerated(
+              OK, "Pending requests", Json.toJson(
+                Player.getPlayerTeams(playerId).flatMap(x =>
+                  MatchRequest.getConfirmedRequests(x.id)
+                ).distinct
+              )
+            )
+          )
+        )
+      case None => BadRequest
+    }
   }
 
   def confirmMatch = Action {
@@ -335,13 +383,57 @@ class PlayerController extends Controller {
         case Some(requestUpdate) =>
           MatchRequest.getById(requestUpdate.id) match {
             case Some(matchRequest) =>
-              Ok(
-                Json.toJson(
-                  ResponseGenerated(
-                    OK, "Match accepted", Json.toJson(MatchRequest.update(requestUpdate.toRequest(matchRequest)))
+              requestUpdate.state match {
+                case Some(state) =>
+                  if(state == RequestState.CONFIRMED.value) {
+                    val updatedRequest = MatchRequest.update(requestUpdate.toRequest(matchRequest))
+                    val email = Email(
+                      "Confirmación de partido",
+                      "info@futigol.com <from@email.com>",
+                      Seq(matchRequest.receiver.captain.email, matchRequest.sender.captain.email),
+                      bodyHtml = Some("<html>\n" +
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html\" charset=\"utf-8\">\n" +
+                        "</head>\n" + "<body style=\"font-family: Helvetica Light, Helvetica, sans-serif\">\n" +
+                        "<div id=\"full-container\" style=\"width: 90%; margin: 20px auto; ;border: solid 1px #EFEFEF\">\n" +
+                        "    <div>\n" +
+                        "        <div style=\"padding: 20px\">\n" +
+                        "            <h2>Futigol</h2>\n" +
+                        "            <p>Se confirmó el partido entre " + matchRequest.receiver.name + " y " + matchRequest.sender.name + " para jugar el " + matchRequest.date.toDateString + " en " + matchRequest.location + "</p>\n" +
+                        "            <p>Inicia sesión para ver tu calendario</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/login\">Iniciar Sesión</a>" +
+                        "            <p>Saludos!</p>" +
+                        "        </div>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>")
+                    )
+                    emailActor ? SendEmail(email)
+                    Ok(
+                      Json.toJson(
+                        ResponseGenerated(
+                          OK, "Match accepted", Json.toJson(updatedRequest)
+                        )
+                      )
+                    )
+                  } else {
+                    Ok(
+                      Json.toJson(
+                        ResponseGenerated(
+                          OK, "Match accepted", Json.toJson(MatchRequest.update(requestUpdate.toRequest(matchRequest)))
+                        )
+                      )
+                    )
+                  }
+                case None =>
+                  Ok(
+                    Json.toJson(
+                      ResponseGenerated(
+                        OK, "Match accepted", Json.toJson(MatchRequest.update(requestUpdate.toRequest(matchRequest)))
+                      )
+                    )
                   )
-                )
-              )
+              }
             case None =>
               BadRequest(
                 Json.toJson(
@@ -360,5 +452,15 @@ class PlayerController extends Controller {
             )
           )
       }
+  }
+
+  def getNotifications(playerId: UUID) = Action {
+    Ok(
+      Json.toJson(
+        ResponseGenerated(
+          OK, "Player notifications", Json.toJson(Invite.getPlayerNotifications(playerId))
+        )
+      )
+    )
   }
 }

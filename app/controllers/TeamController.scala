@@ -6,7 +6,7 @@ import javax.inject.{Inject, Named}
 import akka.actor.ActorRef
 import akka.util.Timeout
 import models.domain.authentication.CaseUser
-import models.domain.player.Player
+import models.domain.player.{Player, PlayerInvite}
 import models.domain.team.{Team, TeamCreate, TeamSearch, TeamUpdate}
 import pdi.jwt._
 import play.api.libs.json.Json
@@ -16,11 +16,12 @@ import utils.ResponseGenerated
 import scala.concurrent.duration._
 import utils.EmailActor.SendEmail
 import akka.pattern.ask
+import models.domain.TeamPlayer
 import models.domain.invite.{Invite, RequestType}
 import models.domain.matchRequest.{MatchRequest, RequestCreate}
-import play.api.libs.mailer.{AttachmentFile, Email}
+import play.api.libs.mailer.Email
 
-class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  extends Controller {
+class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef) extends Controller {
 
   implicit val timeout: Timeout = 300.seconds
 
@@ -260,17 +261,35 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
               } else {
                 Player.getById(user.id) match {
                   case Some(sender) =>
+                    val invite = Invite.save(sender, team.captain, team, RequestType.JOIN.value)
                     val email = Email(
                       "Pedido de Inscripción",
                       "info@futigol.com <from@email.com>",
-                      Seq("jcarlos@sirius.com.ar"),
-                      Some("futigol papa")
+                      Seq(team.captain.email),
+                      bodyHtml = Some("<html>\n" +
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html\" charset=\"utf-8\">\n" +
+                        "</head>\n" + "<body style=\"font-family: Helvetica Light, Helvetica, sans-serif\">\n" +
+                        "<div id=\"full-container\" style=\"width: 90%; margin: 20px auto; ;border: solid 1px #EFEFEF\">\n" +
+                        "    <div>\n" +
+                        "        <div style=\"padding: 20px\">\n" +
+                        "            <h2>Futigol</h2>\n" +
+                        "            <p>Recibiste una postulación de " + sender.name + " " + sender.lastName + " para unirse a " + team.name + "</p>\n" +
+                        "            <p>Confirmala haciendo click en el siguiente link</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/api/invite/accept/mail/" + invite.id + "\">Confirmar</a>" +
+                        "            <p>O inicia sesión para más opciones</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/login\">Iniciar Sesión</a>" +
+                        "            <p>Saludos!</p>" +
+                        "        </div>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>")
                     )
                     emailActor ? SendEmail(email)
                     Ok(
                       Json.toJson(
                         ResponseGenerated(
-                          OK, "Request sent", Json.toJson(Invite.save(sender, team.captain, team, RequestType.JOIN.value))
+                          OK, "Request sent", Json.toJson(invite)
                         )
                       )
                     )
@@ -407,10 +426,38 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
                 case Some(receiver) =>
                   val matchRequest = MatchRequest(requestCreate, sender, receiver)
                   if(MatchRequest.checkRequests(matchRequest).isEmpty) {
+                    val savedRequest = MatchRequest.save(matchRequest)
+                    val email = Email(
+                      "Nuevo desafío",
+                      "info@futigol.com <from@email.com>",
+                      Seq(receiver.captain.email),
+                      bodyHtml = Some("<html>\n" +
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html\" charset=\"utf-8\">\n" +
+                        "</head>\n" + "<body style=\"font-family: Helvetica Light, Helvetica, sans-serif\">\n" +
+                        "<div id=\"full-container\" style=\"width: 90%; margin: 20px auto; ;border: solid 1px #EFEFEF\">\n" +
+                        "    <div>\n" +
+                        "        <div style=\"padding: 20px\">\n" +
+                        "            <h2>Futigol</h2>\n" +
+                        "            <p>Recibiste un desafío de " + sender.name + " para jugar el " + matchRequest.date.toDateString + " en " + matchRequest.location + "</p>\n" +
+                        "            <p>Confirmalo haciendo click en el siguiente link</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/api/challenge/accept/mail/" + savedRequest.id + "\">Confirmar</a>" +
+                        "            <p>Rechazalo haciendo click en este otro link</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/api/challenge/reject/mail/" + savedRequest.id + "\">Rechazar</a>" +
+                        "            <p>O inicia sesión para modificar las condiciones</p>\n" +
+                        "            <p><a href= \"http://localhost:9000/login\">Iniciar Sesión</a>" +
+                        "            <p>Saludos!</p>" +
+                        "        </div>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>")
+                    )
+                    emailActor ? SendEmail(email)
+
                     Ok(
                       Json.toJson(
                         ResponseGenerated(
-                          OK, "Request sent", Json.toJson(MatchRequest.save(matchRequest))
+                          OK, "Request sent", Json.toJson(savedRequest)
                         )
                       )
                     )
@@ -429,5 +476,48 @@ class TeamController @Inject() (@Named("futigol-email") emailActor: ActorRef)  e
           }
         case None => BadRequest
       }
+  }
+
+  def removePlayer = Action {
+    request =>
+      request.body.asJson.get.asOpt[PlayerInvite] match {
+        case Some(playerInvite) =>
+          Player.getById(playerInvite.playerId) match {
+            case Some(_) =>
+              Team.getById(playerInvite.teamId) match {
+                case Some(team) =>
+                  if(team.captain.id == playerInvite.playerId) {
+                    BadRequest(
+                      Json.toJson(
+                        ResponseGenerated(
+                          BAD_REQUEST, "Cant abandon team"
+                        )
+                      )
+                    )
+                  } else {
+                    Ok(
+                      Json.toJson(
+                        ResponseGenerated(
+                          OK, "Deleted", Json.toJson(Team.removePlayer(playerInvite.teamId, playerInvite.playerId))
+                        )
+                      )
+                    )
+                  }
+                case None => BadRequest
+              }
+            case None => BadRequest
+          }
+        case None => BadRequest
+      }
+  }
+
+  def getPastMatches(teamId: UUID) = Action {
+    Ok(
+      Json.toJson(
+        ResponseGenerated(
+          OK, "Deleted", Json.toJson(Team.getPastMatches(teamId))
+        )
+      )
+    )
   }
 }

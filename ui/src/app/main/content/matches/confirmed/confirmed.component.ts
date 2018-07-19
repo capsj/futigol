@@ -1,9 +1,8 @@
 import { startOfDay, endOfDay, subDays, addDays, endOfMonth, isSameDay, isSameMonth, addHours } from 'date-fns';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { FuseCalendarEventFormDialogComponent } from './event-form/event-form.component';
-import { FormGroup } from '@angular/forms';
 import { CalendarEventModel } from './event.model';
 import { CalendarService } from './calendar.service';
 import {
@@ -12,8 +11,11 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarMonthViewDay
 } from 'angular-calendar';
-import { FuseConfirmDialogComponent } from '../../../../core/components/confirm-dialog/confirm-dialog.component';
 import { fuseAnimations } from '../../../../core/animations';
+import {AuthService} from "../../../../core/services/auth/auth.service";
+import {FuseNavigationService} from "../../../../core/components/navigation/navigation.service";
+import {FuseConfigService} from "../../../../core/services/config.service";
+import {FuseNavigationModel} from "../../../../navigation/navigation.model";
 
 @Component({
   selector   : 'confirmed-component',
@@ -31,64 +33,57 @@ export class ConfirmedComponent implements OnInit
   activeDayIsOpen: boolean;
   refresh: Subject<any> = new Subject();
   dialogRef: any;
-  confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
   selectedDay: any;
+  loggedPlayer: any;
 
   constructor(
+    private fuseConfig: FuseConfigService,
+    private fuseNavigationService: FuseNavigationService,
     public dialog: MatDialog,
-    public calendarService: CalendarService
+    public calendarService: CalendarService,
+    private authService: AuthService
   )
   {
+    this.fuseConfig.setSettings({
+      layout: {
+        navigation: 'top',
+        toolbar   : 'above',
+        footer    : 'none'
+      },
+      colorClasses    : {
+        navbar: 'mat-fuse-dark-50-bg'
+      }
+    });
+    this.fuseNavigationService.setNavigationModel(new FuseNavigationModel());
+    this.authService.loggedUser.then(res => {
+      this.loggedPlayer = res;
+    });
     this.viewDate = new Date();
     this.activeDayIsOpen = true;
     this.selectedDay = {date: startOfDay(new Date())};
+    this.events = []
 
-    this.actions = [
-      {
-        label  : '<i class="material-icons s-16">edit</i>',
-        onClick: ({event}: { event: CalendarEvent }): void => {
-          this.editEvent('edit', event);
-        }
-      },
-      {
-        label  : '<i class="material-icons s-16">delete</i>',
-        onClick: ({event}: { event: CalendarEvent }): void => {
-          this.deleteEvent(event);
-        }
-      }
-    ];
-
-    /**
-     * Get events from service/server
-     */
-    this.events = [];
-    // this.setEvents();
   }
 
   ngOnInit()
   {
-    /**
-     * Watch re-render-refresh for updating db
-     */
-    this.refresh.subscribe(updateDB => {
-      // console.warn('REFRESH');
-      if ( updateDB )
-      {
-        // console.warn('UPDATE DB');
-        this.calendarService.updateEvents(this.events);
-      }
-    });
+    this.authService.loggedUser.then(res => {
+      this.calendarService.getEvents(res.id);
+      this.calendarService.onEventsUpdated.subscribe(events => {
+        this.setEvents();
+        this.refresh.next();
 
-    this.calendarService.onEventsUpdated.subscribe(events => {
-      this.setEvents();
-      this.refresh.next();
-    });
+        /**
+         * Get events from service/server
+         */
+        this.setEvents();
+      });
+    })
   }
 
   setEvents()
   {
     this.events = this.calendarService.events.map(item => {
-      item.actions = this.actions;
       return new CalendarEventModel(item);
     });
   }
@@ -160,30 +155,6 @@ export class ConfirmedComponent implements OnInit
   }
 
   /**
-   * Delete Event
-   * @param event
-   */
-  deleteEvent(event)
-  {
-    this.confirmDialogRef = this.dialog.open(FuseConfirmDialogComponent, {
-      disableClose: false
-    });
-
-    this.confirmDialogRef.componentInstance.confirmMessage = 'Are you sure you want to delete?';
-
-    this.confirmDialogRef.afterClosed().subscribe(result => {
-      if ( result )
-      {
-        const eventIndex = this.events.indexOf(event);
-        this.events.splice(eventIndex, 1);
-        this.refresh.next(true);
-      }
-      this.confirmDialogRef = null;
-    });
-
-  }
-
-  /**
    * Edit Event
    * @param {string} action
    * @param {CalendarEvent} event
@@ -199,35 +170,5 @@ export class ConfirmedComponent implements OnInit
         action: action
       }
     });
-
-    this.dialogRef.afterClosed()
-      .subscribe(response => {
-        if ( !response )
-        {
-          return;
-        }
-        const actionType: string = response[0];
-        const formData: FormGroup = response[1];
-        switch ( actionType )
-        {
-          /**
-           * Save
-           */
-          case 'save':
-
-            this.events[eventIndex] = Object.assign(this.events[eventIndex], formData.getRawValue());
-            this.refresh.next(true);
-
-            break;
-          /**
-           * Delete
-           */
-          case 'delete':
-
-            this.deleteEvent(event);
-
-            break;
-        }
-      });
   }
 }

@@ -12,6 +12,8 @@ import {
     isSameMonth,
     addHours
 } from 'date-fns';
+import {DateModel} from "../../../../core/models/utils/date.model";
+import {Time} from "../../../../core/models/utils/time.model";
 // import { CalendarEvent } from 'calendar-utils/dist/calendar-utils';
 
 /*
@@ -34,36 +36,35 @@ export class CalendarEventModel
         primary: string;
         secondary: string;
     };
-    actions?: CalendarEventAction[];
-    allDay?: boolean;
+    location: string;
+    time: string;
+    date: string;
     cssClass?: string;
     resizable?: {
         beforeStart?: boolean;
         afterEnd?: boolean;
     };
-    draggable?: boolean;
     meta?: {
         location: string,
         notes: string
     };
 
-    constructor(data?)
+    constructor(data)
     {
-        data = data || {};
-        this.start = new Date(data.start) || startOfDay(new Date());
-        this.end = new Date(data.end) || endOfDay(new Date());
-        this.title = data.title || '';
+        this.start = DateModel.dateFromDateModelAndTime(data.date, data.time) || new Date();
+        this.end = DateModel.dateFromDateModelAndTime(data.date, new Time({hour: data.time.hour + 2, minute: data.time.minute, second: 0})) || new Date();
+        this.title = data.receiver.name + ' vs ' + data.sender.name || '';
         this.color = {
             primary  : data.color && data.color.primary || '#1e90ff',
             secondary: data.color && data.color.secondary || '#D1E8FF'
         };
-        this.draggable = data.draggable || true;
+        this.location = data.location;
+        this.time = new Time(data.time).toStringTime();
+        this.date = new DateModel(data.date.year, data.date.month, data.date.day, 0, 0, 0).toStringDate();
         this.resizable = {
             beforeStart: data.resizable && data.resizable.beforeStart || true,
             afterEnd   : data.resizable && data.resizable.afterEnd || true
         };
-        this.actions = data.actions || [];
-        this.allDay = data.allDay || false;
         this.cssClass = data.cssClass || '';
         this.meta = {
             location: data.meta && data.meta.location || '',

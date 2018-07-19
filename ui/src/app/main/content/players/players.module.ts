@@ -15,16 +15,17 @@ import {ProfileComponent} from "./profile/profile.component";
 const routes = [
   {
     path: 'players',
+    canActivate: [AuthGuard],
     component: PlayersComponent,
   },
   {
     path: 'players/info/:id',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: PlayerInfoComponent
   },
   {
     path: 'profile',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     component: ProfileComponent
   }
 ];

@@ -24,4 +24,25 @@ object Invite {
   def checkJoinRequests(senderId: UUID, teamId: UUID): List[Invite] = {
     InviteDAO.checkJoinRequests(senderId, teamId)
   }
+
+  def getPlayerNotifications(receiver: UUID): List[Invite] = {
+    InviteDAO.getPlayerNotifications(receiver)
+  }
+
+  def getById(id: UUID): Option[Invite] = {
+    InviteDAO.getById(id)
+  }
+
+  def accept(invite: Invite) = {
+    InviteDAO.accept(invite)
+  }
+
+  def acceptTeamInvite(invite: Invite) = {
+    InviteDAO.acceptTeamInvite(invite)
+  }
+
+
+  def reject(invite: Invite) = {
+    InviteDAO.reject(invite)
+  }
 }
