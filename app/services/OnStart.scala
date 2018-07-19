@@ -1,9 +1,12 @@
 package services
 
+import java.util.UUID
 import javax.inject.{Inject, Singleton}
 
+import models.domain.matchRequest.{MatchRequest, RequestCreate, RequestState}
 import models.domain.player.{Player, PlayerCreate}
 import models.domain.team.{Team, TeamCreate}
+import models.domain.util.{Date, Time}
 import play.api.inject.ApplicationLifecycle
 
 import scala.concurrent.Future
@@ -138,6 +141,25 @@ class OnStartImpl @Inject() (appLifecycle: ApplicationLifecycle) extends OnStart
         Team.addPlayer(comanche, pipe)
         Team.addPlayer(comanche, conro)
         Team.addPlayer(comanche, laucha)
+
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, mistica, Date(2018, 5, 20), Time(20, 15, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, comanche, Date(2018, 6, 2), Time(10, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, walkover, Date(2018, 6, 8), Time(14, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), austral, sanDiego, Date(2018, 6, 14), Time(11, 20, 0), "Zona Oeste", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), austral, sanDiego, Date(2018, 6, 18), Time(18, 0, 0), "Zona Oeste", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), comanche, techo, Date(2018, 6, 18), Time(14, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, techo, Date(2018, 6, 20), Time(13, 30, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), dumbo, mistica, Date(2018, 6, 20), Time(13, 30, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), walkover, mistica, Date(2018, 6, 23), Time(16, 15, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), dumbo, walkover, Date(2018, 6, 24), Time(9, 30, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, dumbo, Date(2018, 6, 24), Time(13, 30, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), walkover, techo, Date(2018, 6, 28), Time(15, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, techo, Date(2018, 6, 28), Time(15, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), sanDiego, austral, Date(2018, 7, 1), Time(18, 0, 0), "Zona Sur", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), austral, comanche, Date(2018, 7, 5), Time(19, 0, 0), "Zona Sur", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), sanDiego, futigol, Date(2018, 7, 6), Time(15, 0, 0), "Zona Oeste", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, mistica, Date(2018, 7, 7), Time(18, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
+        MatchRequest.save(MatchRequest(UUID.randomUUID(), futigol, walkover, Date(2018, 7, 15), Time(20, 0, 0), "Zona Norte", RequestState.CONFIRMED.value))
     }
   }
 
